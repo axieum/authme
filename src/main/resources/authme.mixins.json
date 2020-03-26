@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.axieum.mcmod.authme.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": [
+    "MultiplayerScreenMixin",
+    "DisconnectedScreenMixin",
+    "SetSessionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
