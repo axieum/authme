@@ -51,8 +51,6 @@ public abstract class MultiplayerScreenMixin extends Screen
     @Inject(method = "render", at = @At("TAIL"))
     public void render(int mouseX, int mouseY, float delta, CallbackInfo info)
     {
-        super.render(mouseX, mouseY, delta);
-
         // Draw status text/icon on button
         this.drawString(this.minecraft.textRenderer,
                         Formatting.BOLD + status.toString(),
