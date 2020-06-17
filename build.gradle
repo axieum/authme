@@ -1,71 +1,69 @@
 plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
-    id 'maven-publish'
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'fabric-loom' version '0.4-SNAPSHOT'
 }
 
-version = MOD_VERSION
-group = MOD_GROUP
-archivesBaseName = "${MOD_ID}_fabric-${MINECRAFT_VERSION}"
+apply plugin: 'fabric-loom'
+
+group = project.MOD_GROUP
+version = project.MOD_VERSION
+archivesBaseName = "${project.MOD_ID}_fabric-${MINECRAFT_VERSION}"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     minecraft "com.mojang:minecraft:${MINECRAFT_VERSION}"
-    mappings "net.fabricmc:yarn:${MAPPINGS_VERSION}:v2"
+    mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
 
-    modImplementation "net.fabricmc:fabric-loader:${LOADER_VERSION}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_VERSION}"
+    modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
 }
 
+// Process resources
 processResources {
     inputs.property "version", project.version
 
+    // Inject versioning
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
         expand "version": project.version
     }
 
+    // Add sources
     from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+        exclude "fabric.mod.json" // already modified and added above
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+// Ensure the encoding is set to UTF-8
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
-}
-
+// Add license to the distribution
 jar {
-    from "LICENSE"
+    from rootProject.file("LICENSE.txt")
 }
 
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
+// Add manifest metadata
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : project.findProperty("MOD_NAME") ?: project.name,
+                "Specification-Vendor"    : project.group,
+                "Specification-Version"   : project.version,
+                "Implementation-Title"    : project.MOD_ID,
+                "Implementation-Vendor"   : project.group,
+                "Implementation-Version"  : "${project.version} for Minecraft ${MINECRAFT_VERSION}",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
+}
 
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-    }
+// Generate sources distribution
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
 }
