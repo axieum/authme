@@ -69,6 +69,8 @@ public class AuthScreen extends Screen
             loginButton.setMessage(I18n.translate("gui.authme.auth.button.login."
                                                   + (value.isEmpty() ? "offline" : "online")));
             loginButton.active = canSubmit();
+            // Reset the cancel button accordingly (after a successful login)
+            cancelButton.setMessage(I18n.translate("gui.authme.auth.button.cancel"));
         });
         children.add(passwordField);
 
@@ -175,6 +177,7 @@ public class AuthScreen extends Screen
             // Reset form
             usernameField.setText("");
             passwordField.setText("");
+            cancelButton.setMessage(I18n.translate("gui.authme.auth.button.return"));
         } else {
             // Login
             SessionUtil.login(username, password)
@@ -190,6 +193,7 @@ public class AuthScreen extends Screen
                            // Reset form
                            usernameField.setText("");
                            passwordField.setText("");
+                           cancelButton.setMessage(I18n.translate("gui.authme.auth.button.return"));
                        })
                        .exceptionally(e -> {
                            // Failed login attempt

@@ -1,5 +1,6 @@
 {
   "gui.authme.auth.button.cancel": "Cancel",
+  "gui.authme.auth.button.return": "Start Playing",
   "gui.authme.auth.button.login.online": "Login",
   "gui.authme.auth.button.login.offline": "Play Offline",
   "gui.authme.auth.field.password": "Password",
