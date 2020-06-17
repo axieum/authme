@@ -1,7 +1,6 @@
 package me.axieum.mcmod.authme.gui;
 
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
-import me.axieum.mcmod.authme.AuthMe;
 import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
 import me.axieum.mcmod.authme.util.SessionUtil;
 import net.minecraft.client.MinecraftClient;
@@ -163,8 +162,6 @@ public class AuthScreen extends Screen
 
         final String username = usernameField.getText().isEmpty() ? lastUsername : usernameField.getText();
         final String password = passwordField.getText();
-
-        AuthMe.LOGGER.info("Username: '{}'; Password: '{}'", username, password);
 
         if (password.isEmpty()) {
             // Play offline
