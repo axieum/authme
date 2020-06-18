@@ -6,9 +6,9 @@ import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,9 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class DisconnectedScreenMixin extends Screen
 {
     @Shadow
+    @Final
     private Text reason;
 
     @Shadow
+    @Final
     private Screen parent;
 
     protected DisconnectedScreenMixin(Text title) { super(title); }
@@ -40,8 +42,8 @@ public abstract class DisconnectedScreenMixin extends Screen
                                         backButton.y,
                                         backButton.getWidth(),
                                         20,
-                                        I18n.translate("gui.authme.disconnect.button.auth"),
-                                        button -> this.minecraft.openScreen(new AuthScreen(parent))));
+                                        new TranslatableText("gui.authme.disconnect.button.auth"),
+                                        button -> this.client.openScreen(new AuthScreen(parent))));
 
         // Move back button below
         backButton.y += 26;

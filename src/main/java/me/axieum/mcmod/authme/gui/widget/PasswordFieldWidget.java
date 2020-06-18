@@ -3,11 +3,12 @@ package me.axieum.mcmod.authme.gui.widget;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class PasswordFieldWidget extends TextFieldWidget
 {
-    public PasswordFieldWidget(TextRenderer font, int x, int y, int width, int height, String msg)
+    public PasswordFieldWidget(TextRenderer font, int x, int y, int width, int height, Text msg)
     {
         super(font, x, y, width, height, null, msg);
         setMaxLength(256);
@@ -15,7 +16,7 @@ public class PasswordFieldWidget extends TextFieldWidget
 
 //        // NB: Overriding the rendered characters affects interaction, as the
 //        // actual rendered characters have different widths to the actual text.
-//        setTextFormatter((value, limit) -> StringUtils.repeat('\u204E', value.length()));
+//        setRenderTextProvider((value, limit) -> StringUtils.repeat('\u204E', value.length()));
     }
 
     @Override

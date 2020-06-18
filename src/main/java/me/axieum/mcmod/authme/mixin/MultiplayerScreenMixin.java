@@ -7,8 +7,9 @@ import me.axieum.mcmod.authme.util.SessionUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,8 +40,8 @@ public abstract class MultiplayerScreenMixin extends Screen
                                               new Identifier("minecraft:textures/gui/widgets.png"),
                                               256,
                                               256,
-                                              button -> this.minecraft.openScreen(new AuthScreen(this)),
-                                              I18n.translate("gui.authme.multiplayer.button.auth"));
+                                              button -> this.client.openScreen(new AuthScreen(this)),
+                                              new TranslatableText("gui.authme.multiplayer.button.auth"));
         this.addButton(authButton);
 
         // Fetch current session status
@@ -49,13 +50,14 @@ public abstract class MultiplayerScreenMixin extends Screen
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(int mouseX, int mouseY, float delta, CallbackInfo info)
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
     {
         // Draw status text/icon on button
-        this.drawString(this.minecraft.textRenderer,
-                        Formatting.BOLD + status.toString(),
-                        authButton.x + authButton.getWidth() - 6,
-                        authButton.y - 1,
-                        status.color);
+        this.drawCenteredString(matrices,
+                                this.client.textRenderer,
+                                Formatting.BOLD + status.toString(),
+                                authButton.x + authButton.getWidth(),
+                                authButton.y - 1,
+                                status.color);
     }
 }

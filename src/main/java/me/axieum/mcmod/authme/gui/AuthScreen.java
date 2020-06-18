@@ -3,14 +3,12 @@ package me.axieum.mcmod.authme.gui;
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
 import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
 import me.axieum.mcmod.authme.util.SessionUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.Session;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -28,7 +26,7 @@ public class AuthScreen extends Screen
     {
         super(new TranslatableText("gui.authme.auth.title"));
         this.parentScreen = parentScreen;
-        minecraft = MinecraftClient.getInstance();
+//       this.client = MinecraftClient.getInstance();
         lastUsername = SessionUtil.getSession().getUsername();
         greeting = getGreeting(lastUsername);
     }
@@ -37,15 +35,15 @@ public class AuthScreen extends Screen
     protected void init()
     {
         super.init();
-        minecraft.keyboard.enableRepeatEvents(true);
+        this.client.keyboard.enableRepeatEvents(true);
 
         // Username Text Field
-        usernameField = new TextFieldWidget(font,
+        usernameField = new TextFieldWidget(this.client.textRenderer,
                                             width / 2 - 100,
                                             76,
                                             200,
                                             20,
-                                            I18n.translate("gui.authme.auth.field.username"));
+                                            new TranslatableText("gui.authme.auth.field.username"));
         usernameField.setMaxLength(128);
         usernameField.setSuggestion(lastUsername); // Suggest their current username
         usernameField.setChangedListener(value -> {
@@ -57,20 +55,19 @@ public class AuthScreen extends Screen
         children.add(usernameField);
 
         // Password Text Field
-        passwordField = new PasswordFieldWidget(font,
+        passwordField = new PasswordFieldWidget(this.client.textRenderer,
                                                 width / 2 - 100,
                                                 116,
                                                 200,
                                                 20,
-                                                I18n.translate("gui.authme.auth.field.password"));
-        passwordField.changeFocus(true); // Focus password initially (as we've already suggested a username)
+                                                new TranslatableText("gui.authme.auth.field.password"));
         passwordField.setChangedListener(value -> {
             // Tweak the login button depending on if password is given or not
-            loginButton.setMessage(I18n.translate("gui.authme.auth.button.login."
-                                                  + (value.isEmpty() ? "offline" : "online")));
+            loginButton.setMessage(new TranslatableText("gui.authme.auth.button.login."
+                                                        + (value.isEmpty() ? "offline" : "online")));
             loginButton.active = canSubmit();
             // Reset the cancel button accordingly (after a successful login)
-            cancelButton.setMessage(I18n.translate("gui.authme.auth.button.cancel"));
+            cancelButton.setMessage(new TranslatableText("gui.authme.auth.button.cancel"));
         });
         children.add(passwordField);
 
@@ -79,7 +76,7 @@ public class AuthScreen extends Screen
                                        height / 4 + 96 + 18,
                                        200,
                                        20,
-                                       I18n.translate("gui.authme.auth.button.login.offline"),
+                                       new TranslatableText("gui.authme.auth.button.login.offline"),
                                        button -> submit());
         loginButton.active = false;
         addButton(loginButton);
@@ -89,7 +86,7 @@ public class AuthScreen extends Screen
                                         height / 4 + 120 + 18,
                                         200,
                                         20,
-                                        I18n.translate("gui.authme.auth.button.cancel"),
+                                        new TranslatableText("gui.authme.auth.button.cancel"),
                                         button -> onClose());
         addButton(cancelButton);
     }
@@ -104,13 +101,13 @@ public class AuthScreen extends Screen
     public void onClose()
     {
         passwordField.setText("");
-        minecraft.openScreen(parentScreen);
+        this.client.openScreen(parentScreen);
     }
 
     @Override
     public void removed()
     {
-        minecraft.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.enableRepeatEvents(false);
     }
 
     /**
@@ -124,23 +121,33 @@ public class AuthScreen extends Screen
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float delta)
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
     {
-        renderBackground();
+        renderBackground(matrices);
 
-        drawCenteredString(font, title.asFormattedString(), width / 2, 17, 16777215);
-        drawCenteredString(font, greeting.asFormattedString(), width / 2, 34, 16777215);
+        drawCenteredText(matrices, this.client.textRenderer, title, width / 2, 17, 16777215);
+        drawCenteredText(matrices, this.client.textRenderer, greeting, width / 2, 34, 16777215);
 
         if (message != null)
-            drawCenteredString(font, message.asFormattedString(), width / 2, height / 4 + 86, 16777215);
+            drawCenteredText(matrices, this.client.textRenderer, message, width / 2, height / 4 + 86, 16777215);
 
-        drawString(font, I18n.translate("gui.authme.auth.field.username"), width / 2 - 100, 64, 10526880);
-        drawString(font, I18n.translate("gui.authme.auth.field.password"), width / 2 - 100, 104, 10526880);
+        drawTextWithShadow(matrices,
+                           this.client.textRenderer,
+                           new TranslatableText("gui.authme.auth.field.username"),
+                           width / 2 - 100,
+                           64,
+                           10526880);
+        drawTextWithShadow(matrices,
+                           this.client.textRenderer,
+                           new TranslatableText("gui.authme.auth.field.password"),
+                           width / 2 - 100,
+                           104,
+                           10526880);
 
-        usernameField.render(mouseX, mouseY, delta);
-        passwordField.render(mouseX, mouseY, delta);
+        usernameField.render(matrices, mouseX, mouseY, delta);
+        passwordField.render(matrices, mouseX, mouseY, delta);
 
-        super.render(mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     /**
@@ -169,15 +176,15 @@ public class AuthScreen extends Screen
             // Play offline
             Session offlineSession = SessionUtil.login(username);
 
-            lastUsername = offlineSession.getUsername();
-            greeting = getGreeting(lastUsername);
-            message = new TranslatableText("gui.authme.auth.message.success.offline")
-                    .setStyle(new Style().setBold(true).setColor(Formatting.AQUA));
+            this.lastUsername = offlineSession.getUsername();
+            this.greeting = getGreeting(lastUsername);
+            this.message = new TranslatableText("gui.authme.auth.message.success.offline")
+                    .styled(style -> style.withBold(true).withColor(Formatting.AQUA));
 
             // Reset form
             usernameField.setText("");
             passwordField.setText("");
-            cancelButton.setMessage(I18n.translate("gui.authme.auth.button.return"));
+            cancelButton.setMessage(new TranslatableText("gui.authme.auth.button.return"));
         } else {
             // Login
             SessionUtil.login(username, password)
@@ -188,25 +195,26 @@ public class AuthScreen extends Screen
 
                            // Set the message contents and style it as successful
                            message = new TranslatableText("gui.authme.auth.message.success")
-                                   .setStyle(new Style().setBold(true).setColor(Formatting.GREEN));
+                                   .styled(style -> style.withBold(true).withColor(Formatting.GREEN));
 
                            // Reset form
                            usernameField.setText("");
                            passwordField.setText("");
-                           cancelButton.setMessage(I18n.translate("gui.authme.auth.button.return"));
+                           cancelButton.setMessage(new TranslatableText("gui.authme.auth.button.return"));
                        })
                        .exceptionally(e -> {
                            // Failed login attempt
                            loginButton.active = true; // re-enable login button to try again with same credentials
 
                            // Set the message contents and style it as an error
+                           final TranslatableText text;
                            if (e.getCause() instanceof InvalidCredentialsException)
-                               message = new TranslatableText("gui.authme.auth.message.failed.credentials");
+                               text = new TranslatableText("gui.authme.auth.message.failed.credentials");
                            else
-                               message = new TranslatableText("gui.authme.auth.message.failed.generic",
-                                                              e.getCause().getMessage());
+                               text = new TranslatableText("gui.authme.auth.message.failed.generic",
+                                                           e.getCause().getMessage());
 
-                           message.setStyle(new Style().setBold(true).setColor(Formatting.RED));
+                           this.message = text.styled(style -> style.withBold(true).withColor(Formatting.RED));
 
                            return null;
                        });
@@ -222,7 +230,7 @@ public class AuthScreen extends Screen
     protected static Text getGreeting(String username)
     {
         return new TranslatableText("gui.authme.auth.greeting",
-                                    new LiteralText(username).setStyle(new Style().setColor(Formatting.YELLOW)))
-                .setStyle(new Style().setColor(Formatting.GRAY));
+                                    new LiteralText(username).styled(style -> style.withColor(Formatting.YELLOW)))
+                .styled(style -> style.withColor(Formatting.GRAY));
     }
 }
