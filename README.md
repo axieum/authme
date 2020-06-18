@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/Axieum/AuthMe"><img src="src/main/resources/logo.png" alt="AuthMe for Fabric Logo"></a>
+    <a href="https://github.com/Axieum/AuthMe"><img src="src/main/resources/logo.png" alt="AuthMe Icon"></a>
 </p>
 
 <p align="center">
@@ -10,7 +10,7 @@
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/Axieum/AuthMe?style=flat-square" alt="License"></a>
 </p>
 
-# AuthMe for Fabric
+# AuthMe
 > Authenticate yourself in Minecraft and re-validate your session
 
 ### What does it do?

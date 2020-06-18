@@ -9,7 +9,7 @@ apply plugin: 'fabric-loom'
 
 group = project.MOD_GROUP
 version = project.MOD_VERSION
-archivesBaseName = "${project.MOD_ID}_fabric-${MINECRAFT_VERSION}"
+archivesBaseName = "${project.MOD_ID}-${MINECRAFT_VERSION}"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
