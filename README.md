@@ -1,16 +1,16 @@
 <p align="center">
-    <a href="https://github.com/Axieum/AuthMe"><img src="src/main/resources/logo.png" alt="AuthMe Icon"></a>
+    <a href="https://github.com/Axieum/AuthMe"><img src="src/main/resources/logo.png" alt="Auth Me Icon"></a>
 </p>
 
 <p align="center">
-    <a href="https://curseforge.com/minecraft/mc-mods/auth-me-for-fabric"><img src="http://cf.way2muchnoise.eu/versions/available%20for_auth-me-for-fabric_latest(555-34AA2F-FFF-00000000).svg" alt="Available For"></a>
-    <a href="https://curseforge.com/minecraft/mc-mods/auth-me-for-fabric/files"><img src="http://cf.way2muchnoise.eu/full_auth-me-for-fabric_downloads(555-FF4C05-FFF-00000000-FFF).svg" alt="Downloads"></a>
+    <a href="https://curseforge.com/minecraft/mc-mods/auth-me"><img src="http://cf.way2muchnoise.eu/versions/available%20for_auth-me_latest(555-34AA2F-FFF-00000000).svg" alt="Available For"></a>
+    <a href="https://curseforge.com/minecraft/mc-mods/auth-me/files"><img src="http://cf.way2muchnoise.eu/full_auth-me_downloads(555-FF4C05-FFF-00000000-FFF).svg" alt="Downloads"></a>
     <a href="build.gradle"><img src="https://img.shields.io/librariesio/github/Axieum/AuthMe?style=flat-square" alt="Dependencies"></a>
     <a href="https://github.com/Axieum/AuthMe"><img src="https://img.shields.io/github/repo-size/Axieum/AuthMe?style=flat-square" alt="Repository Size"></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/Axieum/AuthMe?style=flat-square" alt="License"></a>
 </p>
 
-# AuthMe
+# Auth Me
 > Authenticate yourself in Minecraft and re-validate your session
 
 ### What does it do?

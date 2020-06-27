@@ -8,9 +8,9 @@
     "Axieum"
   ],
   "contact": {
-    "homepage": "https://github.com/Axieum/AuthMe-Fabric",
-    "sources": "https://github.com/Axieum/AuthMe-Fabric",
-    "issues": "https://github.com/Axieum/AuthMe-Fabric/issues"
+    "homepage": "https://github.com/Axieum/AuthMe",
+    "sources": "https://github.com/Axieum/AuthMe",
+    "issues": "https://github.com/Axieum/AuthMe/issues"
   },
   "license": "MIT",
   "icon": "logo.png",
@@ -26,7 +26,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": ">=1.14"
+    "minecraft": ">=1.16"
   },
   "custom": {
     "modmenu:clientsideOnly": true
