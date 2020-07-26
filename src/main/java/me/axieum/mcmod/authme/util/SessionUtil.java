@@ -9,6 +9,7 @@ import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import com.mojang.util.UUIDTypeAdapter;
 import me.axieum.mcmod.authme.AuthMe;
 import me.axieum.mcmod.authme.api.Status;
+import me.axieum.mcmod.authme.mixin.RealmsMainScreenMixin;
 import me.axieum.mcmod.authme.mixin.SetSessionMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Session;
@@ -158,6 +159,10 @@ public class SessionUtil
     {
         // NB: Minecraft#session is a final property - use mixin accessor
         ((SetSessionMixin) MinecraftClient.getInstance()).setSession(session);
+
+        // Necessary for Realms to re-check for a valid session
+        RealmsMainScreenMixin.setCheckedClientCompatability(false);
+        RealmsMainScreenMixin.setRealmsGenericErrorScreen(null);
 
         // Cached status is now stale
         lastStatus = Status.UNKNOWN;
