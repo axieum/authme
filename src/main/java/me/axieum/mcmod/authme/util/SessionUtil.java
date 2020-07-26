@@ -6,7 +6,6 @@ import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
-import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.util.UUIDTypeAdapter;
 import me.axieum.mcmod.authme.AuthMe;
 import me.axieum.mcmod.authme.api.Status;
@@ -160,7 +159,8 @@ public class SessionUtil
     {
         // NB: Minecraft#session is a final property - use mixin accessor
         ((SetSessionMixin) MinecraftClient.getInstance()).setSession(session);
-        // Necessary for Realms to re-check for a valid session.
+
+        // Necessary for Realms to re-check for a valid session
         RealmsMainScreenMixin.setCheckedClientCompatability(false);
         RealmsMainScreenMixin.setRealmsGenericErrorScreen(null);
 

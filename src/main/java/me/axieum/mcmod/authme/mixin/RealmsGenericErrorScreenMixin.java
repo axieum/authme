@@ -3,7 +3,6 @@ package me.axieum.mcmod.authme.mixin;
 import com.mojang.realmsclient.gui.screens.RealmsGenericErrorScreen;
 import me.axieum.mcmod.authme.AuthMe;
 import me.axieum.mcmod.authme.gui.AuthScreen;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
