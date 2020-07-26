@@ -1,69 +1,177 @@
+buildscript {
+    dependencies {
+        classpath group: 'org.kohsuke', name: 'github-api', version: '1.115'
+    }
+}
+
 plugins {
     id 'java'
-    id 'eclipse'
     id 'idea'
     id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
-apply plugin: 'fabric-loom'
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 
-group = project.MOD_GROUP
-version = project.MOD_VERSION
-archivesBaseName = "${project.MOD_ID}-${MINECRAFT_VERSION}"
+allprojects {
+    apply plugin: 'fabric-loom'
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    group 'me.axieum.mcmod.authme'
+    version project.MOD_VERSION
+    archivesBaseName = "${project.MOD_ID}-${MINECRAFT_VERSION}"
 
-dependencies {
-    minecraft "com.mojang:minecraft:${MINECRAFT_VERSION}"
-    mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
-    modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
-}
+    dependencies {
+        minecraft "com.mojang:minecraft:${MINECRAFT_VERSION}"
+        mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
+        modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
 
-// Process resources
-processResources {
-    inputs.property "version", project.version
+        modRuntime "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
 
-    // Inject versioning
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
+//        modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
+
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_JUPITER_VERSION}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_JUPITER_VERSION}"
     }
 
-    // Add sources
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json" // already modified and added above
+    test {
+        useJUnitPlatform()
+    }
+
+    afterEvaluate {
+        // Process resources
+        processResources {
+            inputs.property 'version', project.version
+
+            // Inject versioning
+            from(sourceSets.main.resources.srcDirs) {
+                include 'fabric.mod.json'
+                expand 'version': project.version
+            }
+
+            // Add sources
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'fabric.mod.json' // already modified and added above
+            }
+        }
+
+        // Ensure the encoding is set to UTF-8
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
+        }
+
+        // Add the licence to the distribution
+        jar {
+            from rootProject.file('LICENCE.txt')
+        }
+
+        // Add manifest metadata
+        jar {
+            manifest {
+                attributes([
+                        "Specification-Title"     : project.findProperty('MOD_NAME') ?: project.name,
+                        "Specification-Vendor"    : project.group,
+                        "Specification-Version"   : project.version,
+                        "Implementation-Title"    : project.MOD_ID,
+                        "Implementation-Vendor"   : project.group,
+                        "Implementation-Version"  : "${project.version} for Minecraft ${MINECRAFT_VERSION}",
+                        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                ])
+            }
+        }
+    }
+
+    // Ensure sub-projects are remapped before the root project
+    subprojects {
+        rootProject.remapJar.dependsOn("${it.path}:remapJar")
+    }
+
+    // Nest any sub-projects in the distribution
+    dependencies {
+        afterEvaluate {
+            subprojects.each {
+                compile project(":${it.name}")
+                include project("${it.name}:")
+            }
+        }
+    }
+
+    // Generate a sources distribution
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        group 'build'
+        description 'Assembles a jar archive containing the sources'
+
+        archiveClassifier.set('sources')
+        from sourceSets.main.allSource
+    }
+
+    // Publish to the CurseForge platform
+    curseforge {
+        // Set the CurseForge API key from environment variables
+        apiKey = System.getenv('CURSE_API_KEY') ?: ''
+
+        // Other plugin options
+        options {
+            forgeGradleIntegration = false
+        }
     }
 }
 
-// Ensure the encoding is set to UTF-8
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
+// Publish to the CurseForge platform
+curseforge {
+    // Define the main CurseForge project and its artifact(s)
+    project {
+        id = project.CURSE_PROJECT_ID
+        changelog = "For a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/releases/tag/v${project.version}"
 
-// Add license to the distribution
-jar {
-    from rootProject.file("LICENSE.txt")
-}
+        // Set the appropriate release type derived from the current version (i.e. release, beta or alpha)
+        releaseType = project.version.endsWith('alpha') ? 'alpha' : project.version.endsWith('beta') ? 'beta' : 'release'
 
-// Add manifest metadata
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : project.findProperty("MOD_NAME") ?: project.name,
-                "Specification-Vendor"    : project.group,
-                "Specification-Version"   : project.version,
-                "Implementation-Title"    : project.MOD_ID,
-                "Implementation-Vendor"   : project.group,
-                "Implementation-Version"  : "${project.version} for Minecraft ${MINECRAFT_VERSION}",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+        // Add supported game versions
+        project.CURSE_GAME_VERSIONS.split(',').each { addGameVersion it }
+
+        // Set the main artifact (i.e. mod jar)
+        mainArtifact(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar")) {
+            displayName = "${project.findProperty('MOD_NAME') ?: project.name} ${project.version} for Minecraft ${MINECRAFT_VERSION}"
+        }
+
+        // Add additional artifacts (e.g. dev jars, etc.)
+        addArtifact file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-dev.jar")
+        addArtifact file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-sources.jar")
+
+        // Ensure remapping takes place before uploading
+        afterEvaluate {
+            uploadTask.dependsOn('remapJar')
+        }
     }
 }
 
-// Generate sources distribution
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+// Tag the latest commit and publish a new release to GitHub
+task github(dependsOn: remapJar) {
+    group 'upload'
+    description 'Tags the latest commit and publishes a new release to GitHub'
+
+    // Skip publishing to GitHub if no access token exists in the environment variables
+    onlyIf { System.getenv('GITHUB_API_KEY') != null }
+
+    doLast {
+        // Connect to the GitHub repository using an OAuth access token (e.g. a personal access token)
+        def github = GitHub.connectUsingOAuth(System.getenv('GITHUB_API_KY') as String)
+        def repository = github.getRepository(project.GITHUB_REPO as String)
+
+        // Build a new release
+        def builder = new GHReleaseBuilder(repository, "v${project.version}")
+        builder.name("${project.findProperty('MOD_NAME') ?: project.name} ${project.version} for Minecraft ${MINECRAFT_VERSION}")
+        builder.body("For a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/commits")
+        builder.prerelease(project.version.endsWith('alpha') || project.version.endsWith('beta'))
+        builder.commitish(project.GITHUB_BRANCH as String)
+
+        // Persist the release and upload all relevant artifacts
+        def release = builder.create()
+        release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar"), 'application/java-archive')
+        release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-dev.jar"), 'application/java-archive')
+        release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-sources.jar"), 'application/java-archive')
+    }
 }

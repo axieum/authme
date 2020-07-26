@@ -11,9 +11,9 @@ public interface RealmsMainScreenMixin
 {
     @Accessor
     @Mutable
-    static void setCheckedClientCompatability(boolean checkedClientCompatability) {}
+    static void setCheckedClientCompatability(boolean checked) {}
 
     @Accessor
     @Mutable
-    static void setRealmsGenericErrorScreen(Screen realmsGenericErrorScreen) {}
+    static void setRealmsGenericErrorScreen(Screen screen) {}
 }

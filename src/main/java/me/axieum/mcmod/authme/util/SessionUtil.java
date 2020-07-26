@@ -7,16 +7,18 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import com.mojang.util.UUIDTypeAdapter;
-import me.axieum.mcmod.authme.AuthMe;
 import me.axieum.mcmod.authme.api.Status;
 import me.axieum.mcmod.authme.mixin.RealmsMainScreenMixin;
 import me.axieum.mcmod.authme.mixin.SetSessionMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Session;
+import net.minecraft.client.util.Session.AccountType;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+
+import static me.axieum.mcmod.authme.AuthMe.LOGGER;
 
 public class SessionUtil
 {
@@ -69,14 +71,14 @@ public class SessionUtil
             try {
                 ymss.joinServer(gp, token, id);
                 if (ymss.hasJoinedServer(gp, id, null).isComplete()) {
-                    AuthMe.LOGGER.info("Session validated.");
+                    LOGGER.info("Session validated.");
                     lastStatus = Status.VALID;
                 } else {
-                    AuthMe.LOGGER.info("Session invalidated.");
+                    LOGGER.info("Session invalidated.");
                     lastStatus = Status.INVALID;
                 }
             } catch (AuthenticationException e) {
-                AuthMe.LOGGER.warn("Unable to validate the session: {}", e.getMessage());
+                LOGGER.warn("Unable to validate the session: {}", e.getMessage());
                 lastStatus = Status.INVALID;
             }
 
@@ -96,7 +98,7 @@ public class SessionUtil
     {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                AuthMe.LOGGER.info("Logging into a new session with username '{}'", username);
+                LOGGER.info("Logging into a new session with username");
 
                 // Set credentials and login
                 yua.setUsername(username);
@@ -116,10 +118,10 @@ public class SessionUtil
                 final Session session = new Session(name, uuid, token, type);
                 setSession(session);
 
-                AuthMe.LOGGER.info("Session login successful.");
+                LOGGER.info("Session login successful.");
                 return session;
-            } catch (AuthenticationException | IllegalAccessException e) {
-                AuthMe.LOGGER.error("Session login failed: {}", e.getMessage());
+            } catch (Exception e) {
+                LOGGER.error("Session login failed: {}", e.getMessage());
                 throw new CompletionException(e);
             }
         });
@@ -137,14 +139,13 @@ public class SessionUtil
         try {
             UUID uuid = UUID.nameUUIDFromBytes(("offline:" + username).getBytes());
 
-            final Session session =
-                    new Session(username, uuid.toString(), "invalidtoken", Session.AccountType.LEGACY.name());
+            final Session session = new Session(username, uuid.toString(), "invalidtoken", AccountType.LEGACY.name());
             setSession(session);
 
-            AuthMe.LOGGER.info("Session login (offline) successful.");
+            LOGGER.info("Session login (offline) successful.");
             return session;
-        } catch (IllegalAccessException e) {
-            AuthMe.LOGGER.error("Session login (offline) failed: {}", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Session login (offline) failed: {}", e.getMessage());
             return SessionUtil.getSession();
         }
     }
@@ -155,7 +156,7 @@ public class SessionUtil
      * @param session new session with updated properties
      * @see SetSessionMixin
      */
-    private static void setSession(Session session) throws IllegalAccessException
+    private static void setSession(Session session)
     {
         // NB: Minecraft#session is a final property - use mixin accessor
         ((SetSessionMixin) MinecraftClient.getInstance()).setSession(session);
