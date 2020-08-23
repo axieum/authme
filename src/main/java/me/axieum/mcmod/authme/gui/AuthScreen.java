@@ -35,7 +35,7 @@ public class AuthScreen extends Screen
     protected void init()
     {
         super.init();
-        this.client.keyboard.enableRepeatEvents(true);
+        this.client.keyboard.setRepeatEvents(true);
 
         // Username Text Field
         usernameField = new TextFieldWidget(this.client.textRenderer,
@@ -107,7 +107,7 @@ public class AuthScreen extends Screen
     @Override
     public void removed()
     {
-        this.client.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.setRepeatEvents(false);
     }
 
     /**

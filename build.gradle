@@ -30,7 +30,7 @@ allprojects {
 
         modRuntime "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
 
-//        modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_JUPITER_VERSION}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_JUPITER_VERSION}"

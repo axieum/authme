@@ -53,11 +53,11 @@ public abstract class MultiplayerScreenMixin extends Screen
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
     {
         // Draw status text/icon on button
-        this.drawCenteredString(matrices,
-                                this.client.textRenderer,
-                                Formatting.BOLD + status.toString(),
-                                authButton.x + authButton.getWidth(),
-                                authButton.y - 1,
-                                status.color);
+        drawCenteredString(matrices,
+                           this.client.textRenderer,
+                           Formatting.BOLD + status.toString(),
+                           authButton.x + authButton.getWidth(),
+                           authButton.y - 1,
+                           status.color);
     }
 }
