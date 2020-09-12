@@ -28,7 +28,9 @@ allprojects {
         mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
         modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
 
-        modRuntime "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
+        modRuntime("io.github.prospector:modmenu:${MOD_MENU_VERSION}") {
+            transitive false
+        }
 
         modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
 
