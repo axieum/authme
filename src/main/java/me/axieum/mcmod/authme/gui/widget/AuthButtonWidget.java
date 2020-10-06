@@ -21,6 +21,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
      * @param action   on press consumer
      * @param onSetPos on update position consumer
      * @param text     button text
+     * @param screen   screen to constrain the button's position to
      */
     public AuthButtonWidget(int x,
                             int y,
