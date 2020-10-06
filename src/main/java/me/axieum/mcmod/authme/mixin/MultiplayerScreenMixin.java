@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static me.axieum.mcmod.authme.AuthMe.CONFIG;
+
 @Mixin(MultiplayerScreen.class)
 public abstract class MultiplayerScreenMixin extends Screen
 {
@@ -30,8 +32,8 @@ public abstract class MultiplayerScreenMixin extends Screen
     {
         // Inject the authenticate button at top left, using lock texture or fallback text
         AuthMe.LOGGER.debug("Injecting authentication button into multiplayer screen");
-        authButton = new TexturedButtonWidget(6,
-                                              6,
+        authButton = new TexturedButtonWidget(CONFIG.authButton.x,
+                                              CONFIG.authButton.y,
                                               20,
                                               20,
                                               0,

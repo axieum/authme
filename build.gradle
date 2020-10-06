@@ -28,11 +28,12 @@ allprojects {
         mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
         modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
 
-        modRuntime("io.github.prospector:modmenu:${MOD_MENU_VERSION}") {
-            transitive false
-        }
-
         modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
+        modImplementation "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
+        modImplementation "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
+        modImplementation "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
+
+        implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATIONS_VERSION}"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_JUPITER_VERSION}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_JUPITER_VERSION}"
