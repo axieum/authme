@@ -31,7 +31,7 @@ validation error when connecting to a server.
 
 ## Contributing
 
-Thank you for considering contributing to Auth Me! Please see the [Contribution Guidelines](CONTRIBUTING.md).
+Thank you for considering contributing to Auth Me! Please see the [Contribution Guidelines](.github/CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
