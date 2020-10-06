@@ -1,13 +1,13 @@
 buildscript {
     dependencies {
-        classpath group: 'org.kohsuke', name: 'github-api', version: '1.115'
+        classpath group: 'org.kohsuke', name: 'github-api', version: '1.116'
     }
 }
 
 plugins {
     id 'java'
     id 'idea'
-    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
