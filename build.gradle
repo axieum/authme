@@ -30,8 +30,11 @@ allprojects {
 
         modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
         modImplementation "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
-        modImplementation "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
-        modImplementation "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
+        modApi "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
+        modApi "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
+
+        include "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
+        include "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
 
         implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATIONS_VERSION}"
 
