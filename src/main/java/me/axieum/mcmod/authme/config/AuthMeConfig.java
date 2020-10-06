@@ -4,6 +4,7 @@ import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigManager;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
@@ -36,6 +37,14 @@ public class AuthMeConfig implements ConfigData
     {
         return AutoConfig.register(AuthMeConfig.class, JanksonConfigSerializer::new)
                          .getConfig();
+    }
+
+    /**
+     * Persists the config to disk.
+     */
+    public static void save()
+    {
+        ((ConfigManager<AuthMeConfig>) AutoConfig.getConfigHolder(AuthMeConfig.class)).save();
     }
 
     /**
