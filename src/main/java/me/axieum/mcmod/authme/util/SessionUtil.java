@@ -8,8 +8,8 @@ import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import com.mojang.util.UUIDTypeAdapter;
 import me.axieum.mcmod.authme.api.Status;
-import me.axieum.mcmod.authme.mixin.RealmsMainScreenMixin;
-import me.axieum.mcmod.authme.mixin.SetSessionMixin;
+import me.axieum.mcmod.authme.mixin.MinecraftClientAccess;
+import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccess;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.util.Session.AccountType;
@@ -22,6 +22,8 @@ import static me.axieum.mcmod.authme.AuthMe.LOGGER;
 
 public class SessionUtil
 {
+    // Session status cache
+    public static final long STATUS_TTL = 60000L;
     private static Status lastStatus = Status.UNKNOWN;
     private static long lastStatusCheck;
 
@@ -59,22 +61,23 @@ public class SessionUtil
      */
     public static CompletableFuture<Status> getStatus()
     {
-        if (System.currentTimeMillis() - lastStatusCheck < 60000)
+        if (System.currentTimeMillis() - lastStatusCheck < STATUS_TTL)
             return CompletableFuture.completedFuture(lastStatus);
 
         return CompletableFuture.supplyAsync(() -> {
             final Session session = getSession();
-            GameProfile gp = session.getProfile();
+
+            GameProfile profile = session.getProfile();
             String token = session.getAccessToken();
             String id = UUID.randomUUID().toString();
 
             try {
-                ymss.joinServer(gp, token, id);
-                if (ymss.hasJoinedServer(gp, id, null).isComplete()) {
-                    LOGGER.info("Session validated.");
+                ymss.joinServer(profile, token, id);
+                if (ymss.hasJoinedServer(profile, id, null).isComplete()) {
+                    LOGGER.info("Session is valid");
                     lastStatus = Status.VALID;
                 } else {
-                    LOGGER.info("Session invalidated.");
+                    LOGGER.warn("Session is invalid!");
                     lastStatus = Status.INVALID;
                 }
             } catch (AuthenticationException e) {
@@ -118,7 +121,7 @@ public class SessionUtil
                 final Session session = new Session(name, uuid, token, type);
                 setSession(session);
 
-                LOGGER.info("Session login successful.");
+                LOGGER.info("Session login successful");
                 return session;
             } catch (Exception e) {
                 LOGGER.error("Session login failed: {}", e.getMessage());
@@ -142,7 +145,7 @@ public class SessionUtil
             final Session session = new Session(username, uuid.toString(), "invalidtoken", AccountType.LEGACY.name());
             setSession(session);
 
-            LOGGER.info("Session login (offline) successful.");
+            LOGGER.info("Session login (offline) successful");
             return session;
         } catch (Exception e) {
             LOGGER.error("Session login (offline) failed: {}", e.getMessage());
@@ -154,16 +157,16 @@ public class SessionUtil
      * Replaces the session on the Minecraft instance.
      *
      * @param session new session with updated properties
-     * @see SetSessionMixin
+     * @see MinecraftClientAccess
      */
     private static void setSession(Session session)
     {
         // NB: Minecraft#session is a final property - use mixin accessor
-        ((SetSessionMixin) MinecraftClient.getInstance()).setSession(session);
+        ((MinecraftClientAccess) MinecraftClient.getInstance()).setSession(session);
 
         // Necessary for Realms to re-check for a valid session
-        RealmsMainScreenMixin.setCheckedClientCompatability(false);
-        RealmsMainScreenMixin.setRealmsGenericErrorScreen(null);
+        RealmsMainScreenAccess.setCheckedClientCompatability(false);
+        RealmsMainScreenAccess.setRealmsGenericErrorScreen(null);
 
         // Cached status is now stale
         lastStatus = Status.UNKNOWN;

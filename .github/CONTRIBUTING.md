@@ -15,7 +15,7 @@ Thank you for creating them.
 Pull requests are the best way to get your ideas into this repository.
 
 When deciding to merge pull request, the following things are taken into account alongside the
-[Code of Conduct](CODE_OF_CONDUCT.md):
+[Code of Conduct](./CODE_OF_CONDUCT.md):
 
 #### 1. Does it state intent
 

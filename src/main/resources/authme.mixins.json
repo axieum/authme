@@ -7,9 +7,9 @@
   "client": [
     "MultiplayerScreenMixin",
     "DisconnectedScreenMixin",
-    "RealmsMainScreenMixin",
+    "RealmsMainScreenAccess",
     "RealmsGenericErrorScreenMixin",
-    "SetSessionMixin"
+    "MinecraftClientAccess"
   ],
   "injectors": {
     "defaultRequire": 1

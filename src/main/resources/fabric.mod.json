@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "me.axieum.mcmod.authme.AuthMe"
+    ],
+    "modmenu": [
+      "me.axieum.mcmod.authme.config.AuthMeConfig\$ModMenuIntegration"
     ]
   },
   "mixins": [
