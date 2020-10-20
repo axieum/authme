@@ -1,0 +1,23 @@
+{
+  "gui.authme.auth.button.cancel": "İptal",
+  "gui.authme.auth.button.return": "Oynamaya Başla",
+  "gui.authme.auth.button.login.online": "Giriş",
+  "gui.authme.auth.button.login.offline": "Çevrimdışı Oyna",
+  "gui.authme.auth.field.password": "Parola",
+  "gui.authme.auth.field.username": "Kullanıcı adı / Email",
+  "gui.authme.auth.greeting": "%s olarak giriş yapıldı",
+  "gui.authme.auth.message.failed.credentials": "Geçersiz bilgi!",
+  "gui.authme.auth.message.failed.generic": "Giriş yapılamadı!",
+  "gui.authme.auth.message.success": "Başarıyla giriş yapıldı!",
+  "gui.authme.auth.message.success.offline": "Başarıyla çevrimdışı oynanıyor!",
+  "gui.authme.auth.title": "Kimlik Doğrulama",
+  "gui.authme.multiplayer.button.auth": "Doğrula",
+  "gui.authme.disconnect.button.auth": "Yeniden Doğrula",
+  "gui.authme.status.invalid": "\u2717",
+  "gui.authme.status.unknown": "\u2026",
+  "gui.authme.status.valid": "\u2714",
+  "text.autoconfig.authme.title": "Auth Me (Beni Doğrula) Ayarları",
+  "text.autoconfig.authme.option.authButton": "Doğrulama Tuşu",
+  "text.autoconfig.authme.option.authButton.x": "X Koordinatı",
+  "text.autoconfig.authme.option.authButton.y": "Y Koordinatı"
+}
