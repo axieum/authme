@@ -1,0 +1,23 @@
+{
+  "gui.authme.auth.button.cancel": "Anuleaza",
+  "gui.authme.auth.button.return": "Incepeti sa jucati",
+  "gui.authme.auth.button.login.online": "Login",
+  "gui.authme.auth.button.login.offline": "Joaca Offline",
+  "gui.authme.auth.field.password": "Parola",
+  "gui.authme.auth.field.username": "Username / Email",
+  "gui.authme.auth.greeting": "Inregistrat ca %s",
+  "gui.authme.auth.message.failed.credentials": "Datele de autentificare sunt invalide!",
+  "gui.authme.auth.message.failed.generic": "Nu sa realizat autentificarea!",
+  "gui.authme.auth.message.success": "Conectat cu succes!",
+  "gui.authme.auth.message.success.offline": "Acum te joci cu success offline!",
+  "gui.authme.auth.title": "Autentificarea",
+  "gui.authme.multiplayer.button.auth": "Autentifica",
+  "gui.authme.disconnect.button.auth": "Re-autentifica",
+  "gui.authme.status.invalid": "\u2717",
+  "gui.authme.status.unknown": "\u2026",
+  "gui.authme.status.valid": "\u2714",
+  "text.autoconfig.authme.title": "COnfigureaza Auth Me",
+  "text.autoconfig.authme.option.authButton": "Buton autentificare",
+  "text.autoconfig.authme.option.authButton.x": "Coordonata X",
+  "text.autoconfig.authme.option.authButton.y": "Coordonata Y"
+}
