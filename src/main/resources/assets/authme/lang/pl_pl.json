@@ -1,0 +1,23 @@
+{
+  "gui.authme.auth.button.cancel": "Anuluj",
+  "gui.authme.auth.button.return": "Rozpocznij Grę",
+  "gui.authme.auth.button.login.online": "Zaloguj",
+  "gui.authme.auth.button.login.offline": "Graj Offline",
+  "gui.authme.auth.field.password": "Hasło",
+  "gui.authme.auth.field.username": "Nick / Email",
+  "gui.authme.auth.greeting": "Zalogowano jako %s",
+  "gui.authme.auth.message.failed.credentials": "Niewłaściwe dane!",
+  "gui.authme.auth.message.failed.generic": "Nie można się zalogować!",
+  "gui.authme.auth.message.success": "Pomyślnie zalogowano!",
+  "gui.authme.auth.message.success.offline": "Pomyślnie zalogowano w trybie offline!",
+  "gui.authme.auth.title": "Uwierzytelnienie",
+  "gui.authme.multiplayer.button.auth": "Autoryzuj",
+  "gui.authme.disconnect.button.auth": "Zaloguj się ponownie",
+  "gui.authme.status.invalid": "\u2717",
+  "gui.authme.status.unknown": "\u2026",
+  "gui.authme.status.valid": "\u2714",
+  "text.autoconfig.authme.title": "Ustawienia Auth Me",
+  "text.autoconfig.authme.option.authButton": "Przycisk Auth",
+  "text.autoconfig.authme.option.authButton.x": "Współrzędna X",
+  "text.autoconfig.authme.option.authButton.y": "Współrzędna Y"
+}
