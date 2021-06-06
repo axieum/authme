@@ -1,0 +1,37 @@
+# Security Policy
+
+## Reporting a Vulnerability
+
+If you discover a security vulnerability within Chatter, please send an e-mail
+to Axieum at imaxieum@gmail.com.
+All security vulnerabilities will be promptly addressed.
+
+### Public PGP Key
+
+```asc
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mJMEXOdhSxMFK4EEACMEIwQBkhkMOGffdgFVMrzpV7WWG1FeTXI165cpkvgr+Dp/
+zRZ0HIm52R5J1WRXPOZEnkI7nHRoV5YAnvyeYR94IwlHhEMAD6FDudj6mmIT58ow
+RwT95pgLC4+tMvbLvOcx9cb9urh7/SbfEiFJNSanIgnJdQGa4omh8lhiAqXHRaus
+zgRY7U+0MEF4aWV1bSA8NzU3Nzg1MStheGlldW1AdXNlcnMubm9yZXBseS5naXRo
+dWIuY29tPojUBBMTCgA4AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEERS+k
+1PPIZ9BN04yGnJWZUGvSL+8FAl0TdjIACgkQnJWZUGvSL+9Z4AIJAYhtRlJk5MJA
+vkVRYnOFUin1N2AD0AuosB/s88OujpbDZvax6tq7cujAx48+ITqgRrj9qDSEvXTQ
+u9457AJhBi4/AgkB2W0aSAbVLLfmS3r+nIRM+r46yuLAQ7IBB6O0hTg1//bBaMGJ
+FssXa+/6e1iIjIU8fSr2fz+0edv+Fgur1PbGwCaI0gQTEwoAOBYhBEUvpNTzyGfQ
+TdOMhpyVmVBr0i/vBQJc52FLAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJ
+EJyVmVBr0i/vLzYCCLlLIm5tmz5FanxhK8ajZFR8aSs6Sd42BQHc2Fjhm2M99INS
+qViHxdxSf04PvUQHF6EdlZ5Tqnd/yZPbv4rL5qF5Agdi2in7ND6AKJGrWDIOWCeq
+sbRk+H3E9Ta1zZ4UL9iBx04BNC0BDJgwcgrbwls3cW7gFoxiry2ROkOE/FASqRIx
+D7iXBFznYUsSBSuBBAAjBCMEAfs1BM0JpMMCn/cKACBqb+Pw3khxSk4o5Cf/bRkY
+WOppxdg43KbcYEFTZNRw4cJoFrQF+07ucYSQwJ2Z4bR2uKVFAIsU4SpDXJgTWSai
+vrSKuP4r91OjzZ2TGa+sUNvxaedZk4RwsUVT+GELL12XGOLFDBgIr+bbpnhe52m4
+uw06QRUpAwEKCYi7BBgTCgAgFiEERS+k1PPIZ9BN04yGnJWZUGvSL+8FAlznYUsC
+GwwACgkQnJWZUGvSL+8q8wIJARMOWupdgz3FiUEs8BYb9vZEmUKTwzzOrbsxjAqt
+SEnRJ+5ZuHV2xqjLK/fLrI/aAPU5pc4zkRehpI97Cf6GFd1UAgjkHH066H6l0inL
+Wyn83wdcCivhc8GMjXeCzTA+g2AaDOs8U9eKNjLrHrQkd5L6HKFGtH8YMdabsqRz
+4U1sAmnQKw==
+=A81n
+-----END PGP PUBLIC KEY BLOCK-----
+```
