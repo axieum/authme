@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static me.axieum.mcmod.authme.AuthMe.CONFIG;
+import static me.axieum.mcmod.authme.AuthMe.getConfig;
 
 @Mixin(MultiplayerScreen.class)
 public abstract class MultiplayerScreenMixin extends Screen
@@ -33,18 +33,18 @@ public abstract class MultiplayerScreenMixin extends Screen
     {
         // Inject the authenticate button at top left, using lock texture or fallback text
         AuthMe.LOGGER.debug("Injecting authentication button into multiplayer screen");
-        authButton = new AuthButtonWidget(CONFIG.authButton.x,
-                                          CONFIG.authButton.y,
+        authButton = new AuthButtonWidget(getConfig().authButton.x,
+                                          getConfig().authButton.y,
                                           button -> this.client.openScreen(new AuthScreen(this)),
                                           (x, y) -> {
                                               // Sync configuration with updated button position
-                                              CONFIG.authButton.x = x;
-                                              CONFIG.authButton.y = y;
-                                              AuthMeConfig.save();
+                                              getConfig().authButton.x = x;
+                                              getConfig().authButton.y = y;
+                                              AuthMe.CONFIG.save();
                                           },
                                           new TranslatableText("gui.authme.multiplayer.button.auth"),
                                           this);
-        this.addButton(authButton);
+        this.addDrawableChild(authButton);
 
         // Fetch current session status
         MultiplayerScreenMixin.status = Status.UNKNOWN;
@@ -55,11 +55,11 @@ public abstract class MultiplayerScreenMixin extends Screen
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
     {
         // Draw status text/icon on button
-        drawCenteredString(matrices,
-                           this.client.textRenderer,
-                           Formatting.BOLD + status.toString(),
-                           authButton.x + authButton.getWidth(),
-                           authButton.y - 1,
-                           status.color);
+        drawCenteredText(matrices,
+                         this.client.textRenderer,
+                         Formatting.BOLD + status.toString(),
+                         authButton.x + authButton.getWidth(),
+                         authButton.y - 1,
+                         status.color);
     }
 }

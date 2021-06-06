@@ -29,10 +29,13 @@ allprojects {
         mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
         modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
 
-        modRuntime "com.terraformersmc:modmenu:${MOD_MENU_VERSION}"
-
+        modImplementation "com.terraformersmc:modmenu:${MOD_MENU_VERSION}"
         modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
         modImplementation("me.shedaniel.cloth:cloth-config-fabric:${CLOTH_CONFIG_VERSION}") {
+            exclude group: 'net.fabricmc.fabric-api'
+        }
+
+        include("me.shedaniel.cloth:cloth-config-fabric:${CLOTH_CONFIG_VERSION}") {
             exclude group: 'net.fabricmc.fabric-api'
         }
 
