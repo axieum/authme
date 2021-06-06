@@ -81,6 +81,9 @@ allprojects {
         jar {
             from rootProject.file('LICENCE.txt')
         }
+        sourcesJar {
+            from rootProject.file('LICENCE.txt')
+        }
 
         // Add manifest metadata
         jar {
@@ -112,16 +115,6 @@ allprojects {
             }
         }
     }
-
-    // Generate a sources distribution
-//    task sourcesJar(type: Jar, dependsOn: classes) {
-//        group 'build'
-//        description 'Assembles a jar archive containing the sources'
-//
-//        archiveClassifier.set('sources')
-//        from sourceSets.main.allSource
-//        from rootProject.file('LICENCE.txt')
-//    }
 
     // Publish to the CurseForge platform
     curseforge {
