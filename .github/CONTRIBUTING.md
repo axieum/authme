@@ -14,7 +14,7 @@ Thank you for creating them.
 
 Pull requests are the best way to get your ideas into this repository.
 
-When deciding to merge pull request, the following things are taken into account alongside the
+When deciding to merge a pull request, the following things are taken into account alongside the
 [Code of Conduct](./CODE_OF_CONDUCT.md):
 
 #### 1. Does it state intent
@@ -39,22 +39,22 @@ Instead of giving a URL to a discussion, try to summarise the relevant points.
 Many commits may form an aforementioned pull request.
 
 > :exclamation: This project welcomes the use of the [gitmoji](https://github.com/carloscuesta/gitmoji) standard for
-major commits
+major commits!
 
 ### Commit Messages
 
 Briefly describe your changes in present-tense, imperative style.
 
-> :information_source: A good commit message is 50-72 characters of length.
+> :information_source: A good commit message is 50-72 characters in length.
 
 **Good**:
 
-`Link the Code of Conduct in the README`, `Add xyz`, `Remove unused dependency`...
+`Link the Code of Conduct in the README`, `Add navigation`, `Remove unused dependency`...
 
 **Bad**:
 
-`Linked the Code of Conduct in the README`, `Add xyz as it was highly requested`, `Inverting a boolean condition`...
+`Linked the Code of Conduct in the README`, `Add navigation as it was highly requested`, `Inverting a boolean condition`...
 
 ### Commit Body
 
-You may add a supplementary, detailed commit body if you deem necessary.
+You may add a supplementary, detailed commit body if you deem it necessary.

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "authme",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Auth Me",
+  "name": "${name}",
   "description": "Authenticate yourself in Minecraft and re-validate your session.",
   "authors": [
     "Axieum"
