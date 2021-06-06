@@ -1,14 +1,15 @@
 buildscript {
     dependencies {
-        classpath group: 'org.kohsuke', name: 'github-api', version: '1.116'
+        classpath group: 'org.kohsuke', name: 'github-api', version: '1.130'
     }
 }
 
 plugins {
     id 'java'
     id 'idea'
-    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 import org.kohsuke.github.GHReleaseBuilder
@@ -28,15 +29,14 @@ allprojects {
         mappings "net.fabricmc:yarn:${YARN_MAPPINGS}:v2"
         modImplementation "net.fabricmc:fabric-loader:${FABRIC_LOADER_VERSION}"
 
+        modRuntime "com.terraformersmc:modmenu:${MOD_MENU_VERSION}"
+
         modImplementation "net.fabricmc.fabric-api:fabric-api:${FABRIC_API_VERSION}"
-        modImplementation "io.github.prospector:modmenu:${MOD_MENU_VERSION}"
-        modApi "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
-        modApi "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
+        modImplementation("me.shedaniel.cloth:cloth-config-fabric:${CLOTH_CONFIG_VERSION}") {
+            exclude group: 'net.fabricmc.fabric-api'
+        }
 
-        include "me.shedaniel.cloth:config-2:${CLOTH_CONFIG_VERSION}"
-        include "me.sargunvohra.mcmods:autoconfig1u:${AUTO_CONFIG_VERSION}"
-
-        implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATIONS_VERSION}"
+        compileOnly "org.jetbrains:annotations:${JETBRAINS_ANNOTATIONS_VERSION}"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_JUPITER_VERSION}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_JUPITER_VERSION}"
@@ -49,23 +49,29 @@ allprojects {
     afterEvaluate {
         // Process resources
         processResources {
+            inputs.property 'id', project.MOD_ID
+            inputs.property 'name', project.findProperty('MOD_NAME') ?: project.name
             inputs.property 'version', project.version
 
-            // Inject versioning
-            from(sourceSets.main.resources.srcDirs) {
-                include 'fabric.mod.json'
-                expand 'version': project.version
-            }
-
-            // Add sources
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'fabric.mod.json' // already modified and added above
+            // Expand mod metadata
+            filesMatching('fabric.mod.json') {
+                expand([
+                        'id'     : project.MOD_ID,
+                        'name'   : project.findProperty('MOD_NAME') ?: project.name,
+                        'version': project.version
+                ])
             }
         }
 
-        // Ensure the encoding is set to UTF-8
-        tasks.withType(JavaCompile) {
-            options.encoding = 'UTF-8'
+        // Ensure the encoding is set to UTF-8 with newer Java support if present
+        tasks.withType(JavaCompile).configureEach {
+            it.options.encoding = 'UTF-8'
+            if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+        }
+
+        // Generate a sources distribution
+        java {
+            withSourcesJar()
         }
 
         // Add the licence to the distribution
@@ -98,20 +104,21 @@ allprojects {
     dependencies {
         afterEvaluate {
             subprojects.each {
-                compile project(":${it.name}")
+                implementation project(":${it.name}")
                 include project("${it.name}:")
             }
         }
     }
 
     // Generate a sources distribution
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        group 'build'
-        description 'Assembles a jar archive containing the sources'
-
-        archiveClassifier.set('sources')
-        from sourceSets.main.allSource
-    }
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        group 'build'
+//        description 'Assembles a jar archive containing the sources'
+//
+//        archiveClassifier.set('sources')
+//        from sourceSets.main.allSource
+//        from rootProject.file('LICENCE.txt')
+//    }
 
     // Publish to the CurseForge platform
     curseforge {
@@ -122,6 +129,14 @@ allprojects {
         options {
             forgeGradleIntegration = false
         }
+    }
+
+    // Add additional Gradle repositories
+    repositories {
+        mavenCentral()
+        maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
+        maven { name 'Shedaniel'; url 'https://maven.shedaniel.me/' }
+        maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
     }
 }
 
@@ -143,9 +158,16 @@ curseforge {
             displayName = "${project.findProperty('MOD_NAME') ?: project.name} v${project.version} for Minecraft ${MINECRAFT_VERSION}"
         }
 
-        // Add additional artifacts (e.g. dev jars, etc.)
+        // Add additional main artifacts (e.g. dev jars, etc.)
         addArtifact file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-dev.jar")
         addArtifact file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-sources.jar")
+
+        // Add any additional sub-project artifacts
+        subprojects.each {
+            addArtifact file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}.jar")
+            addArtifact file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}-dev.jar")
+            addArtifact file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}-sources.jar")
+        }
 
         // Ensure remapping takes place before uploading
         afterEvaluate {
@@ -167,17 +189,24 @@ task github(dependsOn: remapJar) {
         def github = GitHub.connectUsingOAuth(System.getenv('GITHUB_API_KEY') as String)
         def repository = github.getRepository(project.GITHUB_REPO as String)
 
-        // Build a new release
+        // Tag the latest commit, and hence prepare a new release
         def builder = new GHReleaseBuilder(repository, "v${project.version}")
         builder.name("${project.findProperty('MOD_NAME') ?: project.name} v${project.version} for Minecraft ${MINECRAFT_VERSION}")
         builder.body("For a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/commits")
         builder.prerelease(project.version.endsWith('alpha') || project.version.endsWith('beta'))
         builder.commitish(project.GITHUB_BRANCH as String)
-
-        // Persist the release and upload all relevant artifacts
         def release = builder.create()
+
+        // Upload the main artifact (i.e. mod jar)
         release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar"), 'application/java-archive')
+        // Upload additional main artifacts (e.g. dev jars, etc.)
         release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-dev.jar"), 'application/java-archive')
         release.uploadAsset(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}-sources.jar"), 'application/java-archive')
+        // Upload any additional sub-project artifacts
+        subprojects.each {
+            release.uploadAsset(file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}.jar"), 'application/java-archive')
+            release.uploadAsset(file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}-dev.jar"), 'application/java-archive')
+            release.uploadAsset(file("${it.buildDir}/libs/${it.archivesBaseName}-${it.version}-sources.jar"), 'application/java-archive')
+        }
     }
 }

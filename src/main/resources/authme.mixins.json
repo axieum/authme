@@ -4,6 +4,7 @@
   "package": "me.axieum.mcmod.authme.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [],
+  "server": [],
   "client": [
     "MultiplayerScreenMixin",
     "DisconnectedScreenMixin",
