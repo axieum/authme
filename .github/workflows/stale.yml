@@ -1,0 +1,24 @@
+# This workflow will mark any issues or pull requests that has had no activity.
+# For more information, see https://github.com/actions/stale.
+
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: "30 1 * * *"
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/stale@v3
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        days-before-stale: 60
+        days-before-close: -1  # never close
+        stale-issue-message: 'This issue has had no recent activity, and has been marked as stale'
+        stale-pr-message: 'This pull request has had no recent activity, and has been marked as stale'
+        stale-issue-label: 'stale'
+        stale-pr-label: 'stale'
