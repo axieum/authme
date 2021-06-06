@@ -19,25 +19,38 @@
 # Auth Me
 > Authenticate yourself in Minecraft and re-validate your session
 
-This Minecraft mod brings account authentication into the game in the efforts of overcoming the infamous session
-validation error when connecting to a server.
+Auth Me is a **Minecraft mod** that brings account authentication into the game
+in the efforts of overcoming the infamous session validation error when
+connecting to a server.
 
-![](https://media.forgecdn.net/attachments/thumbnails/274/201/310/172/authme.png "Multiplayer Screen") ![](https://media.forgecdn.net/attachments/thumbnails/275/936/310/172/authme.png "Invalid Session Screen") ![](https://media.forgecdn.net/attachments/thumbnails/274/202/310/172/authme.png "Authentication Screen")
+It is a **client-side** only mod, built on the [Fabric][fabric] mod loader and
+is available for modern versions of [Minecraft][minecraft] Java-Edition.
+
+![](https://media.forgecdn.net/attachments/thumbnails/274/201/310/172/authme.png "Multiplayer Screen")
+![](https://media.forgecdn.net/attachments/thumbnails/275/936/310/172/authme.png "Invalid Session Screen")
+![](https://media.forgecdn.net/attachments/thumbnails/274/202/310/172/authme.png "Authentication Screen")
 
 ## Acknowledgements
 
-- [ReAuth](https://github.com/TechnicianLP/ReAuth) by TechnicianLP
+- [ReAuth][reauth] by TechnicianLP
     - The original session re-validator mod for Minecraft `<= 1.12.2`
 
 ## Contributing
 
-Thank you for considering contributing to Auth Me! Please see the [Contribution Guidelines](.github/CONTRIBUTING.md).
+Thank you for considering contributing to Auth Me! Please see the
+[Contribution Guidelines](.github/CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Auth Me, please send an e-mail to Axieum via
-[imaxieum@gmail.com](mailto:imaxieum@gmail.com). All security vulnerabilities will be promptly addressed.
+Please review the [Security Policy](.github/SECURITY.md) on how to report
+security vulnerabilities.
 
 ## Licence
 
-Auth Me is open-sourced software licenced under the [MIT licence](https://opensource.org/licenses/MIT).
+Auth Me is open-sourced software licenced under the [MIT licence][licence].
+
+[homepage]: https://github.com/Axieum/AuthMe
+[licence]: https://opensource.org/licenses/MIT
+[fabric]: https://fabricmc.net
+[minecraft]: https://minecraft.net
+[reauth]: https://github.com/TechnicianLP/ReAuth

@@ -165,7 +165,7 @@ public class SessionUtil
         ((MinecraftClientAccess) MinecraftClient.getInstance()).setSession(session);
 
         // Necessary for Realms to re-check for a valid session
-        RealmsMainScreenAccess.setCheckedClientCompatability(false);
+        RealmsMainScreenAccess.setCheckedClientCompatibility(false);
         RealmsMainScreenAccess.setRealmsGenericErrorScreen(null);
 
         // Cached status is now stale

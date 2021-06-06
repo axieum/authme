@@ -52,7 +52,7 @@ public class AuthScreen extends Screen
             // Update the login button submission state
             loginButton.active = canSubmit();
         });
-        children.add(usernameField);
+        addDrawableChild(usernameField);
 
         // Password Text Field
         passwordField = new PasswordFieldWidget(this.client.textRenderer,
@@ -69,7 +69,7 @@ public class AuthScreen extends Screen
             // Reset the cancel button accordingly (after a successful login)
             cancelButton.setMessage(new TranslatableText("gui.authme.auth.button.cancel"));
         });
-        children.add(passwordField);
+        addDrawableChild(passwordField);
 
         // Login Button
         loginButton = new ButtonWidget(width / 2 - 100,
@@ -79,7 +79,7 @@ public class AuthScreen extends Screen
                                        new TranslatableText("gui.authme.auth.button.login.offline"),
                                        button -> submit());
         loginButton.active = false;
-        addButton(loginButton);
+        addDrawableChild(loginButton);
 
         // Cancel Button
         cancelButton = new ButtonWidget(width / 2 - 100,
@@ -88,7 +88,7 @@ public class AuthScreen extends Screen
                                         20,
                                         new TranslatableText("gui.authme.auth.button.cancel"),
                                         button -> onClose());
-        addButton(cancelButton);
+        addDrawableChild(cancelButton);
     }
 
     @Override

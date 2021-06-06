@@ -11,7 +11,7 @@ public interface RealmsMainScreenAccess
 {
     @Accessor
     @Mutable
-    static void setCheckedClientCompatability(boolean checked) {}
+    static void setCheckedClientCompatibility(boolean checked) {}
 
     @Accessor
     @Mutable
