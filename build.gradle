@@ -209,9 +209,15 @@ task github(dependsOn: remapJar) {
         // Tag the latest commit, and hence prepare a new release
         def builder = new GHReleaseBuilder(repository, "v${project.version}")
         builder.name("${project.findProperty('MOD_NAME') ?: project.name} v${project.version} for Minecraft ${MINECRAFT_VERSION}")
-        builder.body("For a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/commits")
         builder.prerelease(project.version.endsWith('alpha') || project.version.endsWith('beta'))
         builder.commitish(project.GITHUB_BRANCH as String)
+
+        // Read and set the changelog
+        final chlog_file = file("${project.rootDir}/CHANGELOG.md")
+        var changelog = chlog_file.exists() ? new String(Files.readAllBytes(chlog_file.toPath())) : ''
+        builder.body(changelog.concat("\nFor a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/commits").trim())
+
+        // Create the release
         def release = builder.create()
 
         // Upload the main artifact (i.e. mod jar)
