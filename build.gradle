@@ -1,3 +1,8 @@
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
+import java.nio.file.Files
+
 buildscript {
     dependencies {
         classpath group: 'org.kohsuke', name: 'github-api', version: '1.130'
@@ -12,9 +17,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
-
 allprojects {
     apply plugin: 'fabric-loom'
 
@@ -22,7 +24,7 @@ allprojects {
     version project.MOD_VERSION
     archivesBaseName = "${project.MOD_ID}-${MINECRAFT_VERSION}"
 
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_16
 
     dependencies {
         minecraft "com.mojang:minecraft:${MINECRAFT_VERSION}"
@@ -69,7 +71,7 @@ allprojects {
         // Ensure the encoding is set to UTF-8 with newer Java support if present
         tasks.withType(JavaCompile).configureEach {
             it.options.encoding = 'UTF-8'
-            if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+            it.options.release = 16  // Java 16
         }
 
         // Generate a sources distribution
@@ -141,13 +143,32 @@ curseforge {
     // Define the main CurseForge project and its artifact(s)
     project {
         id = project.CURSE_PROJECT_ID
-        changelog = "For a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/releases/tag/v${project.version}"
+
+        // Read and set the changelog
+        changelogType = "markdown"
+        final chlog_file = file("${project.rootDir}/CHANGELOG.md")
+        changelog = chlog_file.exists() ? new String(Files.readAllBytes(chlog_file.toPath())) : ''
+        changelog = changelog.concat("\nFor a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/releases/tag/v${project.version}").trim()
 
         // Set the appropriate release type derived from the current version (i.e. release, beta or alpha)
         releaseType = project.version.endsWith('alpha') ? 'alpha' : project.version.endsWith('beta') ? 'beta' : 'release'
 
         // Add supported game versions
         project.CURSE_GAME_VERSIONS.split(',').each { addGameVersion it }
+
+        // Add any related projects
+        relations {
+            if (project.CURSE_RELATIONS_REQUIRED)
+                project.CURSE_RELATIONS_REQUIRED.split(',').each { requiredDependency it }
+            if (project.CURSE_RELATIONS_OPTIONAL)
+                project.CURSE_RELATIONS_OPTIONAL.split(',').each { optionalDependency it }
+            if (project.CURSE_RELATIONS_EMBEDDED)
+                project.CURSE_RELATIONS_EMBEDDED.split(',').each { embeddedLibrary it }
+            if (project.CURSE_RELATIONS_TOOLS)
+                project.CURSE_RELATIONS_TOOLS.split(',').each { tool it }
+            if (project.CURSE_RELATIONS_INCOMPATIBLE)
+                project.CURSE_RELATIONS_INCOMPATIBLE.split(',').each { incompatible it }
+        }
 
         // Set the main artifact (i.e. mod jar)
         mainArtifact(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar")) {
