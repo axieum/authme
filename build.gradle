@@ -1,3 +1,5 @@
+import com.modrinth.minotaur.TaskModrinthUpload
+
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
@@ -15,6 +17,7 @@ plugins {
     id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.modrinth.minotaur' version '1.2.1'
 }
 
 allprojects {
@@ -191,6 +194,26 @@ curseforge {
             uploadTask.dependsOn('remapJar')
         }
     }
+}
+
+// Publish to the Modrinth platform
+task publishModrinth (type: TaskModrinthUpload){
+     // Only attempt to run this task if the MODRINTH_API_TOKEN variable is set (and use that as the token), otherwise SKIP it
+    onlyIf { System.getenv("MODRINTH_API_TOKEN") != null }
+    token = System.getenv("MODRINTH_API_TOKEN")
+
+    projectId = project.MODRINTH_PROJECT_ID
+    versionNumber = project.MOD_VERSION
+    // Only upload the remapped (usable) jar
+    uploadFile = remapJar
+    addGameVersion('${MINECRAFT_VERSION}')
+    addLoader('fabric')
+    versionType = project.version.endsWith('alpha') ? 'alpha' : project.version.endsWith('beta') ? 'beta' : 'release'
+
+    // Read and set the changelog
+    final chlog_file = file("${project.rootDir}/CHANGELOG.md")
+    changelog = chlog_file.exists() ? new String(Files.readAllBytes(chlog_file.toPath())) : ''
+    changelog = changelog.concat("\nFor a list of changes, please refer to https://github.com/${project.GITHUB_REPO}/releases/tag/v${project.version}").trim()
 }
 
 // Tag the latest commit and publish a new release to GitHub
