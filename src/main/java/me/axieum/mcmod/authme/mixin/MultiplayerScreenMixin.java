@@ -1,11 +1,10 @@
 package me.axieum.mcmod.authme.mixin;
 
-import me.axieum.mcmod.authme.AuthMe;
-import me.axieum.mcmod.authme.api.Status;
-import me.axieum.mcmod.authme.config.AuthMeConfig;
-import me.axieum.mcmod.authme.gui.AuthScreen;
-import me.axieum.mcmod.authme.gui.widget.AuthButtonWidget;
-import me.axieum.mcmod.authme.util.SessionUtil;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
@@ -13,11 +12,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import me.axieum.mcmod.authme.AuthMe;
+import me.axieum.mcmod.authme.api.Status;
+import me.axieum.mcmod.authme.gui.AuthScreen;
+import me.axieum.mcmod.authme.gui.widget.AuthButtonWidget;
+import me.axieum.mcmod.authme.util.SessionUtil;
 import static me.axieum.mcmod.authme.AuthMe.getConfig;
 
 @Mixin(MultiplayerScreen.class)
@@ -26,7 +26,10 @@ public abstract class MultiplayerScreenMixin extends Screen
     private static Status status = Status.UNKNOWN;
     private static TexturedButtonWidget authButton;
 
-    protected MultiplayerScreenMixin(Text title) { super(title); }
+    protected MultiplayerScreenMixin(Text title)
+    {
+        super(title);
+    }
 
     @Inject(method = "init", at = @At("HEAD"))
     private void init(CallbackInfo info)

@@ -13,12 +13,13 @@ public class PasswordFieldWidget extends TextFieldWidget
     {
         super(font, x, y, width, height, null, msg);
         setMaxLength(256);
-        setRenderTextProvider((value, limit) -> new LiteralText(value).styled(style -> style.withFormatting(Formatting.OBFUSCATED))
-                                                                      .asOrderedText());
+        setRenderTextProvider((value, limit) -> new LiteralText(value)
+            .styled(style -> style.withFormatting(Formatting.OBFUSCATED))
+            .asOrderedText());
 
-//        // NB: Overriding the rendered characters affects interaction, as the
-//        // rendered characters have different widths to the actual underlying text.
-//        setRenderTextProvider((value, limit) -> StringUtils.repeat('\u204E', value.length()));
+        // NB: Overriding the rendered characters affects interaction, as the
+        // rendered characters have different widths to the actual underlying text.
+        // setRenderTextProvider((value, limit) -> StringUtils.repeat('\u204E', value.length()));
     }
 
     @Override

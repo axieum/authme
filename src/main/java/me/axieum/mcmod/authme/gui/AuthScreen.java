@@ -1,8 +1,7 @@
 package me.axieum.mcmod.authme.gui;
 
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
-import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
-import me.axieum.mcmod.authme.util.SessionUtil;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -12,6 +11,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+
+import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
+import me.axieum.mcmod.authme.util.SessionUtil;
 
 public class AuthScreen extends Screen
 {
@@ -26,7 +28,7 @@ public class AuthScreen extends Screen
     {
         super(new TranslatableText("gui.authme.auth.title"));
         this.parentScreen = parentScreen;
-//       this.client = MinecraftClient.getInstance();
+        // this.client = MinecraftClient.getInstance();
         lastUsername = SessionUtil.getSession().getUsername();
         greeting = getGreeting(lastUsername);
     }

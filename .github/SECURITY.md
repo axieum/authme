@@ -2,9 +2,9 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within Chatter, please send an e-mail
-to Axieum at imaxieum@gmail.com.
-All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Auth Me, please send an e-mail
+to Axieum at imaxieum@gmail.com. All security vulnerabilities will be promptly
+addressed.
 
 ### Public PGP Key
 

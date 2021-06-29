@@ -3,17 +3,17 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "Authenticate yourself in Minecraft and re-validate your session.",
+  "description": "Authenticate yourself in Minecraft and re-validate your session",
   "authors": [
     "Axieum"
   ],
   "contact": {
-    "homepage": "https://github.com/Axieum/AuthMe",
-    "sources": "https://github.com/Axieum/AuthMe",
-    "issues": "https://github.com/Axieum/AuthMe/issues"
+    "homepage": "https://github.com/axieum/authme",
+    "sources": "https://github.com/axieum/authme",
+    "issues": "https://github.com/axieum/authme/issues"
   },
   "license": "MIT",
-  "icon": "logo.png",
+  "icon": "assets/authme/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [

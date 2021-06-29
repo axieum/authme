@@ -1,18 +1,20 @@
 package me.axieum.mcmod.authme.mixin;
 
-import me.axieum.mcmod.authme.AuthMe;
-import me.axieum.mcmod.authme.gui.AuthScreen;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.minecraft.client.gui.screen.DisconnectedScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+
+import me.axieum.mcmod.authme.AuthMe;
+import me.axieum.mcmod.authme.gui.AuthScreen;
 
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen
@@ -25,7 +27,10 @@ public abstract class DisconnectedScreenMixin extends Screen
     @Final
     private Screen parent;
 
-    protected DisconnectedScreenMixin(Text title) { super(title); }
+    protected DisconnectedScreenMixin(Text title)
+    {
+        super(title);
+    }
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo info)

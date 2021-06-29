@@ -1,5 +1,9 @@
 package me.axieum.mcmod.authme.util;
 
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.exceptions.AuthenticationException;
@@ -7,20 +11,17 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import com.mojang.util.UUIDTypeAdapter;
-import me.axieum.mcmod.authme.api.Status;
-import me.axieum.mcmod.authme.mixin.MinecraftClientAccess;
-import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccess;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.util.Session.AccountType;
 
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-
+import me.axieum.mcmod.authme.api.Status;
+import me.axieum.mcmod.authme.mixin.MinecraftClientAccess;
+import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccess;
 import static me.axieum.mcmod.authme.AuthMe.LOGGER;
 
-public class SessionUtil
+public final class SessionUtil
 {
     // Session status cache
     public static final long STATUS_TTL = 60000L;
@@ -30,16 +31,18 @@ public class SessionUtil
     /**
      * Authentication Services.
      */
-    private static final YggdrasilAuthenticationService yas;
-    private static final YggdrasilUserAuthentication yua;
-    private static final YggdrasilMinecraftSessionService ymss;
+    private static final YggdrasilAuthenticationService YAS;
+    private static final YggdrasilUserAuthentication YUA;
+    private static final YggdrasilMinecraftSessionService YMSS;
 
     static {
-        yas = new YggdrasilAuthenticationService(MinecraftClient.getInstance().getNetworkProxy(),
+        YAS = new YggdrasilAuthenticationService(MinecraftClient.getInstance().getNetworkProxy(),
                                                  UUID.randomUUID().toString());
-        yua = (YggdrasilUserAuthentication) yas.createUserAuthentication(Agent.MINECRAFT);
-        ymss = (YggdrasilMinecraftSessionService) yas.createMinecraftSessionService();
+        YUA = (YggdrasilUserAuthentication) YAS.createUserAuthentication(Agent.MINECRAFT);
+        YMSS = (YggdrasilMinecraftSessionService) YAS.createMinecraftSessionService();
     }
+
+    private SessionUtil() {}
 
     /**
      * Returns the current session.
@@ -72,8 +75,8 @@ public class SessionUtil
             String id = UUID.randomUUID().toString();
 
             try {
-                ymss.joinServer(profile, token, id);
-                if (ymss.hasJoinedServer(profile, id, null).isComplete()) {
+                YMSS.joinServer(profile, token, id);
+                if (YMSS.hasJoinedServer(profile, id, null).isComplete()) {
                     LOGGER.info("Session is valid");
                     lastStatus = Status.VALID;
                 } else {
@@ -104,18 +107,18 @@ public class SessionUtil
                 LOGGER.info("Logging into a new session with username");
 
                 // Set credentials and login
-                yua.setUsername(username);
-                yua.setPassword(password);
-                yua.logIn();
+                YUA.setUsername(username);
+                YUA.setPassword(password);
+                YUA.logIn();
 
                 // Fetch useful session data
-                final String name = yua.getSelectedProfile().getName();
-                final String uuid = UUIDTypeAdapter.fromUUID(yua.getSelectedProfile().getId());
-                final String token = yua.getAuthenticatedToken();
-                final String type = yua.getUserType().getName();
+                final String name = YUA.getSelectedProfile().getName();
+                final String uuid = UUIDTypeAdapter.fromUUID(YUA.getSelectedProfile().getId());
+                final String token = YUA.getAuthenticatedToken();
+                final String type = YUA.getUserType().getName();
 
                 // Logout after fetching what is needed
-                yua.logOut();
+                YUA.logOut();
 
                 // Persist the new session to the Minecraft instance
                 final Session session = new Session(name, uuid, token, type);

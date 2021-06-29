@@ -1,30 +1,41 @@
 # Contributing
 
+## Discussions
+
+Discussions are a great way to ask for help without undergoing the formalities
+of opening an issue. You are encouraged to use discussions where appropriate.
+
+* With a single question, you show where contributors can improve the user
+  experience
+
 ## Issues
 
-Issues are invaluable to the success of this project.
+Issues are an invaluable asset to the success of this project.
 
 * Ideas enable others to make meaningful contributions
 * Problems highlight where this project is lacking
-* With a single question, you show where contributors can improve the user experience
+* Issues can help others debug their problems
 
 Thank you for creating them.
 
 ## Pull Requests
 
-Pull requests are the best way to get your ideas into this repository.
+Pull requests are the best way to get your ideas into this repository's
+codebase.
 
-When deciding to merge a pull request, the following things are taken into account alongside the
-[Code of Conduct](./CODE_OF_CONDUCT.md):
+When deciding to merge a pull request, the following things are taken into
+account alongside the [Code of Conduct][codeofconduct]:
 
 #### 1. Does it state intent
 
-You should be clear with which problem you're trying to solve within your contribution.
+You should be clear with which problem you are trying to solve within your
+contribution.
 
 #### 2. Is it justified
 
-You should justify the way the change solves the problem (i.e. why this change is better). It may also be worth
-mentioning alternate solutions considered but discarded, if any.
+You should justify the way your change solves the problem, i.e. why this change
+is better. It may also be worth mentioning any alternate solutions considered
+but discarded.
 
 #### 3. Is it of quality
 
@@ -34,27 +45,111 @@ Try to make sure your explanation can be understood without external resources.
 
 Instead of giving a URL to a discussion, try to summarise the relevant points.
 
+## Branches
+
+A branch contains commits to be included in an
+aforementioned [pull request](#pull-requests).
+
+### Branching Strategy
+
+This project follows the [GitHub flow][github:flow] - a lightweight,
+branch-based workflow that supports teams and projects where deployments are
+made regularly.
+
+#### `main`
+
+At any given time, the latest code that exists in production can be found under
+the `main` branch.
+
+#### `next` / `next-major`
+
+An upcoming major release can be found under the `next` or `next-major`
+branches. For example, if `main` is currently on `v2.4.1`, the next major
+release is expected to be on `v3.0.0`.
+
+#### `beta` / `alpha`
+
+The latest Beta and Alpha releases can be found under the `beta` and `alpha`
+branches respectively. Their corresponding versions contain the `-beta`
+or `-alpha` suffixes.
+
+#### `+([0-9])?(.{+([0-9]),x}).x`
+
+Branches that match the given pattern are for maintenance releases, generally
+used for patching older versions of the codebase as outlined below.
+
 ## Commits
 
 Many commits may form an aforementioned pull request.
 
-> :exclamation: This project welcomes the use of the [gitmoji](https://github.com/carloscuesta/gitmoji) standard for
-major commits!
-
 ### Commit Messages
 
-Briefly describe your changes in present-tense, imperative style.
+This project adheres to [Conventional Commits][conventionalcommits] - a
+specification for adding human and machine-readable meaning to commit messages.
 
-> :information_source: A good commit message is 50-72 characters in length.
+It is worth noting that your commit messages will be used to build
+automated [changelogs][changelog]! Hence, code owners may choose to squash your
+commits in any pull requests to ensure they meet our standards outlined in the
+aforementioned Conventional Commits.
 
-**Good**:
+## Versions
 
-`Link the Code of Conduct in the README`, `Add navigation`, `Remove unused dependency`...
+This project follows the [Semantic Versioning][semver] specification.
 
-**Bad**:
+### Major Releases
 
-`Linked the Code of Conduct in the README`, `Add navigation as it was highly requested`, `Inverting a boolean condition`...
+A new feature or fix may introduce a breaking change, this warrants a new major
+version. These releases are not backwards compatible.
 
-### Commit Body
+### Pre-releases
 
-You may add a supplementary, detailed commit body if you deem it necessary.
+As new features and breaking changes are developed, we may decide to deploy
+these only to our most dedicated users to get feedback. These releases are
+identified by a `-beta` or `-alpha` suffix in the version specifier.
+
+### Maintenance Releases
+
+Often, it makes sense to release important patches to older versions so those
+who cannot update due to strict policies may benefit. To track an older major
+version, look for its related branch that follows the
+pattern `+([0-9])?(.{+([0-9]),x}).x`, e.g. `2.x`.
+
+## Continuous Integration & Deployment (CI/CD)
+
+This project uses [GitHub Actions][github:actions] in tandem
+with [semantic-release][semantic-release] to automate building, testing and
+deploying new versions of the codebase.
+
+Please refer to the following [recipes][semantic-release:recipes] for triggering
+new releases.
+
+### How it works?
+
+When new commits make their way into one of the release branches outlined in
+the [Branching Strategy](#branching-strategy), a
+GitHub [workflow][workflow:publish] is triggered. This workflow in turn
+executes [semantic-release][semantic-release].
+
+## Code Style
+
+This project uses [Checkstyle][checkstyle] to assist in ensuring all
+contributions adhere to a specific code style. Our configuration can be found
+under [.checkstyle.xml][checkstyle:config].
+
+You can check the project for any lint errors via `gradle check`.
+
+There are a collection of [Checkstyle tools][checkstyle:tools] available to add
+this functionality to your IDE.
+
+[changelog]: ../CHANGELOG.md
+[checkstyle]: https://github.com/checkstyle/checkstyle
+[checkstyle:config]: ../.checkstyle.xml
+[checkstyle:tools]: https://checkstyle.org/index.html#Related_Tools
+[codeofconduct]: CODE_OF_CONDUCT.md
+[conventionalcommits]: https://www.conventionalcommits.org/
+[github:actions]: https://github.com/features/actions
+[github:flow]: https://guides.github.com/introduction/flow
+[semantic-release]: https://github.com/semantic-release/semantic-release
+[semantic-release:recipes]: https://github.com/semantic-release/semantic-release/blob/v17.4.4/docs/recipes
+[semver]: https://semver.org/
+[workflow:publish]: workflows/publish.yml

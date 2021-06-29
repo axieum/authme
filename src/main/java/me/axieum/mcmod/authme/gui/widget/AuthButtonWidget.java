@@ -1,11 +1,11 @@
 package me.axieum.mcmod.authme.gui.widget;
 
+import java.util.function.BiConsumer;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.function.BiConsumer;
 
 public class AuthButtonWidget extends TexturedButtonWidget
 {
