@@ -1,11 +1,11 @@
 package me.axieum.mcmod.authme.gui.widget;
 
+import java.util.function.BiConsumer;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.function.BiConsumer;
 
 public class AuthButtonWidget extends TexturedButtonWidget
 {
@@ -36,13 +36,6 @@ public class AuthButtonWidget extends TexturedButtonWidget
     }
 
     @Override
-    public void setPos(int x, int y)
-    {
-        this.onSetPos.accept(x, y);
-        super.setPos(x, y);
-    }
-
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
         // Don't handle a button press action here, rather do that on mouse up/release
@@ -55,6 +48,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
     {
         // We'll actually handle a mouse clicked here, i.e. press the button
         // But first, we need to check if we just finished dragging
+        if (didDrag) this.onSetPos.accept(x, y);
         return didDrag ? didDrag = false
                        : super.mouseClicked(mouseX, mouseY, button);
     }

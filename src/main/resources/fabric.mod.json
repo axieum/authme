@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "id": "authme",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Auth Me",
-  "description": "Authenticate yourself in Minecraft and re-validate your session.",
+  "name": "${name}",
+  "description": "Authenticate yourself in Minecraft and re-validate your session",
   "authors": [
     "Axieum"
   ],
   "contact": {
-    "homepage": "https://github.com/Axieum/AuthMe",
-    "sources": "https://github.com/Axieum/AuthMe",
-    "issues": "https://github.com/Axieum/AuthMe/issues"
+    "homepage": "https://github.com/axieum/authme",
+    "sources": "https://github.com/axieum/authme",
+    "issues": "https://github.com/axieum/authme/issues"
   },
   "license": "MIT",
-  "icon": "logo.png",
+  "icon": "assets/authme/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -27,8 +27,13 @@
     "authme.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.7.4",
-    "minecraft": ">=1.16.2",
-    "fabric": "*"
+    "java": ">=16",
+    "minecraft": "1.17.x",
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "cloth-config2": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }

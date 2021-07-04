@@ -1,8 +1,7 @@
 package me.axieum.mcmod.authme.gui;
 
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
-import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
-import me.axieum.mcmod.authme.util.SessionUtil;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -12,6 +11,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+
+import me.axieum.mcmod.authme.gui.widget.PasswordFieldWidget;
+import me.axieum.mcmod.authme.util.SessionUtil;
 
 public class AuthScreen extends Screen
 {
@@ -26,7 +28,7 @@ public class AuthScreen extends Screen
     {
         super(new TranslatableText("gui.authme.auth.title"));
         this.parentScreen = parentScreen;
-//       this.client = MinecraftClient.getInstance();
+        // this.client = MinecraftClient.getInstance();
         lastUsername = SessionUtil.getSession().getUsername();
         greeting = getGreeting(lastUsername);
     }
@@ -52,7 +54,7 @@ public class AuthScreen extends Screen
             // Update the login button submission state
             loginButton.active = canSubmit();
         });
-        children.add(usernameField);
+        addDrawableChild(usernameField);
 
         // Password Text Field
         passwordField = new PasswordFieldWidget(this.client.textRenderer,
@@ -69,7 +71,7 @@ public class AuthScreen extends Screen
             // Reset the cancel button accordingly (after a successful login)
             cancelButton.setMessage(new TranslatableText("gui.authme.auth.button.cancel"));
         });
-        children.add(passwordField);
+        addDrawableChild(passwordField);
 
         // Login Button
         loginButton = new ButtonWidget(width / 2 - 100,
@@ -79,7 +81,7 @@ public class AuthScreen extends Screen
                                        new TranslatableText("gui.authme.auth.button.login.offline"),
                                        button -> submit());
         loginButton.active = false;
-        addButton(loginButton);
+        addDrawableChild(loginButton);
 
         // Cancel Button
         cancelButton = new ButtonWidget(width / 2 - 100,
@@ -88,7 +90,7 @@ public class AuthScreen extends Screen
                                         20,
                                         new TranslatableText("gui.authme.auth.button.cancel"),
                                         button -> onClose());
-        addButton(cancelButton);
+        addDrawableChild(cancelButton);
     }
 
     @Override

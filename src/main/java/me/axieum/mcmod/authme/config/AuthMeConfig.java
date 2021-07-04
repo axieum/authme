@@ -1,16 +1,18 @@
 package me.axieum.mcmod.authme.config;
 
-import io.github.prospector.modmenu.api.ConfigScreenFactory;
-import io.github.prospector.modmenu.api.ModMenuApi;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigManager;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 @Config(name = "authme")
 public class AuthMeConfig implements ConfigData
@@ -32,19 +34,18 @@ public class AuthMeConfig implements ConfigData
      * Registers and prepares a new configuration instance.
      *
      * @return registered config holder
+     * @see AutoConfig#register
      */
-    public static AuthMeConfig init()
+    public static ConfigHolder<AuthMeConfig> init()
     {
-        return AutoConfig.register(AuthMeConfig.class, JanksonConfigSerializer::new)
-                         .getConfig();
-    }
+        // Register the config
+        ConfigHolder<AuthMeConfig> holder = AutoConfig.register(AuthMeConfig.class, JanksonConfigSerializer::new);
 
-    /**
-     * Persists the config to disk.
-     */
-    public static void save()
-    {
-        ((ConfigManager<AuthMeConfig>) AutoConfig.getConfigHolder(AuthMeConfig.class)).save();
+        // Listen for when the server is reloading (i.e. /reload), and reload the config
+        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((s, m) ->
+                AutoConfig.getConfigHolder(AuthMeConfig.class).load());
+
+        return holder;
     }
 
     /**

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/axieum/authme/discussions
+    about: Please ask and answer any questions regarding the mod here
+  - name: About Fabric
+    url: https://fabricmc.net/
+    about: Please find information regarding the Fabric mod loader here
