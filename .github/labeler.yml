@@ -1,0 +1,25 @@
+# https://github.com/marketplace/actions/labeler
+
+# Add 'documentation' label for changes to documentation
+documentation: '**/*.{html,md,txt}'
+
+# Add 'i18n' label for changes to localisation
+i18n: '**/assets/*/lang/*'
+
+# Add 'assets' label for changes to assets (except localisation)
+assets:
+  - any: ['**/assets/**/*', '!**/assets/*/lang/*']
+
+# Add 'ci' label for changes to the deployment process
+ci:
+  - '.releaserc*'
+  - any: ['.github/workflows/**/*', '!.github/workflows/build.yml']
+  - '.github/labeler.yml'
+
+# Add 'build' label for changes to the build process
+build:
+  - '**/fabric.mod.json'
+  - '**/build.gradle'
+  - '**/gradle.properties'
+  - '**/settings.gradle'
+  - '.github/workflows/build.yml'

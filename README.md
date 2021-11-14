@@ -19,10 +19,10 @@ connecting to a server.
 It is a **client-side** only mod, built on the [Fabric][fabric] mod loader and
 is available for modern versions of [Minecraft][minecraft] Java Edition.
 
-## Acknowledgements
+## Alternatives
 
-- [ReAuth][reauth] by TechnicianLP
-    - The original session re-validator mod for Minecraft `<= 1.12.2`
+- [ReAuth][reauth_mod] by TechnicianLP
+- [OAuth][oauth_mod] by Sintinium
 
 ## Contributing
 
@@ -44,6 +44,7 @@ Auth Me is open-sourced software licenced under the [MIT licence][licence].
 [fabric]: https://fabricmc.net/
 [licence]: https://opensource.org/licenses/MIT
 [minecraft]: https://minecraft.net/
-[reauth]: https://github.com/TechnicianLP/ReAuth
+[oauth_mod]: https://github.com/Sintinium/oauth
+[reauth_mod]: https://github.com/TechnicianLP/ReAuth
 [releases]: https://github.com/axieum/authme/releases
 [security]: .github/SECURITY.md

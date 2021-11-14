@@ -7,62 +7,63 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
-import me.axieum.mcmod.authme.AuthMe;
-import me.axieum.mcmod.authme.api.Status;
-import me.axieum.mcmod.authme.gui.AuthScreen;
-import me.axieum.mcmod.authme.gui.widget.AuthButtonWidget;
-import me.axieum.mcmod.authme.util.SessionUtil;
-import static me.axieum.mcmod.authme.AuthMe.getConfig;
+import me.axieum.mcmod.authme.api.gui.widget.AuthButtonWidget;
+import me.axieum.mcmod.authme.api.util.SessionUtils;
+import me.axieum.mcmod.authme.impl.gui.AuthMethodScreen;
+import static me.axieum.mcmod.authme.impl.AuthMe.CONFIG;
+import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
+import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
 
+/**
+ * Injects a button into the multiplayer screen to open the authentication screen.
+ */
 @Mixin(MultiplayerScreen.class)
 public abstract class MultiplayerScreenMixin extends Screen
 {
-    private static Status status = Status.UNKNOWN;
-    private static TexturedButtonWidget authButton;
-
-    protected MultiplayerScreenMixin(Text title)
+    private MultiplayerScreenMixin(Text title)
     {
         super(title);
     }
 
+    /**
+     * Injects into the creation of the screen and adds the authentication button.
+     *
+     * @param ci injection callback info
+     */
     @Inject(method = "init", at = @At("HEAD"))
-    private void init(CallbackInfo info)
+    private void init(CallbackInfo ci)
     {
-        // Inject the authenticate button at top left, using lock texture or fallback text
-        AuthMe.LOGGER.debug("Injecting authentication button into multiplayer screen");
-        authButton = new AuthButtonWidget(getConfig().authButton.x,
-                                          getConfig().authButton.y,
-                                          button -> this.client.openScreen(new AuthScreen(this)),
-                                          (x, y) -> {
-                                              // Sync configuration with updated button position
-                                              getConfig().authButton.x = x;
-                                              getConfig().authButton.y = y;
-                                              AuthMe.CONFIG.save();
-                                          },
-                                          new TranslatableText("gui.authme.multiplayer.button.auth"),
-                                          this);
-        this.addDrawableChild(authButton);
+        LOGGER.info("Adding auth button to the multiplayer screen");
+        assert client != null;
 
-        // Fetch current session status
-        MultiplayerScreenMixin.status = Status.UNKNOWN;
-        SessionUtil.getStatus().thenAccept(status -> MultiplayerScreenMixin.status = status);
-    }
-
-    @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info)
-    {
-        // Draw status text/icon on button
-        drawCenteredText(matrices,
-                         this.client.textRenderer,
-                         Formatting.BOLD + status.toString(),
-                         authButton.x + authButton.getWidth(),
-                         authButton.y - 1,
-                         status.color);
+        // Create and add the button to the screen
+        addDrawableChild(
+            new AuthButtonWidget(
+                this,
+                getConfig().authButton.x,
+                getConfig().authButton.y,
+                btn -> client.setScreen(new AuthMethodScreen(this)),
+                // Optionally, enable button dragging
+                getConfig().authButton.draggable ? btn -> {
+                    // Sync configuration with the updated button position
+                    LOGGER.info("Moved the auth button to {}, {}", btn.x, btn.y);
+                    getConfig().authButton.x = btn.x;
+                    getConfig().authButton.y = btn.y;
+                    CONFIG.save();
+                } : null,
+                // Add a tooltip to greet the player
+                (btn, mtx, x, y) -> renderTooltip(mtx, new TranslatableText(
+                    "gui.authme.button.auth.tooltip",
+                    new LiteralText(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
+                ), x, y),
+                // Non-visible text, useful for screen narrator
+                new TranslatableText("gui.authme.button.auth")
+            )
+        );
     }
 }

@@ -69,6 +69,7 @@
     <!-- See https://checkstyle.org/config_annotation.html -->
     <module name="AnnotationLocation"/>
     <module name="MissingOverride"/>
+    <module name="SuppressWarningsHolder"/>
 
     <!-- Checks for modifiers                             -->
     <!-- See https://checkstyle.org/config_modifiers.html -->
@@ -189,5 +190,9 @@
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value="module\-info\.java$"/>
   </module>
+
+  <!-- Enables suppression of audit events                                   -->
+  <!-- See https://checkstyle.org/config_filters.html#SuppressWarningsFilter -->
+  <module name="SuppressWarningsFilter"/>
 
 </module>

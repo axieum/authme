@@ -7,11 +7,10 @@
   "server": [],
   "client": [
     "DisconnectedScreenMixin",
-    "MinecraftClientAccess",
+    "MinecraftClientAccessor",
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
-    "RealmsMainScreenAccess",
-    "ScreenAccess"
+    "RealmsMainScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
