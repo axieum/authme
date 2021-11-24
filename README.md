@@ -12,6 +12,8 @@ Authenticate yourself in Minecraft and re-validate your session
 
 </div>
 
+<img alt="Auth Me Demo" src="demo.gif" width="50%" align="right">
+
 Auth Me is a **Minecraft mod** that brings account authentication into the game
 in the efforts of overcoming the infamous session validation error when
 connecting to a server.
@@ -19,10 +21,10 @@ connecting to a server.
 It is a **client-side** only mod, built on the [Fabric][fabric] mod loader and
 is available for modern versions of [Minecraft][minecraft] Java Edition.
 
-## Acknowledgements
+#### Alternatives
 
-- [ReAuth][reauth] by TechnicianLP
-    - The original session re-validator mod for Minecraft `<= 1.12.2`
+- [ReAuth][reauth_mod] by TechnicianLP
+- [OAuth][oauth_mod] by Sintinium
 
 ## Contributing
 
@@ -44,6 +46,7 @@ Auth Me is open-sourced software licenced under the [MIT licence][licence].
 [fabric]: https://fabricmc.net/
 [licence]: https://opensource.org/licenses/MIT
 [minecraft]: https://minecraft.net/
-[reauth]: https://github.com/TechnicianLP/ReAuth
+[oauth_mod]: https://github.com/Sintinium/oauth
+[reauth_mod]: https://github.com/TechnicianLP/ReAuth
 [releases]: https://github.com/axieum/authme/releases
 [security]: .github/SECURITY.md
