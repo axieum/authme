@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/axieum/authme/compare/v2.0.0...v2.1.0) (2021-12-01)
+
+
+### Features
+
+* upgrade to Minecraft 1.18 ([4f01859](https://github.com/axieum/authme/commit/4f018596d547cd1255d43219367461fa7996621e))
+
 # [2.0.0](https://github.com/axieum/authme/compare/v1.5.0...v2.0.0) (2021-11-24)
 
 
