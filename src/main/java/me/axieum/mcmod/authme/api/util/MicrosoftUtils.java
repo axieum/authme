@@ -3,6 +3,7 @@ package me.axieum.mcmod.authme.api.util;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -119,11 +120,10 @@ public final class MicrosoftUtils
 
                 server.createContext("/callback", exchange -> {
                     // Parse the query parameters
-                    final Map<String, String> query = URLEncodedUtils.parse(exchange.getRequestURI(), "UTF-8")
-                                                                     .stream()
-                                                                     .collect(Collectors.toMap(
-                                                                         NameValuePair::getName, NameValuePair::getValue
-                                                                     ));
+                    final Map<String, String> query = URLEncodedUtils
+                        .parse(exchange.getRequestURI(), StandardCharsets.UTF_8)
+                        .stream()
+                        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
                     // Check the returned parameter values
                     if (!state.equals(query.get("state"))) {
@@ -507,7 +507,12 @@ public final class MicrosoftUtils
                                    LOGGER.info("Fetched Minecraft profile! (name={}, uuid={})",
                                        json.get("name").getAsString(), uuid);
                                    return new Session(
-                                       json.get("name").getAsString(), uuid, mcToken, Session.AccountType.MOJANG.name()
+                                       json.get("name").getAsString(),
+                                       uuid,
+                                       mcToken,
+                                       Optional.empty(),
+                                       Optional.empty(),
+                                       Session.AccountType.MOJANG
                                    );
                                })
                                // Otherwise, throw an exception with the error description if present
