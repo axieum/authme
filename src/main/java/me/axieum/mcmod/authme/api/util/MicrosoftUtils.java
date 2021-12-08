@@ -121,7 +121,7 @@ public final class MicrosoftUtils
                 server.createContext("/callback", exchange -> {
                     // Parse the query parameters
                     final Map<String, String> query = URLEncodedUtils
-                        .parse(exchange.getRequestURI(), StandardCharsets.UTF_8)
+                        .parse(exchange.getRequestURI(), StandardCharsets.UTF_8.name())
                         .stream()
                         .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
@@ -510,9 +510,7 @@ public final class MicrosoftUtils
                                        json.get("name").getAsString(),
                                        uuid,
                                        mcToken,
-                                       Optional.empty(),
-                                       Optional.empty(),
-                                       Session.AccountType.MOJANG
+                                       Session.AccountType.MOJANG.name()
                                    );
                                })
                                // Otherwise, throw an exception with the error description if present

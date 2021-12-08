@@ -25,7 +25,7 @@ public class PasswordFieldWidget extends TextFieldWidget
     {
         super(textRenderer, x, y, width, height, text);
         setRenderTextProvider(
-            (val, limit) -> new LiteralText(val).styled(style -> style.withObfuscated(true)).asOrderedText()
+            (val, limit) -> new LiteralText(val).styled(style -> style.obfuscated(true)).asOrderedText()
         );
         // NB: Overriding the rendered characters affects interaction, as the
         // rendered characters have different widths to the actual underlying text.
