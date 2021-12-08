@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 /**
  * A text field widget for masking typed passwords.
@@ -25,7 +26,7 @@ public class PasswordFieldWidget extends TextFieldWidget
     {
         super(textRenderer, x, y, width, height, text);
         setRenderTextProvider(
-            (val, limit) -> new LiteralText(val).styled(style -> style.withObfuscated(true)).asOrderedText()
+            (val, limit) -> new LiteralText(val).styled(s -> s.withFormatting(Formatting.OBFUSCATED)).asOrderedText()
         );
         // NB: Overriding the rendered characters affects interaction, as the
         // rendered characters have different widths to the actual underlying text.

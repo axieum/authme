@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
@@ -238,17 +239,23 @@ public class AuthButtonWidget extends TexturedButtonWidget
         super.renderButton(matrices, mouseX, mouseY, delta);
 
         // Render the current session status
-        RenderSystem.setShaderTexture(0, AuthMe.WIDGETS_TEXTURE);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(AuthMe.WIDGETS_TEXTURE);
+        RenderSystem.enableDepthTest();
         final int u;
         switch (sessionStatus) {
-            case VALID -> u = 0;
-            case OFFLINE -> u = 8;
-            default -> u = 16;
+            case VALID:
+                u = 0;
+                break;
+            case OFFLINE:
+                u = 8;
+                break;
+            default:
+                u = 16;
         }
         drawTexture(matrices, x + width - 6, y - 1, u, 60, 8, 8, 128, 128);
 
         // Render the tooltip on top of the session status
-        if (isHovered()) renderTooltip(matrices, mouseX, mouseY);
+        if (isHovered()) renderToolTip(matrices, mouseX, mouseY);
     }
 
     /**

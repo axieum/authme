@@ -52,7 +52,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
         // Add a cancel button to abort the task
         final ButtonWidget cancelBtn;
-        addDrawableChild(
+        addButton(
             cancelBtn = new ButtonWidget(
                 width / 2 - 50, height / 2 + 22, 100, 20,
                 new TranslatableText("gui.cancel"),

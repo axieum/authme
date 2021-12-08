@@ -31,11 +31,6 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
     @Shadow
     private Text line1;
 
-    private RealmsGenericErrorScreenMixin(Text title)
-    {
-        super(title);
-    }
-
     /**
      * Injects into the creation of the screen and adds the authentication button.
      *
@@ -51,14 +46,14 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
 
             // Create and add the button to the screen above the back button
             final ButtonWidget backButton = (ButtonWidget) children().get(0);
-            addDrawableChild(
+            addButton(
                 new ButtonWidget(
                     backButton.x,
                     backButton.y - backButton.getHeight() - 4,
                     backButton.getWidth(),
                     backButton.getHeight(),
                     new TranslatableText("gui.authme.button.relogin"),
-                    btn -> client.setScreen(new AuthMethodScreen(parent))
+                    btn -> client.openScreen(new AuthMethodScreen(parent))
                 )
             );
         }

@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
     id 'com.modrinth.minotaur' version '1.2.1'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.7-SNAPSHOT'
 }
 
 allprojects {
@@ -16,7 +16,7 @@ allprojects {
     version = project.mod_version
     archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
 
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
     // Declare dependencies
     dependencies {

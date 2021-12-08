@@ -1,6 +1,5 @@
 package me.axieum.mcmod.authme.api.util;
 
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -87,9 +86,7 @@ public final class SessionUtils
             username,
             UUID.nameUUIDFromBytes(("offline:" + username).getBytes()).toString(),
             "invalidtoken",
-            Optional.empty(),
-            Optional.empty(),
-            Session.AccountType.LEGACY
+            Session.AccountType.LEGACY.name()
         );
     }
 

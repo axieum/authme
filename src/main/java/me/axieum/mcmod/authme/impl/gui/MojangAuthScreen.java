@@ -60,7 +60,7 @@ public class MojangAuthScreen extends AuthScreen
         assert client != null;
 
         // Add a username text field
-        addDrawableChild(
+        addChild(
             usernameField = new TextFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 - 39, 200, 20,
@@ -74,7 +74,7 @@ public class MojangAuthScreen extends AuthScreen
         usernameField.setChangedListener(value -> loginBtn.active = isFormValid());
 
         // Add a password text field
-        addDrawableChild(
+        addChild(
             passwordField = new PasswordFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 + 6, 200, 20,
@@ -84,7 +84,7 @@ public class MojangAuthScreen extends AuthScreen
         passwordField.setChangedListener(value -> loginBtn.active = isFormValid());
 
         // Add a login button to submit the form
-        addDrawableChild(
+        addButton(
             loginBtn = new ButtonWidget(
                 width / 2 - 100 - 2, height / 2 + 59, 100, 20,
                 new TranslatableText("gui.authme.mojang.button.login"),
@@ -94,7 +94,7 @@ public class MojangAuthScreen extends AuthScreen
         loginBtn.active = isFormValid();
 
         // Add a cancel button to abort the task
-        addDrawableChild(
+        addButton(
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 59, 100, 20,
                 new TranslatableText("gui.cancel"),
@@ -165,7 +165,7 @@ public class MojangAuthScreen extends AuthScreen
      */
     public boolean isFormValid()
     {
-        return !usernameField.getText().isBlank() && !passwordField.getText().isBlank();
+        return !usernameField.getText().isEmpty() && !passwordField.getText().isEmpty();
     }
 
     @Override
@@ -191,6 +191,10 @@ public class MojangAuthScreen extends AuthScreen
         if (status != null) {
             drawCenteredText(matrices, client.textRenderer, status, width / 2, loginBtn.y - 20, 0xdddddd);
         }
+
+        // Render any text field widgets
+        usernameField.render(matrices, mouseX, mouseY, delta);
+        passwordField.render(matrices, mouseX, mouseY, delta);
 
         // Cascade the rendering
         super.render(matrices, mouseX, mouseY, delta);

@@ -46,11 +46,11 @@ public class AuthMethodScreen extends Screen
         );
 
         // Add a button for the 'Microsoft' authentication method
-        addDrawableChild(
+        addButton(
             new TexturedButtonWidget(
                 width / 2 - 20 - 10 - 4, height / 2 - 5, 20, 20,
                 0, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new MicrosoftAuthScreen(this, parentScreen)),
+                button -> client.openScreen(new MicrosoftAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
                     mtx, new TranslatableText("gui.authme.method.button.microsoft"), x, y
                 ),
@@ -59,11 +59,11 @@ public class AuthMethodScreen extends Screen
         );
 
         // Add a button for the 'Mojang (or legacy)' authentication method
-        addDrawableChild(
+        addButton(
             new TexturedButtonWidget(
                 width / 2 - 10, height / 2 - 5, 20, 20,
                 20, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new MojangAuthScreen(this, parentScreen)),
+                button -> client.openScreen(new MojangAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
                     mtx, new TranslatableText("gui.authme.method.button.mojang"), x, y
                 ),
@@ -72,11 +72,11 @@ public class AuthMethodScreen extends Screen
         );
 
         // Add a button for the 'Offline' authentication method
-        addDrawableChild(
+        addButton(
             new TexturedButtonWidget(
                 width / 2 + 10 + 4, height / 2 - 5, 20, 20,
                 40, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new OfflineAuthScreen(this, parentScreen)),
+                button -> client.openScreen(new OfflineAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
                     mtx, new TranslatableText("gui.authme.method.button.offline"), x, y
                 ),
@@ -85,7 +85,7 @@ public class AuthMethodScreen extends Screen
         );
 
         // Add a button to go back
-        addDrawableChild(
+        addButton(
             new ButtonWidget(
                 width / 2 - 50, height / 2 + 27, 100, 20,
                 new TranslatableText("gui.back"),
@@ -117,6 +117,6 @@ public class AuthMethodScreen extends Screen
     @Override
     public void onClose()
     {
-        if (client != null) client.setScreen(parentScreen);
+        if (client != null) client.openScreen(parentScreen);
     }
 }

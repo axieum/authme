@@ -1,6 +1,5 @@
 package me.axieum.mcmod.authme.api.util;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
@@ -50,14 +49,14 @@ public final class MojangUtils
                 final String name = yua.getSelectedProfile().getName();
                 final String uuid = UUIDTypeAdapter.fromUUID(yua.getSelectedProfile().getId());
                 final String token = yua.getAuthenticatedToken();
-                final Session.AccountType type = Session.AccountType.byName(yua.getUserType().getName());
+                final String type = yua.getUserType().getName();
 
                 // Logout after fetching what is needed
                 yua.logOut();
 
                 // Finally, log success and return
                 LOGGER.info("Successfully logged into Minecraft via Mojang (or legacy)! ({})", name);
-                return new Session(name, uuid, token, Optional.empty(), Optional.empty(), type);
+                return new Session(name, uuid, token, type);
             } catch (Exception e) {
                 LOGGER.error("Unable to login to Minecraft via Mojang (or legacy)!", e);
                 throw new CompletionException(e);

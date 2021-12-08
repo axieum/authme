@@ -55,7 +55,7 @@ public abstract class AuthScreen extends Screen
     @Override
     public void onClose()
     {
-        if (client != null) client.setScreen(success ? successScreen : parentScreen);
+        if (client != null) client.openScreen(success ? successScreen : parentScreen);
     }
 
     @Override

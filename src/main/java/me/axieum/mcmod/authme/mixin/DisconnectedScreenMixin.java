@@ -51,14 +51,14 @@ public abstract class DisconnectedScreenMixin extends Screen
 
             // Create and add the button to the screen where the back button is
             final ButtonWidget backButton = (ButtonWidget) children().get(0);
-            addDrawableChild(
+            addButton(
                 new ButtonWidget(
                     backButton.x,
                     backButton.y,
                     backButton.getWidth(),
                     backButton.getHeight(),
                     new TranslatableText("gui.authme.button.relogin"),
-                    btn -> client.setScreen(new AuthMethodScreen(parent))
+                    btn -> client.openScreen(new AuthMethodScreen(parent))
                 )
             );
 
@@ -77,13 +77,11 @@ public abstract class DisconnectedScreenMixin extends Screen
     {
         if (reason instanceof TranslatableText) {
             final String key = ((TranslatableText) reason).getKey();
-            return key != null && switch (key) {
-                case "multiplayer.disconnect.duplicate_login",
-                    "multiplayer.disconnect.unverified_username",
-                    "multiplayer.disconnect.not_whitelisted",
-                    "multiplayer.disconnect.name_taken" -> true;
-                default -> key.startsWith("disconnect.loginFailed");
-            };
+            return key != null && (key.startsWith("disconnect.loginFailed")
+                || "multiplayer.disconnect.duplicate_login".equals(key)
+                || "multiplayer.disconnect.unverified_username".equals(key)
+                || "multiplayer.disconnect.not_whitelisted".equals(key)
+                || "multiplayer.disconnect.name_taken".equals(key));
         }
         return false;
     }

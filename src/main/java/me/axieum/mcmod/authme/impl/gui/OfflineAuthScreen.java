@@ -44,7 +44,7 @@ public class OfflineAuthScreen extends AuthScreen
         assert client != null;
 
         // Add a username text field
-        addDrawableChild(
+        addChild(
             usernameField = new TextFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 - 6, 200, 20,
@@ -58,7 +58,7 @@ public class OfflineAuthScreen extends AuthScreen
         usernameField.setChangedListener(value -> loginBtn.active = isFormValid());
 
         // Add a login button to submit the form
-        addDrawableChild(
+        addButton(
             loginBtn = new ButtonWidget(
                 width / 2 - 100 - 2, height / 2 + 26, 100, 20,
                 new TranslatableText("gui.authme.offline.button.login"),
@@ -68,7 +68,7 @@ public class OfflineAuthScreen extends AuthScreen
         loginBtn.active = isFormValid();
 
         // Add a cancel button to abort the task
-        addDrawableChild(
+        addButton(
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 26, 100, 20,
                 new TranslatableText("gui.cancel"),
@@ -116,7 +116,7 @@ public class OfflineAuthScreen extends AuthScreen
      */
     public boolean isFormValid()
     {
-        return !usernameField.getText().isBlank();
+        return !usernameField.getText().isEmpty();
     }
 
     @Override
@@ -134,6 +134,9 @@ public class OfflineAuthScreen extends AuthScreen
         drawTextWithShadow(
             matrices, client.textRenderer, usernameField.getMessage(), usernameField.x, usernameField.y - 16, 0xa0a0a0
         );
+
+        // Render any text field widgets
+        usernameField.render(matrices, mouseX, mouseY, delta);
 
         // Cascade the rendering
         super.render(matrices, mouseX, mouseY, delta);

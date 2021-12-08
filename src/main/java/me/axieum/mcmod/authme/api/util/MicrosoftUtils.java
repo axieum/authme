@@ -4,7 +4,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
@@ -121,7 +122,7 @@ public final class MicrosoftUtils
                 server.createContext("/callback", exchange -> {
                     // Parse the query parameters
                     final Map<String, String> query = URLEncodedUtils
-                        .parse(exchange.getRequestURI(), StandardCharsets.UTF_8)
+                        .parse(exchange.getRequestURI(), StandardCharsets.UTF_8.name())
                         .stream()
                         .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 
@@ -177,7 +178,7 @@ public final class MicrosoftUtils
                     // Wait for the server to stop and return the auth code, if any captured
                     latch.await();
                     return Optional.ofNullable(authCode.get())
-                                   .filter(code -> !code.isBlank())
+                                   .filter(code -> !code.isEmpty())
                                    // If present, log success and return
                                    .map(code -> {
                                        LOGGER.info("Acquired Microsoft auth code! ({})",
@@ -223,7 +224,7 @@ public final class MicrosoftUtils
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.setEntity(new UrlEncodedFormEntity(
-                    List.of(
+                    Arrays.asList(
                         new BasicNameValuePair("client_id", getConfig().methods.microsoft.clientId),
                         new BasicNameValuePair("grant_type", "authorization_code"),
                         new BasicNameValuePair("code", authCode),
@@ -245,7 +246,7 @@ public final class MicrosoftUtils
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
                 return Optional.ofNullable(json.get("access_token"))
                                .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                               .filter(token -> !token.isEmpty())
                                // If present, log success and return
                                .map(token -> {
                                    LOGGER.info("Acquired Microsoft access token! ({})",
@@ -290,16 +291,15 @@ public final class MicrosoftUtils
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/json");
                 request.setEntity(new StringEntity(
-                    String.format("""
-                        {
-                          "Properties": {
-                            "AuthMethod": "RPS",
-                            "SiteName": "user.auth.xboxlive.com",
-                            "RpsTicket": "d=%s"
-                          },
-                          "RelyingParty": "http://auth.xboxlive.com",
-                          "TokenType": "JWT"
-                        }""", accessToken)
+                    String.format("{"
+                        + "  \"Properties\": {"
+                        + "    \"AuthMethod\": \"RPS\","
+                        + "    \"SiteName\": \"user.auth.xboxlive.com\","
+                        + "    \"RpsTicket\": \"d=%s\""
+                        + "  },"
+                        + "  \"RelyingParty\": \"http://auth.xboxlive.com\","
+                        + "  \"TokenType\": \"JWT\""
+                        + "}", accessToken)
                 ));
 
                 // Send the request on the HTTP client
@@ -314,7 +314,7 @@ public final class MicrosoftUtils
                                         : new JsonObject();
                 return Optional.ofNullable(json.get("Token"))
                                .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                               .filter(token -> !token.isEmpty())
                                // If present, log success and return
                                .map(token -> {
                                    LOGGER.info("Acquired Xbox Live access token! ({})",
@@ -360,15 +360,14 @@ public final class MicrosoftUtils
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/json");
                 request.setEntity(new StringEntity(
-                    String.format("""
-                        {
-                          "Properties": {
-                            "SandboxId": "RETAIL",
-                            "UserTokens": ["%s"]
-                          },
-                          "RelyingParty": "rp://api.minecraftservices.com/",
-                          "TokenType": "JWT"
-                        }""", accessToken)
+                    String.format("{"
+                        + "  \"Properties\": {"
+                        + "    \"SandboxId\": \"RETAIL\","
+                        + "    \"UserTokens\": [\"%s\"]"
+                        + "  },"
+                        + "  \"RelyingParty\": \"rp://api.minecraftservices.com/\","
+                        + "  \"TokenType\": \"JWT\""
+                        + "}", accessToken)
                 ));
 
                 // Send the request on the HTTP client
@@ -383,7 +382,7 @@ public final class MicrosoftUtils
                                         : new JsonObject();
                 return Optional.ofNullable(json.get("Token"))
                                .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                               .filter(token -> !token.isEmpty())
                                // If present, extract the user hash, log success and return
                                .map(token -> {
                                    // Extract the user hash
@@ -394,7 +393,10 @@ public final class MicrosoftUtils
                                    // Return an immutable mapping of the token and user hash
                                    LOGGER.info("Acquired Xbox Live XSTS token! (token={}, uhs={})",
                                        StringUtils.abbreviateMiddle(token, "...", 32), uhs);
-                                   return Map.of("Token", token, "uhs", uhs);
+                                   final Map<String, String> map = new HashMap<>(2);
+                                   map.put("Token", token);
+                                   map.put("uhs", uhs);
+                                   return map;
                                })
                                // Otherwise, throw an exception with the error description if present
                                .orElseThrow(() -> new Exception(
@@ -447,7 +449,7 @@ public final class MicrosoftUtils
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
                 return Optional.ofNullable(json.get("access_token"))
                                .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                               .filter(token -> !token.isEmpty())
                                // If present, log success and return
                                .map(token -> {
                                    LOGGER.info("Acquired Minecraft access token! ({})",
@@ -501,7 +503,7 @@ public final class MicrosoftUtils
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
                 return Optional.ofNullable(json.get("id"))
                                .map(JsonElement::getAsString)
-                               .filter(uuid -> !uuid.isBlank())
+                               .filter(uuid -> !uuid.isEmpty())
                                // If present, log success, build a new session and return
                                .map(uuid -> {
                                    LOGGER.info("Fetched Minecraft profile! (name={}, uuid={})",
@@ -510,9 +512,7 @@ public final class MicrosoftUtils
                                        json.get("name").getAsString(),
                                        uuid,
                                        mcToken,
-                                       Optional.empty(),
-                                       Optional.empty(),
-                                       Session.AccountType.MOJANG
+                                       Session.AccountType.MOJANG.name()
                                    );
                                })
                                // Otherwise, throw an exception with the error description if present

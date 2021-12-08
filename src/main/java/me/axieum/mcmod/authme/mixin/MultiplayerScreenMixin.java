@@ -42,12 +42,12 @@ public abstract class MultiplayerScreenMixin extends Screen
         assert client != null;
 
         // Create and add the button to the screen
-        addDrawableChild(
+        addButton(
             new AuthButtonWidget(
                 this,
                 getConfig().authButton.x,
                 getConfig().authButton.y,
-                btn -> client.setScreen(new AuthMethodScreen(this)),
+                btn -> client.openScreen(new AuthMethodScreen(this)),
                 // Optionally, enable button dragging
                 getConfig().authButton.draggable ? btn -> {
                     // Sync configuration with the updated button position
