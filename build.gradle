@@ -172,10 +172,7 @@ publishing {
     // Declare all publications
     publications {
         mavenJava(MavenPublication) {
-            // Main
-            artifact(remapJar) { builtBy remapJar }
-            // Sources
-            artifact(sourcesJar) { builtBy remapSourcesJar }
+            from components.java
         }
     }
 
