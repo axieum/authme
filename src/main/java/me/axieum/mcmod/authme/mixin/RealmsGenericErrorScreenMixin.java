@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.mixin;
 
+import com.mojang.datafixers.util.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +30,8 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
     private Screen parent;
 
     @Shadow
-    private Text line1;
+    @Final
+    private Pair<Text, Text> errorMessages;
 
     private RealmsGenericErrorScreenMixin(Text title)
     {
@@ -45,7 +47,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
     private void init(CallbackInfo ci)
     {
         // Determine if the disconnection reason is user or session related
-        if (isUserRelated(line1)) {
+        if (isUserRelated(errorMessages.getFirst())) {
             LOGGER.info("Adding auth button to the Realms error screen");
             assert client != null;
 
