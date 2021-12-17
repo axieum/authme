@@ -20,6 +20,8 @@ on:
       - .github/workflows/publish.yml
       - .releaserc*
       - LICENCE.txt
+  workflow_dispatch:
+
 
 jobs:
   publish:
