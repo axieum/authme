@@ -1,3 +1,16 @@
+# [2.2.0](https://github.com/axieum/authme/compare/v2.1.0...v2.2.0) (2021-12-17)
+
+
+### Bug Fixes
+
+* Realms screen ([c804805](https://github.com/axieum/authme/commit/c8048056a414ca817ff7450e6ea4cf3d860049ea))
+
+
+### Features
+
+* add Chinese translation ([738f822](https://github.com/axieum/authme/commit/738f822b2235baaad00e92dba04ee3bb073a8125))
+* add German translation ([f3725e6](https://github.com/axieum/authme/commit/f3725e656d7249b48068698b7692ef3eb5698b75))
+
 # [2.1.0](https://github.com/axieum/authme/compare/v2.0.0...v2.1.0) (2021-12-01)
 
 
