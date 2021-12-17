@@ -1,0 +1,57 @@
+{
+    "gui.authme.button.auth": "Autentykacja",
+    "gui.authme.button.auth.tooltip": "Witaj, %s!",
+    "gui.authme.button.relogin": "Zaloguj ponownie",
+    
+    "gui.authme.error.credentials": "Nieprawidłowa nazwa użytkownika lub hasło!",
+    "gui.authme.error.generic": "Coś poszło nie tak! Proszę wrócić i spróbować ponownie.",
+    "gui.authme.error.timeout": "Upłynął limit czasu! Proszę wrócić i spróbować ponownie.",
+    
+    "gui.authme.toast.greeting": "Witaj, %s!",
+    
+    "gui.authme.method.title": "Wybierz metodę logowania",
+    "gui.authme.method.greeting": "Witaj, %s!",
+    "gui.authme.method.button.microsoft": "Microsoft",
+    "gui.authme.method.button.mojang": "Mojang (lub stara metoda)",
+    "gui.authme.method.button.offline": "Offline",
+    
+    "gui.authme.microsoft.title": "Zaloguj przez Microsoft",
+    "gui.authme.microsoft.browser": "Możesz już zamknąć to okno i powrócić do Minecrafta!",
+    "gui.authme.microsoft.status.checkBrowser": "Proszę sprawdzić przeglądarkę...",
+    "gui.authme.microsoft.status.msAccessToken": "Pozyskiwanie tokenu dostępu Microsoft...",
+    "gui.authme.microsoft.status.xboxAccessToken": "Pozyskiwanie tokenu dostępu Xbox...",
+    "gui.authme.microsoft.status.xboxXstsToken": "Pozyskiwanie tokenu XSTS Xbox...",
+    "gui.authme.microsoft.status.mcAccessToken": "Pozyskiwanie tokenu dostępu Minecraft...",
+    "gui.authme.microsoft.status.mcProfile": "Pobieranie Twojego profilu Minecraft...",
+    
+    "gui.authme.mojang.title": "Zaloguj przez Mojang (stara metoda)",
+    "gui.authme.mojang.field.username": "Nazwa użytkownika / Email",
+    "gui.authme.mojang.field.password": "Hasło",
+    "gui.authme.mojang.button.login": "Login",
+    "gui.authme.mojang.status.loggingIn": "Logowanie do Mojang...",
+    
+    "gui.authme.offline.title": "Zaloguj offline",
+    "gui.authme.offline.field.username": "Wybierz nazwę użytkownika",
+    "gui.authme.offline.button.login": "Graj offline",
+    
+    "text.autoconfig.authme.title": "Konfiguracja Auth Me",
+    "text.autoconfig.authme.option.authButton": "Przycisk Auth",
+    "text.autoconfig.authme.option.authButton.x": "Pozycja X",
+    "text.autoconfig.authme.option.authButton.y": "Pozycja Y",
+    "text.autoconfig.authme.option.authButton.draggable": "Można przesuwać?",
+    "text.autoconfig.authme.option.methods": "Metody logowania",
+    "text.autoconfig.authme.option.methods.microsoft": "Microsoft",
+    "text.autoconfig.authme.option.methods.microsoft.prompt": "Powiadomienie o interakcji",
+    "text.autoconfig.authme.option.methods.microsoft.port": "Port Url wywołania zwrotnego OAuth2",
+    "text.autoconfig.authme.option.methods.microsoft.clientId": "ID klienta OAuth2",
+    "text.autoconfig.authme.option.methods.microsoft.authorizeUrl": "Url autoryzacji OAuth2",
+    "text.autoconfig.authme.option.methods.microsoft.tokenUrl": "Url tokenu dostępu OAuth2",
+    "text.autoconfig.authme.option.methods.microsoft.xboxAuthUrl": "Url autentykacji Xbox",
+    "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Url autentykacji XSTS Xbox",
+    "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Url autentykacji Minecraft",
+    "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Url profilu Minecraft",
+    "text.autoconfig.authme.option.methods.mojang": "Mojang (stara metoda)",
+    "text.autoconfig.authme.option.methods.mojang.lastUsername": "Ostatnia nazwa użytkownika",
+    "text.autoconfig.authme.option.methods.offline": "Offline",
+    "text.autoconfig.authme.option.methods.offline.lastUsername": "Ostatnia nazwa użytkownika"
+}
