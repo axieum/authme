@@ -72,7 +72,7 @@ public class OfflineAuthScreen extends AuthScreen
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 26, 100, 20,
                 new TranslatableText("gui.cancel"),
-                button -> onClose()
+                button -> close()
             )
         );
     }

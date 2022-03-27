@@ -98,7 +98,7 @@ public class MojangAuthScreen extends AuthScreen
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 59, 100, 20,
                 new TranslatableText("gui.cancel"),
-                button -> onClose()
+                button -> close()
             )
         );
     }
@@ -203,7 +203,7 @@ public class MojangAuthScreen extends AuthScreen
     }
 
     @Override
-    public void onClose()
+    public void close()
     {
         // Cancel the login task if still running
         if (task != null && !task.isDone()) {
@@ -212,6 +212,6 @@ public class MojangAuthScreen extends AuthScreen
         }
 
         // Cascade the closing
-        super.onClose();
+        super.close();
     }
 }
