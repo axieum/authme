@@ -49,11 +49,11 @@ public abstract class AuthScreen extends Screen
         super.tick();
 
         // Optionally close the screen if the login task completed successfully
-        if (success && closeOnSuccess) this.onClose();
+        if (success && closeOnSuccess) this.close();
     }
 
     @Override
-    public void onClose()
+    public void close()
     {
         if (client != null) client.setScreen(success ? successScreen : parentScreen);
     }

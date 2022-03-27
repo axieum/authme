@@ -89,7 +89,7 @@ public class AuthMethodScreen extends Screen
             new ButtonWidget(
                 width / 2 - 50, height / 2 + 27, 100, 20,
                 new TranslatableText("gui.back"),
-                button -> onClose()
+                button -> close()
             )
         );
     }
@@ -115,7 +115,7 @@ public class AuthMethodScreen extends Screen
     }
 
     @Override
-    public void onClose()
+    public void close()
     {
         if (client != null) client.setScreen(parentScreen);
     }

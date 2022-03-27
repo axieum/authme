@@ -1,7 +1,5 @@
 package me.axieum.mcmod.authme.impl.config;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -11,8 +9,6 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils.MicrosoftPrompt;
@@ -125,18 +121,5 @@ public class AuthMeConfig implements ConfigData
             AutoConfig.getConfigHolder(AuthMeConfig.class).load());
 
         return holder;
-    }
-
-    /**
-     * Mod Menu integration.
-     */
-    @Environment(EnvType.CLIENT)
-    public static class ModMenuIntegration implements ModMenuApi
-    {
-        @Override
-        public ConfigScreenFactory<?> getModConfigScreenFactory()
-        {
-            return screen -> AutoConfig.getConfigScreen(AuthMeConfig.class, screen).get();
-        }
     }
 }

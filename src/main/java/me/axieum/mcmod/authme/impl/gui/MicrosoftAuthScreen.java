@@ -56,7 +56,7 @@ public class MicrosoftAuthScreen extends AuthScreen
             cancelBtn = new ButtonWidget(
                 width / 2 - 50, height / 2 + 22, 100, 20,
                 new TranslatableText("gui.cancel"),
-                button -> onClose()
+                button -> close()
             )
         );
 
@@ -149,7 +149,7 @@ public class MicrosoftAuthScreen extends AuthScreen
     }
 
     @Override
-    public void onClose()
+    public void close()
     {
         // Cancel the login task if still running
         if (task != null && !task.isDone()) {
@@ -158,6 +158,6 @@ public class MicrosoftAuthScreen extends AuthScreen
         }
 
         // Cascade the closing
-        super.onClose();
+        super.close();
     }
 }

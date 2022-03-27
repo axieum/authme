@@ -20,7 +20,7 @@
       "me.axieum.mcmod.authme.impl.AuthMe"
     ],
     "modmenu": [
-      "me.axieum.mcmod.authme.impl.config.AuthMeConfig\$ModMenuIntegration"
+      "me.axieum.mcmod.authme.impl.compat.ModMenuApiImpl"
     ]
   },
   "mixins": [
