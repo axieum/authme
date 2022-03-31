@@ -60,6 +60,9 @@ public class MicrosoftAuthScreen extends AuthScreen
             )
         );
 
+        // Prevent the task from starting several times
+        if (task != null) return;
+
         // Set the initial progress/status of the login task
         status = new TranslatableText("gui.authme.microsoft.status.checkBrowser");
 
