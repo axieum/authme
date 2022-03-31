@@ -1,46 +1,25 @@
-# [2.2.0](https://github.com/axieum/authme/compare/v2.1.0...v2.2.0) (2021-12-17)
+# Changelog
+
+## [3.0.0](https://github.com/axieum/authme/compare/v2.2.0...v3.0.0) (2022-03-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* use `googleapis/release-please` for releases
+* no longer works on Minecraft 1.18.1
+
+### Features
+
+* add French translation ([#37](https://github.com/axieum/authme/issues/37)) ([d64353b](https://github.com/axieum/authme/commit/d64353bd757b550b865365a6486c033bcb4ca536))
+* add Polish translation ([#36](https://github.com/axieum/authme/issues/36)) ([00fa1bc](https://github.com/axieum/authme/commit/00fa1bc7be2b3d195e912d6569acf1ce24d8f10e))
+* upgrade Minecraft (1.18.1 -> 1.18.2) ([#41](https://github.com/axieum/authme/issues/41)) ([717c24f](https://github.com/axieum/authme/commit/717c24ff2d47362b32bead6f38bf003820149b8a))
 
 
 ### Bug Fixes
 
-* Realms screen ([c804805](https://github.com/axieum/authme/commit/c8048056a414ca817ff7450e6ea4cf3d860049ea))
+* do not rerun the Microsoft login task when resizing the window ([#38](https://github.com/axieum/authme/issues/38)) ([0fb8842](https://github.com/axieum/authme/commit/0fb8842e59312864994d50e9007e5d9adc5a6a7e))
 
 
-### Features
+### Continuous Integration
 
-* add Chinese translation ([738f822](https://github.com/axieum/authme/commit/738f822b2235baaad00e92dba04ee3bb073a8125))
-* add German translation ([f3725e6](https://github.com/axieum/authme/commit/f3725e656d7249b48068698b7692ef3eb5698b75))
-
-# [2.1.0](https://github.com/axieum/authme/compare/v2.0.0...v2.1.0) (2021-12-01)
-
-
-### Features
-
-* upgrade to Minecraft 1.18 ([4f01859](https://github.com/axieum/authme/commit/4f018596d547cd1255d43219367461fa7996621e))
-
-# [2.0.0](https://github.com/axieum/authme/compare/v1.5.0...v2.0.0) (2021-11-24)
-
-
-* add Microsoft login ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* add login success toast ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* add greeting tooltip to auth button ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* add option to lock auth button in place ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* show 're-login' button for more disconnection reasons ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-
-
-### BREAKING CHANGES
-
-* rewrite the mod to support multiple login methods
-
-# [2.0.0-beta.1](https://github.com/axieum/authme/compare/v1.5.0...v2.0.0-beta.1) (2021-11-14)
-
-
-* add Microsoft login ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* add login success toast ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* add greeting tooltip to auth button ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-* show 're-login' button for more disconnection reasons ([cb72cdb](https://github.com/axieum/authme/commit/cb72cdb6e37a01cd20a581a107b3fbe96ffd9c70))
-
-
-### BREAKING CHANGES
-
-* rewrite the mod to support multiple login methods
+* use `googleapis/release-please` for releases ([717c24f](https://github.com/axieum/authme/commit/717c24ff2d47362b32bead6f38bf003820149b8a))
