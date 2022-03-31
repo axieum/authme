@@ -1,0 +1,57 @@
+{
+  "gui.authme.button.auth": "Authentification",
+  "gui.authme.button.auth.tooltip": "Bonjour, %s !",
+  "gui.authme.button.relogin": "Reconnection",
+
+  "gui.authme.error.credentials": "Nom d'utilisateur ou mot de passe incorrect !",
+  "gui.authme.error.generic": "Quelque chose n'a pas fonctionné ! Veuillez réessayez.",
+  "gui.authme.error.timeout": "Temps d'attente dépassé ! Veuillez réessayez.",
+
+  "gui.authme.toast.greeting": "Bonjour, %s !",
+
+  "gui.authme.method.title": "Choisissez une méthode de connection",
+  "gui.authme.method.greeting": "Bonjour, %s !",
+  "gui.authme.method.button.microsoft": "Microsoft",
+  "gui.authme.method.button.mojang": "Mojang (ou legacy)",
+  "gui.authme.method.button.offline": "Hors-ligne",
+
+  "gui.authme.microsoft.title": "Se connecter grâce à Microsoft",
+  "gui.authme.microsoft.browser": "Vous pouvez fermer cette fenêtre et retourner sur minecraft !",
+  "gui.authme.microsoft.status.checkBrowser": "Veuillez vérifier votre navigateur",
+  "gui.authme.microsoft.status.msAccessToken": "Acquisition du jeton d'accès Microsoft...",
+  "gui.authme.microsoft.status.xboxAccessToken": "Acquisition du jeton d'accès Xbox...",
+  "gui.authme.microsoft.status.xboxXstsToken": "Acquisition du jeton XSTS Xbox...",
+  "gui.authme.microsoft.status.mcAccessToken": "Acquisition du jeton d'accès Minecraft...",
+  "gui.authme.microsoft.status.mcProfile": "Récupération de votre profil Minecraft...",
+
+  "gui.authme.mojang.title": "Connexion grâce à Mojang (ou legacy)",
+  "gui.authme.mojang.field.username": "Nom d'utilisateur / Email",
+  "gui.authme.mojang.field.password": "Mot de passe",
+  "gui.authme.mojang.button.login": "Connexion",
+  "gui.authme.mojang.status.loggingIn": "Connexion à Mojang...",
+
+  "gui.authme.offline.title": "Se connecter hors-ligne",
+  "gui.authme.offline.field.username": "Choisissez un nom d'utilisateur",
+  "gui.authme.offline.button.login": "Jouer hors-ligne",
+
+  "text.autoconfig.authme.title": "Configuration d'Auth Me",
+  "text.autoconfig.authme.option.authButton": "Bouton d'authentification",
+  "text.autoconfig.authme.option.authButton.x": "Coordonnée X",
+  "text.autoconfig.authme.option.authButton.y": "Coordonnée Y",
+  "text.autoconfig.authme.option.authButton.draggable": "Possibilité de déplacer le bouton",
+  "text.autoconfig.authme.option.methods": "Méthodes de connexion",
+  "text.autoconfig.authme.option.methods.microsoft": "Microsoft",
+  "text.autoconfig.authme.option.methods.microsoft.prompt": "Boite d'interaction",
+  "text.autoconfig.authme.option.methods.microsoft.port": "Port d'URL de rappel OAuth2",
+  "text.autoconfig.authme.option.methods.microsoft.clientId": "Id OAuth2 du client",
+  "text.autoconfig.authme.option.methods.microsoft.authorizeUrl": "URL OAuth2 d'autorisation",
+  "text.autoconfig.authme.option.methods.microsoft.tokenUrl": "URL OAuth2 d'accès au jeton",
+  "text.autoconfig.authme.option.methods.microsoft.xboxAuthUrl": "URL d'authentification Xbox",
+  "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "URL d'authentification Xbox XSTS",
+  "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "URL d'authentification Minecraft",
+  "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "URL du profil Minecraft",
+  "text.autoconfig.authme.option.methods.mojang": "Mojang (ou legacy)",
+  "text.autoconfig.authme.option.methods.mojang.lastUsername": "Dernier nom d'utilisateur utilisé",
+  "text.autoconfig.authme.option.methods.offline": "Hors-ligne",
+  "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username"
+}
