@@ -59,77 +59,76 @@ public class MicrosoftAuthScreen extends AuthScreen
                 button -> close()
             )
         );
-        
-        // Prevents the task from starting several times.
-        if (task == null) {
 
-            // Set the initial progress/status of the login task
-            status = new TranslatableText("gui.authme.microsoft.status.checkBrowser");
+        // Prevent the task from starting several times
+        if (task != null) return;
 
-            // Prepare a new executor thread to run the login task on
-            executor = Executors.newSingleThreadExecutor();
+        // Set the initial progress/status of the login task
+        status = new TranslatableText("gui.authme.microsoft.status.checkBrowser");
 
-            // Start the login task
-            task = MicrosoftUtils
-                // Acquire a Microsoft auth code
-                .acquireMSAuthCode(success -> new TranslatableText("gui.authme.microsoft.browser").getString(), executor)
+        // Prepare a new executor thread to run the login task on
+        executor = Executors.newSingleThreadExecutor();
 
-                // Exchange the Microsoft auth code for an access token
-                .thenComposeAsync(msAuthCode -> {
-                    status = new TranslatableText("gui.authme.microsoft.status.msAccessToken");
-                    return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
-                })
+        // Start the login task
+        task = MicrosoftUtils
+            // Acquire a Microsoft auth code
+            .acquireMSAuthCode(success -> new TranslatableText("gui.authme.microsoft.browser").getString(), executor)
 
-                // Exchange the Microsoft access token for an Xbox access token
-                .thenComposeAsync(msAccessToken -> {
-                    status = new TranslatableText("gui.authme.microsoft.status.xboxAccessToken");
-                    return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
-                })
+            // Exchange the Microsoft auth code for an access token
+            .thenComposeAsync(msAuthCode -> {
+                status = new TranslatableText("gui.authme.microsoft.status.msAccessToken");
+                return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
+            })
 
-                // Exchange the Xbox access token for an XSTS token
-                .thenComposeAsync(xboxAccessToken -> {
-                    status = new TranslatableText("gui.authme.microsoft.status.xboxXstsToken");
-                    return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
-                })
+            // Exchange the Microsoft access token for an Xbox access token
+            .thenComposeAsync(msAccessToken -> {
+                status = new TranslatableText("gui.authme.microsoft.status.xboxAccessToken");
+                return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
+            })
 
-                // Exchange the Xbox XSTS token for a Minecraft access token
-                .thenComposeAsync(xboxXstsData -> {
-                    status = new TranslatableText("gui.authme.microsoft.status.mcAccessToken");
-                    return MicrosoftUtils.acquireMCAccessToken(
-                        xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
-                    );
-                })
+            // Exchange the Xbox access token for an XSTS token
+            .thenComposeAsync(xboxAccessToken -> {
+                status = new TranslatableText("gui.authme.microsoft.status.xboxXstsToken");
+                return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
+            })
 
-                // Build a new Minecraft session with the Minecraft access token
-                .thenComposeAsync(mcToken -> {
-                    status = new TranslatableText("gui.authme.microsoft.status.mcProfile");
-                    return MicrosoftUtils.login(mcToken, executor);
-                })
+            // Exchange the Xbox XSTS token for a Minecraft access token
+            .thenComposeAsync(xboxXstsData -> {
+                status = new TranslatableText("gui.authme.microsoft.status.mcAccessToken");
+                return MicrosoftUtils.acquireMCAccessToken(
+                    xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
+                );
+            })
 
-                // Update the game session and greet the player
-                .thenAccept(session -> {
-                    // Apply the new session
-                    SessionUtils.setSession(session);
-                    // Add a toast that greets the player
-                    SystemToast.add(
-                        client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
-                        new TranslatableText("gui.authme.toast.greeting", new LiteralText(session.getUsername())), null
-                    );
-                    // Mark the task as successful, in turn closing the screen
-                    LOGGER.info("Successfully logged in via Microsoft!");
-                    success = true;
-                })
+            // Build a new Minecraft session with the Minecraft access token
+            .thenComposeAsync(mcToken -> {
+                status = new TranslatableText("gui.authme.microsoft.status.mcProfile");
+                return MicrosoftUtils.login(mcToken, executor);
+            })
 
-                // On any exception, update the status and cancel button
-                .exceptionally(error -> {
-                    status = new TranslatableText(
-                        error.getCause() instanceof ConnectTimeoutException ? "gui.authme.error.timeout"
-                                                                            : "gui.authme.error.generic"
-                    ).formatted(Formatting.RED);
-                    cancelBtn.setMessage(new TranslatableText("gui.back"));
-                    return null; // return a default value
-                });
-        }
+            // Update the game session and greet the player
+            .thenAccept(session -> {
+                // Apply the new session
+                SessionUtils.setSession(session);
+                // Add a toast that greets the player
+                SystemToast.add(
+                    client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
+                    new TranslatableText("gui.authme.toast.greeting", new LiteralText(session.getUsername())), null
+                );
+                // Mark the task as successful, in turn closing the screen
+                LOGGER.info("Successfully logged in via Microsoft!");
+                success = true;
+            })
+
+            // On any exception, update the status and cancel button
+            .exceptionally(error -> {
+                status = new TranslatableText(
+                    error.getCause() instanceof ConnectTimeoutException ? "gui.authme.error.timeout"
+                                                                        : "gui.authme.error.generic"
+                ).formatted(Formatting.RED);
+                cancelBtn.setMessage(new TranslatableText("gui.back"));
+                return null; // return a default value
+            });
     }
 
     @Override
