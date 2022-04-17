@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/axieum/authme/compare/v3.0.0...v3.1.0) (2022-04-17)
+
+
+### Features
+
+* add Finnish translation ([#45](https://github.com/axieum/authme/issues/45)) ([0924997](https://github.com/axieum/authme/commit/092499713c03526f50f5c20c360443c0fa679acb))
+
 ## [3.0.0](https://github.com/axieum/authme/compare/v2.2.0...v3.0.0) (2022-03-31)
 
 
