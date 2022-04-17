@@ -1,0 +1,57 @@
+{
+  "gui.authme.button.auth": "Valtuutus",
+  "gui.authme.button.auth.tooltip": "Hei, %s!",
+  "gui.authme.button.relogin": "Kirjaudu uudelleen",
+
+  "gui.authme.error.credentials": "Väärä käyttäjätunnus tai salasana",
+  "gui.authme.error.generic": "Jokin meni pieleen! Mene takaisin ja yritä uudelleen.",
+  "gui.authme.error.timeout": "Aikakatkaisu! Mene takaisin ja yritä uudelleen.",
+
+  "gui.authme.toast.greeting": "Hei, %s!",
+
+  "gui.authme.method.title": "Valitse kirjautumismenetelmä",
+  "gui.authme.method.greeting": "Hei, %s!",
+  "gui.authme.method.button.microsoft": "Microsoft",
+  "gui.authme.method.button.mojang": "Mojang (vanha menetelmä)",
+  "gui.authme.method.button.offline": "Yhteydetön",
+
+  "gui.authme.microsoft.title": "Microsoft-kirjautuminen",
+  "gui.authme.microsoft.browser": "Voit nyt sulkea tämän ikkunan ja palata Minecraftiin!",
+  "gui.authme.microsoft.status.checkBrowser": "Tarkista selaimesi...",
+  "gui.authme.microsoft.status.msAccessToken": "Hankitaan Microsoft-pääsytunnusta...",
+  "gui.authme.microsoft.status.xboxAccessToken": "Hankitaan Xbox-pääsytunnusta...",
+  "gui.authme.microsoft.status.xboxXstsToken": "Hankitaan Xbox XSTS-tunnusta...",
+  "gui.authme.microsoft.status.mcAccessToken": "Hankitaan Minecraft-pääsytunnusta...",
+  "gui.authme.microsoft.status.mcProfile": "Haetaan Minecraft-profiiliasi...",
+
+  "gui.authme.mojang.title": "Mojang (vanha)-kirjautuminen",
+  "gui.authme.mojang.field.username": "Käyttäjätunnus / sähköposti",
+  "gui.authme.mojang.field.password": "Salasana",
+  "gui.authme.mojang.button.login": "Kirjaudu",
+  "gui.authme.mojang.status.loggingIn": "Kirjaudutaan Mojang-tiliin...",
+
+  "gui.authme.offline.title": "Yhteydetön peli",
+  "gui.authme.offline.field.username": "Valitse pelinimi",
+  "gui.authme.offline.button.login": "Pelaa ilman yhteyttä",
+
+  "text.autoconfig.authme.title": "Auth Me-asetukset",
+  "text.autoconfig.authme.option.authButton": "Auth-nappi",
+  "text.autoconfig.authme.option.authButton.x": "X-koordinaatti",
+  "text.autoconfig.authme.option.authButton.y": "Y-koordinaatti",
+  "text.autoconfig.authme.option.authButton.draggable": "Vedettävissä?",
+  "text.autoconfig.authme.option.methods": "Kirjautumismenetelmät",
+  "text.autoconfig.authme.option.methods.microsoft": "Microsoft",
+  "text.autoconfig.authme.option.methods.microsoft.prompt": "Vuorovaikutuskehote",
+  "text.autoconfig.authme.option.methods.microsoft.port": "OAuth2-takaisinkutsuosoitteen portti",
+  "text.autoconfig.authme.option.methods.microsoft.clientId": "OAuth2-asiakkaan ID",
+  "text.autoconfig.authme.option.methods.microsoft.authorizeUrl": "OAuth2-valtuutusosoite",
+  "text.autoconfig.authme.option.methods.microsoft.tokenUrl": "OAuth2-pääsytunnuksen osoite",
+  "text.autoconfig.authme.option.methods.microsoft.xboxAuthUrl": "Xbox-valtuutuksen osoite",
+  "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS-valtuutuksen osoite",
+  "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft-valtuutuksen osoite",
+  "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft-profiilin osoite",
+  "text.autoconfig.authme.option.methods.mojang": "Mojang (vanha menetelmä)",
+  "text.autoconfig.authme.option.methods.mojang.lastUsername": "Viimeksi käytetty käyttäjätunnus",
+  "text.autoconfig.authme.option.methods.offline": "Yhteydetön",
+  "text.autoconfig.authme.option.methods.offline.lastUsername": "Viimeksi käytetty käyttäjätunnus"
+}
