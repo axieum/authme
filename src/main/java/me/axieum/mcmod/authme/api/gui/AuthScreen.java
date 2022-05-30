@@ -1,7 +1,7 @@
 package me.axieum.mcmod.authme.api.gui;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 /**
  * A screen for handling user authentication.
@@ -26,7 +26,7 @@ public abstract class AuthScreen extends Screen
      * @param parentScreen  parent (or last) screen that opened this screen
      * @param successScreen screen to be returned to after a successful login
      */
-    public AuthScreen(TranslatableText title, Screen parentScreen, Screen successScreen)
+    public AuthScreen(Text title, Screen parentScreen, Screen successScreen)
     {
         super(title);
         this.parentScreen = parentScreen;

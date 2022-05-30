@@ -4,9 +4,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
@@ -29,7 +27,7 @@ public class AuthMethodScreen extends Screen
      */
     public AuthMethodScreen(Screen parentScreen)
     {
-        super(new TranslatableText("gui.authme.method.title"));
+        super(Text.translatable("gui.authme.method.title"));
         this.parentScreen = parentScreen;
     }
 
@@ -40,9 +38,9 @@ public class AuthMethodScreen extends Screen
         assert client != null;
 
         // Set the greeting message
-        greeting = new TranslatableText(
+        greeting = Text.translatable(
             "gui.authme.method.greeting",
-            new LiteralText(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
+            Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
         );
 
         // Add a button for the 'Microsoft' authentication method
@@ -52,9 +50,9 @@ public class AuthMethodScreen extends Screen
                 0, 0, 20, WIDGETS_TEXTURE, 128, 128,
                 button -> client.setScreen(new MicrosoftAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
-                    mtx, new TranslatableText("gui.authme.method.button.microsoft"), x, y
+                    mtx, Text.translatable("gui.authme.method.button.microsoft"), x, y
                 ),
-                new TranslatableText("gui.authme.method.button.microsoft")
+                Text.translatable("gui.authme.method.button.microsoft")
             )
         );
 
@@ -65,9 +63,9 @@ public class AuthMethodScreen extends Screen
                 20, 0, 20, WIDGETS_TEXTURE, 128, 128,
                 button -> client.setScreen(new MojangAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
-                    mtx, new TranslatableText("gui.authme.method.button.mojang"), x, y
+                    mtx, Text.translatable("gui.authme.method.button.mojang"), x, y
                 ),
-                new TranslatableText("gui.authme.method.button.mojang")
+                Text.translatable("gui.authme.method.button.mojang")
             )
         );
 
@@ -78,9 +76,9 @@ public class AuthMethodScreen extends Screen
                 40, 0, 20, WIDGETS_TEXTURE, 128, 128,
                 button -> client.setScreen(new OfflineAuthScreen(this, parentScreen)),
                 (btn, mtx, x, y) -> renderTooltip(
-                    mtx, new TranslatableText("gui.authme.method.button.offline"), x, y
+                    mtx, Text.translatable("gui.authme.method.button.offline"), x, y
                 ),
-                new TranslatableText("gui.authme.method.button.offline")
+                Text.translatable("gui.authme.method.button.offline")
             )
         );
 
@@ -88,7 +86,7 @@ public class AuthMethodScreen extends Screen
         addDrawableChild(
             new ButtonWidget(
                 width / 2 - 50, height / 2 + 27, 100, 20,
-                new TranslatableText("gui.back"),
+                Text.translatable("gui.back"),
                 button -> close()
             )
         );

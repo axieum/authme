@@ -5,8 +5,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import me.axieum.mcmod.authme.api.gui.AuthScreen;
 import me.axieum.mcmod.authme.api.util.SessionUtils;
@@ -32,7 +31,7 @@ public class OfflineAuthScreen extends AuthScreen
      */
     public OfflineAuthScreen(Screen parentScreen, Screen successScreen)
     {
-        super(new TranslatableText("gui.authme.offline.title"), parentScreen, successScreen);
+        super(Text.translatable("gui.authme.offline.title"), parentScreen, successScreen);
         this.enableKeyboardRepeatEvents = true;
         this.closeOnSuccess = true;
     }
@@ -48,7 +47,7 @@ public class OfflineAuthScreen extends AuthScreen
             usernameField = new TextFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 - 6, 200, 20,
-                new TranslatableText("gui.authme.offline.field.username")
+                Text.translatable("gui.authme.offline.field.username")
             )
         );
         usernameField.setMaxLength(128);
@@ -61,7 +60,7 @@ public class OfflineAuthScreen extends AuthScreen
         addDrawableChild(
             loginBtn = new ButtonWidget(
                 width / 2 - 100 - 2, height / 2 + 26, 100, 20,
-                new TranslatableText("gui.authme.offline.button.login"),
+                Text.translatable("gui.authme.offline.button.login"),
                 button -> login()
             )
         );
@@ -71,7 +70,7 @@ public class OfflineAuthScreen extends AuthScreen
         addDrawableChild(
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 26, 100, 20,
-                new TranslatableText("gui.cancel"),
+                Text.translatable("gui.cancel"),
                 button -> close()
             )
         );
@@ -101,7 +100,7 @@ public class OfflineAuthScreen extends AuthScreen
         // Add a toast that greets the player
         SystemToast.add(
             client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
-            new TranslatableText("gui.authme.toast.greeting", new LiteralText(usernameField.getText())), null
+            Text.translatable("gui.authme.toast.greeting", Text.literal(usernameField.getText())), null
         );
 
         // Mark the task as successful, in turn closing the screen

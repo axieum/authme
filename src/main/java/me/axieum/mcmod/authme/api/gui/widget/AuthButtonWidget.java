@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
 import me.axieum.mcmod.authme.api.util.SessionUtils.SessionStatus;
@@ -87,7 +86,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
         @Nullable Screen screen, int x, int y, PressAction pressAction, @Nullable MoveAction moveAction
     )
     {
-        this(screen, x, y, pressAction, moveAction, new TranslatableText("gui.authme.button.auth"));
+        this(screen, x, y, pressAction, moveAction, Text.translatable("gui.authme.button.auth"));
     }
 
     /**
