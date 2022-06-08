@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/axieum/authme/compare/v3.1.0...v4.0.0) (2022-06-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade Minecraft (1.18.2 -> 1.19) (#48)
+
+### Features
+
+* upgrade Minecraft (1.18.2 -> 1.19) ([#48](https://github.com/axieum/authme/issues/48)) ([3f6541a](https://github.com/axieum/authme/commit/3f6541ae38eb44f07d9193d2cc1ee24da8701216))
+
 ## [3.1.0](https://github.com/axieum/authme/compare/v3.0.0...v3.1.0) (2022-04-17)
 
 
