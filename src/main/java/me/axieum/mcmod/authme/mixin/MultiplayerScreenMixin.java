@@ -7,9 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.gui.widget.AuthButtonWidget;
@@ -57,12 +55,12 @@ public abstract class MultiplayerScreenMixin extends Screen
                     CONFIG.save();
                 } : null,
                 // Add a tooltip to greet the player
-                (btn, mtx, x, y) -> renderTooltip(mtx, new TranslatableText(
+                (btn, mtx, x, y) -> renderTooltip(mtx, Text.translatable(
                     "gui.authme.button.auth.tooltip",
-                    new LiteralText(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
+                    Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
                 ), x, y),
                 // Non-visible text, useful for screen narrator
-                new TranslatableText("gui.authme.button.auth")
+                Text.translatable("gui.authme.button.auth")
             )
         );
     }

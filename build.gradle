@@ -2,9 +2,9 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'maven-publish'
-    id 'com.modrinth.minotaur' version '2.1.1'
+    id 'com.modrinth.minotaur' version '2.2.0'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
 allprojects {
@@ -82,6 +82,16 @@ allprojects {
         maven { name 'Shedaniel'; url 'https://maven.shedaniel.me/' }
         maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
     }
+
+    // Read the `CHANGELOG.md` for the project version's changelog notes if present
+    ext.getChangelogNotes = { ->
+        final File changelog = project.file("CHANGELOG.md")
+        if (changelog.canRead()) {
+            def match = changelog.text =~ "(?ms)^## \\[\\Q${project.version}\\E].*?(?=^## |\\Z)"
+            if (match.find() && !match.group().isBlank()) return match.group().trim()
+        }
+        return "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+    }
 }
 
 // Define how artifacts are published to CurseForge (https://curseforge.com)
@@ -96,7 +106,7 @@ curseforge {
         // Set the release type
         releaseType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
         // Set the release notes
-        changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+        changelog = project.getChangelogNotes()
         // Add all supported game versions
         project.cf_game_versions.split(', ').each { addGameVersion it }
         // Add the main artifact
@@ -142,7 +152,7 @@ modrinth {
     // Set the release version
     versionNumber = project.version
     // Set the release notes
-    changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+    changelog = project.getChangelogNotes()
     // Add all supported mod loaders
     loaders = ['fabric']
     // Add all supported game versions

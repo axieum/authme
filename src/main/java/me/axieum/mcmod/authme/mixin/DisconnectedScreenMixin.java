@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 import me.axieum.mcmod.authme.impl.gui.AuthMethodScreen;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
@@ -57,7 +57,7 @@ public abstract class DisconnectedScreenMixin extends Screen
                     backButton.y,
                     backButton.getWidth(),
                     backButton.getHeight(),
-                    new TranslatableText("gui.authme.button.relogin"),
+                    Text.translatable("gui.authme.button.relogin"),
                     btn -> client.setScreen(new AuthMethodScreen(parent))
                 )
             );
@@ -75,8 +75,8 @@ public abstract class DisconnectedScreenMixin extends Screen
      */
     private static boolean isUserRelated(final @Nullable Text reason)
     {
-        if (reason instanceof TranslatableText) {
-            final String key = ((TranslatableText) reason).getKey();
+        if (reason instanceof TranslatableTextContent) {
+            final String key = ((TranslatableTextContent) reason).getKey();
             return key != null && switch (key) {
                 case "multiplayer.disconnect.duplicate_login",
                     "multiplayer.disconnect.unverified_username",

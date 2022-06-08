@@ -15,7 +15,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.realms.gui.screen.RealmsGenericErrorScreen;
 import net.minecraft.client.realms.gui.screen.RealmsScreen;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 import me.axieum.mcmod.authme.impl.gui.AuthMethodScreen;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
@@ -60,7 +60,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
                     backButton.y - backButton.getHeight() - 4,
                     backButton.getWidth(),
                     backButton.getHeight(),
-                    new TranslatableText("gui.authme.button.relogin"),
+                    Text.translatable("gui.authme.button.relogin"),
                     btn -> client.setScreen(new AuthMethodScreen(parent))
                 )
             );
@@ -75,8 +75,8 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
      */
     private static boolean isUserRelated(final @Nullable Text reason)
     {
-        if (reason instanceof TranslatableText) {
-            final String key = ((TranslatableText) reason).getKey();
+        if (reason instanceof TranslatableTextContent) {
+            final String key = ((TranslatableTextContent) reason).getKey();
             return key != null && key.startsWith("mco.error.invalid.session");
         }
         return false;

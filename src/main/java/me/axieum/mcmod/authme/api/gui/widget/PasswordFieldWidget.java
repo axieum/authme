@@ -3,7 +3,6 @@ package me.axieum.mcmod.authme.api.gui.widget;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 /**
@@ -25,7 +24,7 @@ public class PasswordFieldWidget extends TextFieldWidget
     {
         super(textRenderer, x, y, width, height, text);
         setRenderTextProvider(
-            (val, limit) -> new LiteralText(val).styled(style -> style.withObfuscated(true)).asOrderedText()
+            (val, limit) -> Text.literal(val).styled(style -> style.withObfuscated(true)).asOrderedText()
         );
         // NB: Overriding the rendered characters affects interaction, as the
         // rendered characters have different widths to the actual underlying text.

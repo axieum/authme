@@ -10,9 +10,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.gui.AuthScreen;
@@ -40,7 +38,7 @@ public class MicrosoftAuthScreen extends AuthScreen
      */
     public MicrosoftAuthScreen(Screen parentScreen, Screen successScreen)
     {
-        super(new TranslatableText("gui.authme.microsoft.title"), parentScreen, successScreen);
+        super(Text.translatable("gui.authme.microsoft.title"), parentScreen, successScreen);
         this.closeOnSuccess = true;
     }
 
@@ -55,7 +53,7 @@ public class MicrosoftAuthScreen extends AuthScreen
         addDrawableChild(
             cancelBtn = new ButtonWidget(
                 width / 2 - 50, height / 2 + 22, 100, 20,
-                new TranslatableText("gui.cancel"),
+                Text.translatable("gui.cancel"),
                 button -> close()
             )
         );
@@ -64,7 +62,7 @@ public class MicrosoftAuthScreen extends AuthScreen
         if (task != null) return;
 
         // Set the initial progress/status of the login task
-        status = new TranslatableText("gui.authme.microsoft.status.checkBrowser");
+        status = Text.translatable("gui.authme.microsoft.status.checkBrowser");
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
@@ -72,29 +70,29 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Start the login task
         task = MicrosoftUtils
             // Acquire a Microsoft auth code
-            .acquireMSAuthCode(success -> new TranslatableText("gui.authme.microsoft.browser").getString(), executor)
+            .acquireMSAuthCode(success -> Text.translatable("gui.authme.microsoft.browser").getString(), executor)
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                status = new TranslatableText("gui.authme.microsoft.status.msAccessToken");
+                status = Text.translatable("gui.authme.microsoft.status.msAccessToken");
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                status = new TranslatableText("gui.authme.microsoft.status.xboxAccessToken");
+                status = Text.translatable("gui.authme.microsoft.status.xboxAccessToken");
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                status = new TranslatableText("gui.authme.microsoft.status.xboxXstsToken");
+                status = Text.translatable("gui.authme.microsoft.status.xboxXstsToken");
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                status = new TranslatableText("gui.authme.microsoft.status.mcAccessToken");
+                status = Text.translatable("gui.authme.microsoft.status.mcAccessToken");
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -102,7 +100,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                status = new TranslatableText("gui.authme.microsoft.status.mcProfile");
+                status = Text.translatable("gui.authme.microsoft.status.mcProfile");
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -113,7 +111,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 // Add a toast that greets the player
                 SystemToast.add(
                     client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
-                    new TranslatableText("gui.authme.toast.greeting", new LiteralText(session.getUsername())), null
+                    Text.translatable("gui.authme.toast.greeting", Text.literal(session.getUsername())), null
                 );
                 // Mark the task as successful, in turn closing the screen
                 LOGGER.info("Successfully logged in via Microsoft!");
@@ -122,11 +120,11 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // On any exception, update the status and cancel button
             .exceptionally(error -> {
-                status = new TranslatableText(
+                status = Text.translatable(
                     error.getCause() instanceof ConnectTimeoutException ? "gui.authme.error.timeout"
                                                                         : "gui.authme.error.generic"
                 ).formatted(Formatting.RED);
-                cancelBtn.setMessage(new TranslatableText("gui.back"));
+                cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
             });
     }

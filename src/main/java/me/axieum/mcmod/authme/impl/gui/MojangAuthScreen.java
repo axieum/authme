@@ -11,9 +11,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.gui.AuthScreen;
@@ -48,7 +46,7 @@ public class MojangAuthScreen extends AuthScreen
      */
     public MojangAuthScreen(Screen parentScreen, Screen successScreen)
     {
-        super(new TranslatableText("gui.authme.mojang.title"), parentScreen, successScreen);
+        super(Text.translatable("gui.authme.mojang.title"), parentScreen, successScreen);
         this.enableKeyboardRepeatEvents = true;
         this.closeOnSuccess = true;
     }
@@ -64,7 +62,7 @@ public class MojangAuthScreen extends AuthScreen
             usernameField = new TextFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 - 39, 200, 20,
-                new TranslatableText("gui.authme.mojang.field.username")
+                Text.translatable("gui.authme.mojang.field.username")
             )
         );
         usernameField.setMaxLength(128);
@@ -78,7 +76,7 @@ public class MojangAuthScreen extends AuthScreen
             passwordField = new PasswordFieldWidget(
                 client.textRenderer,
                 width / 2 - 100, height / 2 + 6, 200, 20,
-                new TranslatableText("gui.authme.mojang.field.password")
+                Text.translatable("gui.authme.mojang.field.password")
             )
         );
         passwordField.setChangedListener(value -> loginBtn.active = isFormValid());
@@ -87,7 +85,7 @@ public class MojangAuthScreen extends AuthScreen
         addDrawableChild(
             loginBtn = new ButtonWidget(
                 width / 2 - 100 - 2, height / 2 + 59, 100, 20,
-                new TranslatableText("gui.authme.mojang.button.login"),
+                Text.translatable("gui.authme.mojang.button.login"),
                 button -> login()
             )
         );
@@ -97,7 +95,7 @@ public class MojangAuthScreen extends AuthScreen
         addDrawableChild(
             new ButtonWidget(
                 width / 2 + 2, height / 2 + 59, 100, 20,
-                new TranslatableText("gui.cancel"),
+                Text.translatable("gui.cancel"),
                 button -> close()
             )
         );
@@ -119,7 +117,7 @@ public class MojangAuthScreen extends AuthScreen
         loginBtn.active = false;
 
         // Set the initial progress/status of the login task
-        status = new TranslatableText("gui.authme.mojang.status.loggingIn");
+        status = Text.translatable("gui.authme.mojang.status.loggingIn");
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
@@ -139,7 +137,7 @@ public class MojangAuthScreen extends AuthScreen
                 // Add a toast that greets the player
                 SystemToast.add(
                     client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
-                    new TranslatableText("gui.authme.toast.greeting", new LiteralText(session.getUsername())), null
+                    Text.translatable("gui.authme.toast.greeting", Text.literal(session.getUsername())), null
                 );
                 // Mark the task as successful, in turn closing the screen
                 LOGGER.info("Successfully logged in via Mojang (or legacy)!");
@@ -148,7 +146,7 @@ public class MojangAuthScreen extends AuthScreen
 
             // On any exception, update the status and re-enable form fields
             .exceptionally(error -> {
-                status = new TranslatableText(
+                status = Text.translatable(
                     error.getCause() instanceof InvalidCredentialsException ? "gui.authme.error.credentials"
                                                                             : "gui.authme.error.generic"
                 ).formatted(Formatting.RED);
