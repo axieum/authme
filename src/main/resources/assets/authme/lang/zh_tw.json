@@ -1,0 +1,57 @@
+{
+  "gui.authme.button.auth": "驗證",
+  "gui.authme.button.auth.tooltip": "您好，%s！",
+  "gui.authme.button.relogin": "重新登入",
+
+  "gui.authme.error.credentials": "使用者名稱錯誤或密碼錯誤！",
+  "gui.authme.error.generic": "有些東西出錯了！請返回在重試一次。",
+  "gui.authme.error.timeout": "已逾時！請返回重試。",
+
+  "gui.authme.toast.greeting": "您好，%s！",
+
+  "gui.authme.method.title": "選擇登入方式",
+  "gui.authme.method.greeting": "您好，%s！",
+  "gui.authme.method.button.microsoft": "Microsoft",
+  "gui.authme.method.button.mojang": "Mojang（舊版登入）",
+  "gui.authme.method.button.offline": "離線",
+
+  "gui.authme.microsoft.title": "透過 Microsoft 登入",
+  "gui.authme.microsoft.browser": "您現在可以關閉這個視窗並返回 Minecraft！",
+  "gui.authme.microsoft.status.checkBrowser": "請查看您的瀏覽器...",
+  "gui.authme.microsoft.status.msAccessToken": "獲取 Microsoft 存取權杖...",
+  "gui.authme.microsoft.status.xboxAccessToken": "獲取 Xbox 存取權杖...",
+  "gui.authme.microsoft.status.xboxXstsToken": "獲取 Xbox XSTS 權杖...",
+  "gui.authme.microsoft.status.mcAccessToken": "獲取 Minecraft 存取權杖...",
+  "gui.authme.microsoft.status.mcProfile": "獲取您的 Minecraft 個人資料...",
+
+  "gui.authme.mojang.title": "透過 Mojang 登入（舊版）",
+  "gui.authme.mojang.field.username": "使用者名稱／電子郵件",
+  "gui.authme.mojang.field.password": "密碼",
+  "gui.authme.mojang.button.login": "登入",
+  "gui.authme.mojang.status.loggingIn": "登入至 Mojang...",
+
+  "gui.authme.offline.title": "離線登入",
+  "gui.authme.offline.field.username": "選擇使用者名稱",
+  "gui.authme.offline.button.login": "離線遊玩",
+
+  "text.autoconfig.authme.title": "Auth Me 設定",
+  "text.autoconfig.authme.option.authButton": "驗證按紐",
+  "text.autoconfig.authme.option.authButton.x": "X 座標",
+  "text.autoconfig.authme.option.authButton.y": "Y 座標",
+  "text.autoconfig.authme.option.authButton.draggable": "可以拖動？",
+  "text.autoconfig.authme.option.methods": "登入方式",
+  "text.autoconfig.authme.option.methods.microsoft": "Microsoft",
+  "text.autoconfig.authme.option.methods.microsoft.prompt": "互動提示",
+  "text.autoconfig.authme.option.methods.microsoft.port": "OAuth2 回傳 Url 端口",
+  "text.autoconfig.authme.option.methods.microsoft.clientId": "OAuth2 用戶 Id",
+  "text.autoconfig.authme.option.methods.microsoft.authorizeUrl": "OAuth2 授權 Url",
+  "text.autoconfig.authme.option.methods.microsoft.tokenUrl": "OAuth2 存取權杖 Url",
+  "text.autoconfig.authme.option.methods.microsoft.xboxAuthUrl": "Xbox 驗證 Url",
+  "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS 授權 Url",
+  "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft 驗證 Url",
+  "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft 個人資料 Url",
+  "text.autoconfig.authme.option.methods.mojang": "Mojang（舊版登入）",
+  "text.autoconfig.authme.option.methods.mojang.lastUsername": "最後使用的使用者名稱",
+  "text.autoconfig.authme.option.methods.offline": "離線",
+  "text.autoconfig.authme.option.methods.offline.lastUsername": "最後使用的使用者名稱"
+}
