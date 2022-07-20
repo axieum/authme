@@ -17,6 +17,7 @@
 
   "gui.authme.microsoft.title": "Login via Microsoft",
   "gui.authme.microsoft.browser": "You may now close this window and return to Minecraft!",
+  "gui.authme.microsoft.status.loggingIn": "Logging in...",
   "gui.authme.microsoft.status.checkBrowser": "Please check your browser...",
   "gui.authme.microsoft.status.msAccessToken": "Acquiring Microsoft access token...",
   "gui.authme.microsoft.status.xboxAccessToken": "Acquiring Xbox access token...",

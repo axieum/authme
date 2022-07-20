@@ -4,6 +4,9 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
+import me.axieum.mcmod.authme.impl.config.AuthMeConfig;
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
@@ -41,8 +46,7 @@ import net.minecraft.client.util.Session;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.Util;
 
-import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
-import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
+import static me.axieum.mcmod.authme.impl.AuthMe.*;
 
 /**
  * Utility methods for authenticating via Microsoft.
@@ -61,7 +65,33 @@ public final class MicrosoftUtils
         .setSocketTimeout(30_000)
         .build();
 
+    // Base64 decoder. Used to get precise issuance millisecond for JWT tokens.
+    private static final Base64.Decoder BASE_64_DECODER = Base64.getUrlDecoder();
+
     private MicrosoftUtils() {}
+
+    public static CompletableFuture<MSAToken> acquireMSAToken(final Executor executor) {
+        // Test if we can use an existing MSA token
+        Instant msaExpiration = Instant.ofEpochMilli(getConfig().methods.microsoft.tokens.msAccessExpiration);
+        if(msaExpiration.isAfter(Instant.now()) && !getConfig().methods.microsoft.tokens.msAccessToken.isBlank())
+        {
+            LOGGER.info("Microsoft access token is valid!");
+            return CompletableFuture.supplyAsync(() -> new MicrosoftUtils.MSAToken(
+                getConfig().methods.microsoft.tokens.msAccessToken,
+                getConfig().methods.microsoft.tokens.msRefreshToken,
+                msaExpiration));
+        }
+        // Check if a refresh token was provided
+        else if(!getConfig().methods.microsoft.tokens.msRefreshToken.isBlank())
+        {
+            LOGGER.info("Microsoft access token is not valid, but refresh key is present. Refreshing...");
+            return MicrosoftUtils.refreshMSAccessToken(getConfig().methods.microsoft.tokens.msRefreshToken, executor);
+        }
+        else {
+            LOGGER.info("No saved token information was valid, starting from scratch.");
+            return null;
+        }
+    }
 
     /**
      * Navigates to the Microsoft login, and listens for a successful login
@@ -202,7 +232,6 @@ public final class MicrosoftUtils
             }
         }, executor);
     }
-
     /**
      * Exchanges a Microsoft auth code for an access token.
      *
@@ -213,7 +242,38 @@ public final class MicrosoftUtils
      * @param executor executor to run the login task on
      * @return completable future for the Microsoft access token
      */
-    public static CompletableFuture<String> acquireMSAccessToken(final String authCode, final Executor executor)
+    public static CompletableFuture<MSAToken> acquireMSAccessToken(final String authCode, final Executor executor)
+    {
+        return acquireMSAccessToken(authCode, AuthorizationCodeType.AUTHORIZATION, executor);
+    }
+
+    /**
+     * Refreshes an existing MSA token using its refresh token
+     *
+     * <p>NB: You must manually interrupt the executor thread if the
+     * completable future is cancelled!
+     *
+     * @param refreshToken MSA refresh token
+     * @param executor executor to run the login task on
+     * @return completable future for the Microsoft access token
+     */
+    public static CompletableFuture<MSAToken> refreshMSAccessToken(final String refreshToken, final Executor executor)
+    {
+        return acquireMSAccessToken(refreshToken, AuthorizationCodeType.REFRESH, executor);
+    }
+
+    /**
+     * Exchanges a Microsoft auth code for an access token or refreshes an existing token.
+     *
+     * <p>NB: You must manually interrupt the executor thread if the
+     * completable future is cancelled!
+     *
+     * @param authCode Microsoft auth code
+     * @param executor executor to run the login task on
+     * @param type The type of request we are making, either a new request or refreshing an existing code.
+     * @return completable future for the Microsoft access token
+     */
+    public static CompletableFuture<MSAToken> acquireMSAccessToken(final String authCode, final AuthorizationCodeType type, final Executor executor)
     {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Exchanging Microsoft auth code for an access token...");
@@ -225,8 +285,8 @@ public final class MicrosoftUtils
                 request.setEntity(new UrlEncodedFormEntity(
                     List.of(
                         new BasicNameValuePair("client_id", getConfig().methods.microsoft.clientId),
-                        new BasicNameValuePair("grant_type", "authorization_code"),
-                        new BasicNameValuePair("code", authCode),
+                        new BasicNameValuePair("grant_type", type.getGrantType()),
+                        new BasicNameValuePair(type.getParameterName(), authCode),
                         // We must provide the exact redirect URI that was used to obtain the auth code
                         new BasicNameValuePair(
                             "redirect_uri",
@@ -243,13 +303,17 @@ public final class MicrosoftUtils
 
                 // Attempt to parse the response body as JSON and extract the access token
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
-                return Optional.ofNullable(json.get("access_token"))
-                               .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                return Optional.ofNullable(MSAToken.createFromJSON(json))
+                               .filter(token -> !token.accessToken().isBlank())
                                // If present, log success and return
                                .map(token -> {
+                                   // Save MSA tokens for faster authentication
+                                   getConfig().methods.microsoft.tokens.msAccessToken = token.accessToken();
+                                   getConfig().methods.microsoft.tokens.msRefreshToken = token.refreshToken();
+                                   getConfig().methods.microsoft.tokens.msAccessExpiration = token.expiresAt.toEpochMilli();
+
                                    LOGGER.info("Acquired Microsoft access token! ({})",
-                                       StringUtils.abbreviateMiddle(token, "...", 32));
+                                       StringUtils.abbreviateMiddle(token.accessToken(), "...", 32));
                                    return token;
                                })
                                // Otherwise, throw an exception with the error description if present
@@ -280,9 +344,17 @@ public final class MicrosoftUtils
      * @param executor    executor to run the login task on
      * @return completable future for the Xbox Live access token
      */
-    public static CompletableFuture<String> acquireXboxAccessToken(final String accessToken, final Executor executor)
+    public static CompletableFuture<XBLToken> acquireXboxAccessToken(final MSAToken accessToken, final Executor executor)
     {
         return CompletableFuture.supplyAsync(() -> {
+            AuthMeConfig.LoginMethodsSchema.MicrosoftAuthTokens tokens = getConfig().methods.microsoft.tokens;
+            Instant xblExpiration = Instant.ofEpochMilli(tokens.xblExpiration);
+            if(xblExpiration.isAfter(Instant.now()) && !tokens.xblToken.isBlank())
+            {
+                LOGGER.info("XBL token is valid");
+                return new XBLToken(tokens.xblToken, xblExpiration);
+            }
+
             LOGGER.info("Exchanging Microsoft access token for an Xbox Live access token...");
             try (CloseableHttpClient client = HttpClients.createMinimal()) {
                 // Build a new HTTP request
@@ -299,7 +371,7 @@ public final class MicrosoftUtils
                           },
                           "RelyingParty": "http://auth.xboxlive.com",
                           "TokenType": "JWT"
-                        }""", accessToken)
+                        }""", accessToken.accessToken())
                 ));
 
                 // Send the request on the HTTP client
@@ -312,13 +384,15 @@ public final class MicrosoftUtils
                 final JsonObject json = res.getStatusLine().getStatusCode() == 200
                                         ? JsonHelper.deserialize(EntityUtils.toString(res.getEntity()))
                                         : new JsonObject();
-                return Optional.ofNullable(json.get("Token"))
-                               .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                return Optional.ofNullable(XBLToken.createFromJSON(json))
+                               .filter(token -> !token.token().isBlank())
                                // If present, log success and return
                                .map(token -> {
+                                   getConfig().methods.microsoft.tokens.xblToken = token.token();
+                                   getConfig().methods.microsoft.tokens.xblExpiration = token.expires().toEpochMilli();
+
                                    LOGGER.info("Acquired Xbox Live access token! ({})",
-                                       StringUtils.abbreviateMiddle(token, "...", 32));
+                                       StringUtils.abbreviateMiddle(token.token(), "...", 32));
                                    return token;
                                })
                                // Otherwise, throw an exception with the error description if present
@@ -344,15 +418,25 @@ public final class MicrosoftUtils
      * <p>NB: You must manually interrupt the executor thread if the
      * completable future is cancelled!
      *
-     * @param accessToken Xbox Live access token
+     * @param xblToken Xbox Live access token
      * @param executor    executor to run the login task on
      * @return completable future for a mapping of Xbox Live XSTS token ("Token") and user hash ("uhs")
      */
-    public static CompletableFuture<Map<String, String>> acquireXboxXstsToken(
-        final String accessToken, final Executor executor
+    public static CompletableFuture<XSTSToken> acquireXboxXstsToken(
+        final XBLToken xblToken, final Executor executor
     )
     {
         return CompletableFuture.supplyAsync(() -> {
+            AuthMeConfig.LoginMethodsSchema.MicrosoftAuthTokens tokens = getConfig().methods.microsoft.tokens;
+            Instant xstsExpiration = Instant.ofEpochMilli(tokens.xblExpiration);
+            if(xstsExpiration.isAfter(Instant.now())
+                && !tokens.xstsToken.isBlank()
+                && !tokens.xstsUhs.isBlank()
+            )
+            {
+                LOGGER.info("XSTS token is valid");
+                return new XSTSToken(tokens.xstsToken, tokens.xstsUhs, xstsExpiration);
+            }
             LOGGER.info("Exchanging Xbox Live token for an Xbox Live XSTS token...");
             try (CloseableHttpClient client = HttpClients.createMinimal()) {
                 // Build a new HTTP request
@@ -368,7 +452,7 @@ public final class MicrosoftUtils
                           },
                           "RelyingParty": "rp://api.minecraftservices.com/",
                           "TokenType": "JWT"
-                        }""", accessToken)
+                        }""", xblToken.token())
                 ));
 
                 // Send the request on the HTTP client
@@ -381,20 +465,17 @@ public final class MicrosoftUtils
                 final JsonObject json = res.getStatusLine().getStatusCode() == 200
                                         ? JsonHelper.deserialize(EntityUtils.toString(res.getEntity()))
                                         : new JsonObject();
-                return Optional.ofNullable(json.get("Token"))
-                               .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                return Optional.ofNullable(XSTSToken.createFromJSON(json))
+                               .filter(token -> !token.token().isBlank())
                                // If present, extract the user hash, log success and return
                                .map(token -> {
-                                   // Extract the user hash
-                                   final String uhs = json.get("DisplayClaims").getAsJsonObject()
-                                                          .get("xui").getAsJsonArray()
-                                                          .get(0).getAsJsonObject()
-                                                          .get("uhs").getAsString();
-                                   // Return an immutable mapping of the token and user hash
                                    LOGGER.info("Acquired Xbox Live XSTS token! (token={}, uhs={})",
-                                       StringUtils.abbreviateMiddle(token, "...", 32), uhs);
-                                   return Map.of("Token", token, "uhs", uhs);
+                                       StringUtils.abbreviateMiddle(token.token(), "...", 32), token.uhs());
+
+                                   getConfig().methods.microsoft.tokens.xstsToken = token.token();
+                                   getConfig().methods.microsoft.tokens.xstsUhs = token.uhs();
+                                   getConfig().methods.microsoft.tokens.xstsExpiration = token.expires().toEpochMilli();
+                                   return token;
                                })
                                // Otherwise, throw an exception with the error description if present
                                .orElseThrow(() -> new Exception(
@@ -418,16 +499,22 @@ public final class MicrosoftUtils
      * <p>NB: You must manually interrupt the executor thread if the
      * completable future is cancelled!
      *
-     * @param xstsToken Xbox Live XSTS token
-     * @param userHash  Xbox Live user hash
+     * @param xstsToken Xbox Live XSTS token and user hash (uhs)
      * @param executor  executor to run the login task on
      * @return completable future for the Minecraft access token
      */
-    public static CompletableFuture<String> acquireMCAccessToken(
-        final String xstsToken, final String userHash, final Executor executor
+    public static CompletableFuture<MinecraftToken> acquireMCAccessToken(
+        final XSTSToken xstsToken, final Executor executor
     )
     {
         return CompletableFuture.supplyAsync(() -> {
+            AuthMeConfig.LoginMethodsSchema.MicrosoftAuthTokens tokens = getConfig().methods.microsoft.tokens;
+            Instant mcExpiration = Instant.ofEpochMilli(tokens.mcAccessExpiration);
+            if(mcExpiration.isAfter(Instant.now()) && !tokens.mcAccessToken.isBlank())
+            {
+                LOGGER.info("Minecraft token is valid");
+                return new MinecraftToken(tokens.mcAccessToken, mcExpiration);
+            }
             LOGGER.info("Exchanging Xbox Live XSTS token for a Minecraft access token...");
             try (CloseableHttpClient client = HttpClients.createMinimal()) {
                 // Build a new HTTP request
@@ -435,7 +522,7 @@ public final class MicrosoftUtils
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/json");
                 request.setEntity(new StringEntity(
-                    String.format("{\"identityToken\": \"XBL3.0 x=%s;%s\"}", userHash, xstsToken)
+                    String.format("{\"identityToken\": \"XBL3.0 x=%s;%s\"}", xstsToken.uhs(), xstsToken.token())
                 ));
 
                 // Send the request on the HTTP client
@@ -445,13 +532,16 @@ public final class MicrosoftUtils
 
                 // Attempt to parse the response body as JSON and extract the access token
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
-                return Optional.ofNullable(json.get("access_token"))
-                               .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
+                return Optional.ofNullable(MinecraftToken.createFromJSON(json))
+                               .filter(token -> !token.accessToken().isBlank())
                                // If present, log success and return
                                .map(token -> {
+                                   getConfig().methods.microsoft.tokens.mcAccessToken = token.accessToken();
+                                   getConfig().methods.microsoft.tokens.mcAccessExpiration = token.expiresAt.toEpochMilli();
+                                   CONFIG.save();
                                    LOGGER.info("Acquired Minecraft access token! ({})",
-                                       StringUtils.abbreviateMiddle(token, "...", 32));
+                                       StringUtils.abbreviateMiddle(token.accessToken(), "...", 32)
+                                   );
                                    return token;
                                })
                                // Otherwise, throw an exception with the error description if present
@@ -482,7 +572,7 @@ public final class MicrosoftUtils
      * @return completable future for the new Minecraft session
      * @see SessionUtils#setSession(Session) to apply the new session
      */
-    public static CompletableFuture<Session> login(final String mcToken, final Executor executor)
+    public static CompletableFuture<Session> login(final MinecraftToken mcToken, final Executor executor)
     {
         return CompletableFuture.supplyAsync(() -> {
             LOGGER.info("Fetching Minecraft profile...");
@@ -490,7 +580,7 @@ public final class MicrosoftUtils
                 // Build a new HTTP request
                 final HttpGet request = new HttpGet(URI.create(getConfig().methods.microsoft.mcProfileUrl));
                 request.setConfig(REQUEST_CONFIG);
-                request.setHeader("Authorization", "Bearer " + mcToken);
+                request.setHeader("Authorization", "Bearer " + mcToken.accessToken());
 
                 // Send the request on the HTTP client
                 LOGGER.info("[{}] {} (timeout={}s)",
@@ -509,7 +599,7 @@ public final class MicrosoftUtils
                                    return new Session(
                                        json.get("name").getAsString(),
                                        uuid,
-                                       mcToken,
+                                       mcToken.accessToken(),
                                        Optional.empty(),
                                        Optional.empty(),
                                        Session.AccountType.MOJANG
@@ -531,6 +621,131 @@ public final class MicrosoftUtils
         }, executor);
     }
 
+    /**
+     * Derives an iat (issued at time) from a JWT
+     * @param jwt token to examine
+     * @return issuance time
+     */
+    private static Instant iatFromJWT(String jwt)
+    {
+        return Instant.ofEpochSecond(JsonHelper.deserialize(new String(BASE_64_DECODER.decode(jwt.split("\\.")[1]))).get("iat").getAsLong());
+    }
+
+    public record XBLToken(String token,Instant expires)
+    {
+
+        static @Nullable XBLToken createFromJSON(JsonObject json)
+        {
+            JsonElement accessTokenElement = json.get("Token");
+            JsonElement expiresAtElement = json.get("NotAfter");
+
+            if(accessTokenElement == null  || expiresAtElement == null)
+            {
+                return null;
+            }
+
+            return new XBLToken(accessTokenElement.getAsString(),
+                Instant.from(DateTimeFormatter.ISO_INSTANT.parse(expiresAtElement.getAsString()))
+            );
+        }
+    }
+
+    public record XSTSToken(String token, String uhs, Instant expires)
+    {
+
+        static @Nullable XSTSToken createFromJSON(JsonObject json)
+        {
+            JsonElement accessTokenElement = json.get("Token");
+            JsonElement expiresAtElement = json.get("NotAfter");
+
+            if(accessTokenElement == null || expiresAtElement == null)
+            {
+                return null;
+            }
+
+            final String uhs = json.get("DisplayClaims").getAsJsonObject()
+                .get("xui").getAsJsonArray()
+                .get(0).getAsJsonObject()
+                .get("uhs").getAsString();
+
+            return new XSTSToken(accessTokenElement.getAsString(),
+                uhs,
+                Instant.from(DateTimeFormatter.ISO_INSTANT.parse(expiresAtElement.getAsString()))
+            );
+        }
+    }
+
+    public record MSAToken(String accessToken, String refreshToken, Instant expiresAt)
+    {
+        public boolean needsRefresh()
+        {
+            return expiresAt.isBefore(Instant.now());
+        }
+
+        static @Nullable MSAToken createFromJSON(JsonObject json)
+        {
+            JsonElement accessTokenElement = json.get("access_token");
+            JsonElement refreshTokenElement = json.get("refresh_token");
+            JsonElement expiresInElement = json.get("expires_in");
+
+            if(accessTokenElement == null || refreshTokenElement == null || expiresInElement == null)
+            {
+                return null;
+            }
+
+            return new MSAToken(accessTokenElement.getAsString(), refreshTokenElement.getAsString(), Instant.now().plusSeconds(expiresInElement.getAsLong()));
+        }
+    }
+
+    public record MinecraftToken(String accessToken, Instant expiresAt)
+    {
+        public boolean needsRefresh()
+        {
+            return expiresAt.isBefore(Instant.now());
+        }
+
+        static @Nullable MinecraftToken createFromJSON(JsonObject json)
+        {
+            JsonElement accessTokenElement = json.get("access_token");
+            JsonElement expiresInElement = json.get("expires_in");
+
+            if(accessTokenElement == null || expiresInElement == null)
+            {
+                return null;
+            }
+
+            String accessToken = accessTokenElement.getAsString();
+            Instant issuanceTime = iatFromJWT(accessToken);
+
+            return new MinecraftToken(accessTokenElement.getAsString(), issuanceTime.plusSeconds(expiresInElement.getAsLong()));
+        }
+    }
+
+    /**
+     * Defines the type of request to make when requesting an MSA token
+     */
+    enum AuthorizationCodeType
+    {
+        AUTHORIZATION("code", "authorization_code"),
+        REFRESH("refresh_token", "refresh_token");
+
+        private final String parameterName;
+        private final String grantType;
+
+        AuthorizationCodeType(String parameterName, String grantType)
+        {
+            this.parameterName = parameterName;
+            this.grantType = grantType;
+        }
+
+        public String getParameterName() {
+            return parameterName;
+        }
+
+        public String getGrantType() {
+            return grantType;
+        }
+    }
     /**
      * Indicates the type of user interaction that is required when requesting
      * Microsoft authorization codes.
