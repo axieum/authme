@@ -76,6 +76,43 @@ public class AuthMeConfig implements ConfigData
 
             @Comment("Minecraft profile url")
             public String mcProfileUrl = "https://api.minecraftservices.com/minecraft/profile";
+
+            @ConfigEntry.Gui.Excluded
+            public MicrosoftAuthTokens tokens = new MicrosoftAuthTokens();
+        }
+
+
+        public static class MicrosoftAuthTokens {
+            @Comment("Microsoft access token (keep secret)")
+            public String msAccessToken = "";
+
+            @Comment("Microsoft refresh token (keep secret)")
+            public String msRefreshToken = "";
+
+            @Comment("Microsoft access token expiration")
+            public long msAccessExpiration = -1;
+
+            @Comment("Minecraft access token (keep secret)")
+            public String mcAccessToken = "";
+
+            @Comment("Minecraft access token expiration")
+            public long mcAccessExpiration = -1;
+
+            @Comment("XBL token (keep secret)")
+            public String xblToken = "";
+
+            @Comment("XBL token expiration")
+            public long xblExpiration = -1;
+
+            @Comment("XSTS token (keep secret)")
+            public String xstsToken = "";
+
+            @Comment("XSTS UHS")
+            public String xstsUhs = "";
+
+            @Comment("XSTS expiration")
+            public long xstsExpiration = -1;
+
         }
 
         @Comment("Login via Mojang (or legacy)")

@@ -1,9 +1,12 @@
 package me.axieum.mcmod.authme.impl.gui;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.axieum.mcmod.authme.impl.config.AuthMeConfig;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -16,7 +19,8 @@ import net.minecraft.util.Formatting;
 import me.axieum.mcmod.authme.api.gui.AuthScreen;
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils;
 import me.axieum.mcmod.authme.api.util.SessionUtils;
-import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
+
+import static me.axieum.mcmod.authme.impl.AuthMe.*;
 
 /**
  * A screen for handling user authentication via Microsoft.
@@ -62,22 +66,21 @@ public class MicrosoftAuthScreen extends AuthScreen
         if (task != null) return;
 
         // Set the initial progress/status of the login task
-        status = Text.translatable("gui.authme.microsoft.status.checkBrowser");
+        status = Text.translatable("gui.authme.microsoft.status.loggingIn");
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
 
         // Start the login task
-        task = MicrosoftUtils
-            // Acquire a Microsoft auth code
-            .acquireMSAuthCode(success -> Text.translatable("gui.authme.microsoft.browser").getString(), executor)
-
-            // Exchange the Microsoft auth code for an access token
-            .thenComposeAsync(msAuthCode -> {
-                status = Text.translatable("gui.authme.microsoft.status.msAccessToken");
-                return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
-            })
-
+        CompletableFuture<MicrosoftUtils.MSAToken> msaTask = MicrosoftUtils.acquireMSAToken(executor);
+        if(msaTask == null)
+        {
+            status = Text.translatable("gui.authme.microsoft.status.checkBrowser");
+            msaTask = MicrosoftUtils.acquireMSAuthCode(success -> Text.translatable("gui.authme.microsoft.browser").getString(), executor)
+                .thenComposeAsync((accessCode) -> MicrosoftUtils.acquireMSAccessToken(accessCode, executor));
+        }
+        task =
+            msaTask
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
                 status = Text.translatable("gui.authme.microsoft.status.xboxAccessToken");
@@ -93,11 +96,8 @@ public class MicrosoftAuthScreen extends AuthScreen
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
                 status = Text.translatable("gui.authme.microsoft.status.mcAccessToken");
-                return MicrosoftUtils.acquireMCAccessToken(
-                    xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
-                );
+                return MicrosoftUtils.acquireMCAccessToken(xboxXstsData, executor);
             })
-
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
                 status = Text.translatable("gui.authme.microsoft.status.mcProfile");
@@ -120,10 +120,15 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // On any exception, update the status and cancel button
             .exceptionally(error -> {
+                boolean isTimeout = error.getCause() instanceof ConnectTimeoutException;
                 status = Text.translatable(
-                    error.getCause() instanceof ConnectTimeoutException ? "gui.authme.error.timeout"
-                                                                        : "gui.authme.error.generic"
+                     isTimeout ? "gui.authme.error.timeout"
+                               : "gui.authme.error.generic"
                 ).formatted(Formatting.RED);
+
+                // We couldn't log in, so let's assume the saved tokens are wrong and get rid of them.
+                if(!isTimeout) getConfig().methods.microsoft.tokens = new AuthMeConfig.LoginMethodsSchema.MicrosoftAuthTokens();
+
                 cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
             });
@@ -157,6 +162,9 @@ public class MicrosoftAuthScreen extends AuthScreen
             task.cancel(true);
             executor.shutdownNow();
         }
+
+        // Save the config to keep tokens)
+        CONFIG.save();
 
         // Cascade the closing
         super.close();
