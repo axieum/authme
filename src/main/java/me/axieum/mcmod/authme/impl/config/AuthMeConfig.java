@@ -80,6 +80,11 @@ public class AuthMeConfig implements ConfigData
             @Comment("Minecraft profile url")
             public String mcProfileUrl = MicrosoftUtils.MC_PROFILE_URL;
 
+            /**
+             * Determines whether the configured URLs differ from the defaults.
+             *
+             * @return true if the configured URLs are unchanged
+             */
             public boolean isDefaults()
             {
                 return Objects.equals(authorizeUrl, MicrosoftUtils.AUTHORIZE_URL)
