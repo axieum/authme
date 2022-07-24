@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.impl.gui;
 
+import me.axieum.mcmod.authme.impl.AuthMe;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -54,6 +55,7 @@ public class AuthMethodScreen extends Screen
                     if (getConfig().methods.microsoft.isDefaults()) {
                         client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
                     } else {
+                        AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
                         ConfirmScreen confirmScreen = new ConfirmScreen(
                             accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
                             Text.translatable("gui.authme.microsoft.warning.title"),
