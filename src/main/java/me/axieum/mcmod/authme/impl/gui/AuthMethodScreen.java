@@ -54,14 +54,8 @@ public class AuthMethodScreen extends Screen
                     if (getConfig().methods.microsoft.isDefaults()) {
                         client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
                     } else {
-                        var confirmScreen = new ConfirmScreen(
-                            accepted -> {
-                                if (accepted) {
-                                    client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
-                                } else {
-                                    client.setScreen(this);
-                                }
-                            },
+                        ConfirmScreen confirmScreen = new ConfirmScreen(
+                            accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
                             Text.translatable("gui.authme.microsoft.warning.title"),
                             Text.translatable("gui.authme.microsoft.warning.body"),
                             Text.translatable("gui.authme.microsoft.warning.accept"),

@@ -23,7 +23,6 @@
   "gui.authme.microsoft.status.xboxXstsToken": "Acquiring Xbox XSTS token...",
   "gui.authme.microsoft.status.mcAccessToken": "Acquiring Minecraft access token...",
   "gui.authme.microsoft.status.mcProfile": "Fetching your Minecraft profile...",
-
   "gui.authme.microsoft.warning.title": "Warning! Non-default options for Microsoft authentication",
   "gui.authme.microsoft.warning.body": "If you did not make this change, then this could leak your account token. Do you wish to continue anyway?",
   "gui.authme.microsoft.warning.accept": "I know what I'm doing",
