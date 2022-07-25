@@ -1,6 +1,5 @@
 package me.axieum.mcmod.authme.impl.gui;
 
-import me.axieum.mcmod.authme.impl.AuthMe;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -10,6 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
+import me.axieum.mcmod.authme.impl.AuthMe;
 import static me.axieum.mcmod.authme.impl.AuthMe.WIDGETS_TEXTURE;
 import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
 
