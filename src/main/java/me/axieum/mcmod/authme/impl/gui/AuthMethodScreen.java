@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.impl.gui;
 
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
@@ -8,7 +9,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
+import me.axieum.mcmod.authme.impl.AuthMe;
 import static me.axieum.mcmod.authme.impl.AuthMe.WIDGETS_TEXTURE;
+import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
 
 /**
  * A screen for choosing a user authentication method.
@@ -48,7 +51,22 @@ public class AuthMethodScreen extends Screen
             new TexturedButtonWidget(
                 width / 2 - 20 - 10 - 4, height / 2 - 5, 20, 20,
                 0, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new MicrosoftAuthScreen(this, parentScreen)),
+                button -> {
+                    if (getConfig().methods.microsoft.isDefaults()) {
+                        client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
+                    } else {
+                        AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
+                        ConfirmScreen confirmScreen = new ConfirmScreen(
+                            accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
+                            Text.translatable("gui.authme.microsoft.warning.title"),
+                            Text.translatable("gui.authme.microsoft.warning.body"),
+                            Text.translatable("gui.authme.microsoft.warning.accept"),
+                            Text.translatable("gui.authme.microsoft.warning.cancel")
+                        );
+                        client.setScreen(confirmScreen);
+                        confirmScreen.disableButtons(40);
+                    }
+                },
                 (btn, mtx, x, y) -> renderTooltip(
                     mtx, Text.translatable("gui.authme.method.button.microsoft"), x, y
                 ),

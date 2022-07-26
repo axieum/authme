@@ -1,5 +1,7 @@
 package me.axieum.mcmod.authme.impl.config;
 
+import java.util.Objects;
+
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import me.axieum.mcmod.authme.api.util.MicrosoftUtils;
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils.MicrosoftPrompt;
 
 @Config(name = "authme")
@@ -57,25 +60,40 @@ public class AuthMeConfig implements ConfigData
             public int port = 25585;
 
             @Comment("OAuth2 client id")
-            public String clientId = "e16699bb-2aa8-46da-b5e3-45cbcce29091";
+            public String clientId = MicrosoftUtils.CLIENT_ID;
 
             @Comment("OAuth2 authorization url")
-            public String authorizeUrl = "https://login.live.com/oauth20_authorize.srf";
+            public String authorizeUrl = MicrosoftUtils.AUTHORIZE_URL;
 
             @Comment("OAuth2 access token url")
-            public String tokenUrl = "https://login.live.com/oauth20_token.srf";
+            public String tokenUrl = MicrosoftUtils.TOKEN_URL;
 
             @Comment("Xbox authentication url")
-            public String xboxAuthUrl = "https://user.auth.xboxlive.com/user/authenticate";
+            public String xboxAuthUrl = MicrosoftUtils.XBOX_AUTH_URL;
 
             @Comment("Xbox XSTS authorization url")
-            public String xboxXstsUrl = "https://xsts.auth.xboxlive.com/xsts/authorize";
+            public String xboxXstsUrl = MicrosoftUtils.XBOX_XSTS_URL;
 
             @Comment("Minecraft authentication url")
-            public String mcAuthUrl = "https://api.minecraftservices.com/authentication/login_with_xbox";
+            public String mcAuthUrl = MicrosoftUtils.MC_AUTH_URL;
 
             @Comment("Minecraft profile url")
-            public String mcProfileUrl = "https://api.minecraftservices.com/minecraft/profile";
+            public String mcProfileUrl = MicrosoftUtils.MC_PROFILE_URL;
+
+            /**
+             * Determines whether the configured URLs differ from the defaults.
+             *
+             * @return true if the configured URLs are unchanged
+             */
+            public boolean isDefaults()
+            {
+                return Objects.equals(authorizeUrl, MicrosoftUtils.AUTHORIZE_URL)
+                    && Objects.equals(tokenUrl, MicrosoftUtils.TOKEN_URL)
+                    && Objects.equals(xboxAuthUrl, MicrosoftUtils.XBOX_AUTH_URL)
+                    && Objects.equals(xboxXstsUrl, MicrosoftUtils.XBOX_XSTS_URL)
+                    && Objects.equals(mcAuthUrl, MicrosoftUtils.MC_AUTH_URL)
+                    && Objects.equals(mcProfileUrl, MicrosoftUtils.MC_PROFILE_URL);
+            }
         }
 
         @Comment("Login via Mojang (or legacy)")
