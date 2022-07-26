@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.1.0](https://github.com/axieum/authme/compare/v4.0.0...v4.1.0) (2022-07-26)
+
+
+### Features
+
+* add a warning screen when custom Microsoft auth URLs are in use ([#55](https://github.com/axieum/authme/issues/55)) ([563b8e7](https://github.com/axieum/authme/commit/563b8e721923727e1621ae191d90430fcced4013))
+* add traditional Chinese translation ([#52](https://github.com/axieum/authme/issues/52)) ([423c495](https://github.com/axieum/authme/commit/423c4955c4394fba4f0840cc93bff6103c348b5d))
+
 ## [4.0.0](https://github.com/axieum/authme/compare/v3.1.0...v4.0.0) (2022-06-08)
 
 
