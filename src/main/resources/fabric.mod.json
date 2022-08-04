@@ -30,7 +30,8 @@
     "java": ">=17",
     "minecraft": "1.19.x",
     "fabricloader": ">=0.11.3",
-    "fabric": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-resource-loader-v0": "*",
     "cloth-config2": "*"
   },
   "suggests": {
