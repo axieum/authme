@@ -10,13 +10,13 @@
   "gui.authme.toast.greeting": "Привет, %s!",
 
   "gui.authme.method.title": "Выберите способ авторизации",
-  "gui.authme.method.greeting": "Привет, %s!",
+  "gui.authme.method.greeting": "Приветствую, %s!",
   "gui.authme.method.button.microsoft": "Microsoft",
   "gui.authme.method.button.mojang": "Mojang (или Legacy)",
   "gui.authme.method.button.offline": "Офлайн",
 
   "gui.authme.microsoft.title": "Вход через Microsoft",
-  "gui.authme.microsoft.browser": "<!doctype html><html lang=\"ru\"><head><meta charset=\"utf-8\" /><title>AuthMe</title></head><body><span style=\"font-family: Calibri;\">Вы можете закрыть это окно и вернуться в Minecraft :)</span></body></html>",
+  "gui.authme.microsoft.browser": "<!doctype html><html lang=\"ru_ru\"><head><meta charset=\"utf-8\" /><title>AuthMe</title></head><body><span style=\"font-family: Calibri;\">Вы можете закрыть это окно и вернуться в Minecraft :)</span></body></html>",
   "gui.authme.microsoft.status.checkBrowser": "Проверьте ваш браузер...",
   "gui.authme.microsoft.status.msAccessToken": "Получение токена доступа к Microsoft...",
   "gui.authme.microsoft.status.xboxAccessToken": "Получение токена доступа к Xbox...",
