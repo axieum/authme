@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import me.axieum.mcmod.authme.api.gui.AnchorPoint;
 import me.axieum.mcmod.authme.api.gui.widget.AuthButtonWidget;
 import me.axieum.mcmod.authme.api.util.SessionUtils;
 import me.axieum.mcmod.authme.impl.gui.AuthMethodScreen;
@@ -43,15 +44,17 @@ public abstract class MultiplayerScreenMixin extends Screen
         addDrawableChild(
             new AuthButtonWidget(
                 this,
-                getConfig().authButton.x,
-                getConfig().authButton.y,
+                (int) (getConfig().authButton.anchor.x * width) + getConfig().authButton.x,
+                (int) (getConfig().authButton.anchor.y * height) + getConfig().authButton.y,
                 btn -> client.setScreen(new AuthMethodScreen(this)),
                 // Optionally, enable button dragging
                 getConfig().authButton.draggable ? btn -> {
                     // Sync configuration with the updated button position
-                    LOGGER.info("Moved the auth button to {}, {}", btn.x, btn.y);
-                    getConfig().authButton.x = btn.x;
-                    getConfig().authButton.y = btn.y;
+                    final AnchorPoint anchor = AnchorPoint.getFromCoords(btn.x, btn.y, width, height);
+                    LOGGER.info("Moved the auth button to {}, {} anchored {}", btn.x, btn.y, anchor);
+                    getConfig().authButton.anchor = anchor;
+                    getConfig().authButton.x = btn.x - (int) (anchor.x * width) - btn.getWidth() / 2;
+                    getConfig().authButton.y = btn.y - (int) (anchor.y * height) - btn.getWidth() / 2;
                     CONFIG.save();
                 } : null,
                 // Add a tooltip to greet the player

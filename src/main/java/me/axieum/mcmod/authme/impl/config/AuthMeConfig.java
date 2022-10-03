@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import me.axieum.mcmod.authme.api.gui.AnchorPoint;
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils.MicrosoftPrompt;
 
 @Config(name = "authme")
@@ -25,8 +26,11 @@ public class AuthMeConfig implements ConfigData
      */
     public static class AuthButtonSchema
     {
-        @Comment("Position of the button on the multiplayer screen")
+        @Comment("Position relative to the anchor point of the button on the multiplayer screen")
         public int x = 6, y = 6;
+
+        @Comment("Anchor point of the button on the multiplayer screen")
+        public AnchorPoint anchor = AnchorPoint.TOP_LEFT;
 
         @Comment("True if the button can be dragged to a new position")
         public boolean draggable = true;
