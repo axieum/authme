@@ -10,7 +10,8 @@
     "MinecraftClientAccessor",
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
-    "RealmsMainScreenAccessor"
+    "RealmsMainScreenAccessor",
+    "YggdrasilAuthenticationServiceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
