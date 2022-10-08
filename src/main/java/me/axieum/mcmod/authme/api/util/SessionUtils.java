@@ -20,6 +20,7 @@ import net.minecraft.client.util.Session;
 
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
+import me.axieum.mcmod.authme.mixin.SplashTextResourceSupplierAccessor;
 import me.axieum.mcmod.authme.mixin.YggdrasilAuthenticationServiceAccessor;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
 
@@ -60,6 +61,7 @@ public final class SessionUtils
 
         // Use an accessor mixin to update the 'private final' Minecraft session
         ((MinecraftClientAccessor) client).setSession(session);
+        ((SplashTextResourceSupplierAccessor) client.getSplashTextLoader()).setSession(session);
 
         // Refresh the session properties
         client.getSessionProperties().clear();

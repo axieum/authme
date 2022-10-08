@@ -11,6 +11,7 @@
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
     "RealmsMainScreenAccessor",
+    "SplashTextResourceSupplierAccessor",
     "YggdrasilAuthenticationServiceAccessor"
   ],
   "injectors": {
