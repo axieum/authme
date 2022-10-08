@@ -75,13 +75,23 @@ public abstract class DisconnectedScreenMixin extends Screen
      */
     private static boolean isUserRelated(final @Nullable Text reason)
     {
-        if (reason instanceof TranslatableTextContent) {
-            final String key = ((TranslatableTextContent) reason).getKey();
+        if (reason != null && reason.getContent() instanceof TranslatableTextContent content) {
+            final String key = content.getKey();
             return key != null && switch (key) {
-                case "multiplayer.disconnect.duplicate_login",
+                case "disconnect.kicked",
+                    "multiplayer.disconnect.banned",
+                    "multiplayer.disconnect.banned.reason",
+                    "multiplayer.disconnect.banned.expiration",
+                    "multiplayer.disconnect.duplicate_login",
+                    "multiplayer.disconnect.kicked",
                     "multiplayer.disconnect.unverified_username",
                     "multiplayer.disconnect.not_whitelisted",
-                    "multiplayer.disconnect.name_taken" -> true;
+                    "multiplayer.disconnect.name_taken",
+                    "multiplayer.disconnect.missing_public_key",
+                    "multiplayer.disconnect.expired_public_key",
+                    "multiplayer.disconnect.invalid_public_key_signature",
+                    "multiplayer.disconnect.unsigned_chat",
+                    "multiplayer.disconnect.chat_validation_failed" -> true;
                 default -> key.startsWith("disconnect.loginFailed");
             };
         }

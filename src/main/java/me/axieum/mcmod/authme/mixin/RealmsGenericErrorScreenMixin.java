@@ -75,8 +75,8 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
      */
     private static boolean isUserRelated(final @Nullable Text reason)
     {
-        if (reason instanceof TranslatableTextContent) {
-            final String key = ((TranslatableTextContent) reason).getKey();
+        if (reason != null && reason.getContent() instanceof TranslatableTextContent content) {
+            final String key = content.getKey();
             return key != null && key.startsWith("mco.error.invalid.session");
         }
         return false;
