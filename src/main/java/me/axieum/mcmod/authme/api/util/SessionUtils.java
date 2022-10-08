@@ -7,15 +7,20 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.exceptions.AuthenticationException;
+import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.SocialInteractionsManager;
+import net.minecraft.client.report.AbuseReportContext;
+import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
 
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
+import me.axieum.mcmod.authme.mixin.YggdrasilAuthenticationServiceAccessor;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
 
 /**
@@ -23,17 +28,8 @@ import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
  */
 public final class SessionUtils
 {
-    // The Mojang authentication service
-    private static final YggdrasilAuthenticationService YAS = new YggdrasilAuthenticationService(
-        MinecraftClient.getInstance().getNetworkProxy(), UUID.randomUUID().toString()
-    );
-    // The Mojang user authentication provider
-    private static final YggdrasilUserAuthentication YUA = (YggdrasilUserAuthentication)
-        YAS.createUserAuthentication(Agent.MINECRAFT);
-    // The Mojang Minecraft session service
-    private static final YggdrasilMinecraftSessionService YMSS = (YggdrasilMinecraftSessionService)
-        YAS.createMinecraftSessionService();
-
+    // The access token used for offline sessions
+    public static final String OFFLINE_TOKEN = "invalidtoken";
     // The number of milliseconds that a session status is cached for
     public static final long STATUS_TTL = 60_000L; // 60s
     // The time of the last session status check (milliseconds since epoch)
@@ -60,8 +56,40 @@ public final class SessionUtils
      */
     public static void setSession(Session session)
     {
+        final MinecraftClient client = MinecraftClient.getInstance();
+
         // Use an accessor mixin to update the 'private final' Minecraft session
-        ((MinecraftClientAccessor) MinecraftClient.getInstance()).setSession(session);
+        ((MinecraftClientAccessor) client).setSession(session);
+
+        // Refresh the session properties
+        client.getSessionProperties().clear();
+        client.getSessionProperties();
+
+        // Re-create the user API service (ignore offline session)
+        UserApiService userApiService = UserApiService.OFFLINE;
+        if (!OFFLINE_TOKEN.equals(session.getAccessToken())) {
+            try {
+                userApiService = getAuthService().createUserApiService(session.getAccessToken());
+            } catch (AuthenticationException e) {
+                LOGGER.error("Failed to verify authentication for new user API service!", e);
+            }
+        }
+        ((MinecraftClientAccessor) client).setUserApiService(userApiService);
+
+        // Re-create the social interactions manager
+        ((MinecraftClientAccessor) client).setSocialInteractionsManager(
+            new SocialInteractionsManager(client, userApiService)
+        );
+
+        // Re-create the profile keys
+        ((MinecraftClientAccessor) client).setProfileKeys(
+            new ProfileKeys(userApiService, session.getProfile().getId(), client.runDirectory.toPath())
+        );
+
+        // Re-create the abuse report context
+        ((MinecraftClientAccessor) client).setAbuseReportContext(
+            AbuseReportContext.create(client.getAbuseReportContext().environment(), userApiService)
+        );
 
         // Necessary for Realms to re-check for a valid session
         RealmsMainScreenAccessor.setCheckedClientCompatibility(false);
@@ -86,7 +114,7 @@ public final class SessionUtils
         return new Session(
             username,
             UUID.nameUUIDFromBytes(("offline:" + username).getBytes()).toString(),
-            "invalidtoken",
+            OFFLINE_TOKEN,
             Optional.empty(),
             Optional.empty(),
             Session.AccountType.LEGACY
@@ -119,10 +147,11 @@ public final class SessionUtils
             final String id = UUID.randomUUID().toString();
 
             // Attempt to join the Minecraft Session Service server
+            final YggdrasilMinecraftSessionService sessionService = getSessionService();
             try {
                 LOGGER.info("Verifying Minecraft session...");
-                YMSS.joinServer(profile, token, id);
-                if (YMSS.hasJoinedServer(profile, id, null).isComplete()) {
+                sessionService.joinServer(profile, token, id);
+                if (sessionService.hasJoinedServer(profile, id, null).isComplete()) {
                     LOGGER.info("The Minecraft session is valid");
                     lastStatus = SessionStatus.VALID;
                 } else {
@@ -141,13 +170,30 @@ public final class SessionUtils
     }
 
     /**
+     * Returns the Yggdrasil Minecraft Session Service.
+     *
+     * @return Yggdrasil Minecraft Session Service instance
+     */
+    public static YggdrasilMinecraftSessionService getSessionService()
+    {
+        return (YggdrasilMinecraftSessionService) MinecraftClient.getInstance().getSessionService();
+    }
+
+    /**
      * Returns the Yggdrasil Authentication Service.
      *
      * @return Yggdrasil Authentication Service instance
      */
     public static YggdrasilAuthenticationService getAuthService()
     {
-        return YAS;
+        final YggdrasilAuthenticationService authService = getSessionService().getAuthenticationService();
+
+        // Provide a random client token if not set
+        if (((YggdrasilAuthenticationServiceAccessor) authService).getClientToken() == null) {
+            ((YggdrasilAuthenticationServiceAccessor) authService).setClientToken(UUID.randomUUID().toString());
+        }
+
+        return authService;
     }
 
     /**
@@ -157,17 +203,7 @@ public final class SessionUtils
      */
     public static YggdrasilUserAuthentication getAuthProvider()
     {
-        return YUA;
-    }
-
-    /**
-     * Returns the Yggdrasil Minecraft Session Service.
-     *
-     * @return Yggdrasil Minecraft Session Service instance
-     */
-    public static YggdrasilMinecraftSessionService getSessionService()
-    {
-        return YMSS;
+        return (YggdrasilUserAuthentication) getAuthService().createUserAuthentication(Agent.MINECRAFT);
     }
 
     /**
