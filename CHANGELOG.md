@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.2.0](https://github.com/axieum/authme/compare/v4.1.0...v4.2.0) (2022-10-08)
+
+
+### Features
+
+* upgrade `cloth-config-fabric` (7 -> 8) ([2d9e00a](https://github.com/axieum/authme/commit/2d9e00a3bfaf251a6cce3b432580b805ea0f0d6d))
+
+
+### Bug Fixes
+
+* 'IS YOU' splash text should reflect the new username (fixes [#65](https://github.com/axieum/authme/issues/65)) ([#67](https://github.com/axieum/authme/issues/67)) ([2fc0ab2](https://github.com/axieum/authme/commit/2fc0ab2c060dc91814814d0dcef1839e4dcd2531))
+* re-login button should appear on the disconnected screen (fixes [#63](https://github.com/axieum/authme/issues/63)) ([#64](https://github.com/axieum/authme/issues/64)) ([f0bf6e2](https://github.com/axieum/authme/commit/f0bf6e28564cbdf834123be502f05972de9059c3))
+* unable to join servers with chat verification turned on (fixes [#60](https://github.com/axieum/authme/issues/60)) ([#66](https://github.com/axieum/authme/issues/66)) ([d8ee98d](https://github.com/axieum/authme/commit/d8ee98d081754f864735544390b7c773c31723df))
+
 ## [4.1.0](https://github.com/axieum/authme/compare/v4.0.0...v4.1.0) (2022-07-26)
 
 
