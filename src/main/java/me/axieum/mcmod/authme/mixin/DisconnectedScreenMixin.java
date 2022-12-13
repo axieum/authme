@@ -52,18 +52,19 @@ public abstract class DisconnectedScreenMixin extends Screen
             // Create and add the button to the screen where the back button is
             final ButtonWidget backButton = (ButtonWidget) children().get(0);
             addDrawableChild(
-                new ButtonWidget(
-                    backButton.x,
-                    backButton.y,
-                    backButton.getWidth(),
-                    backButton.getHeight(),
+                ButtonWidget.builder(
                     Text.translatable("gui.authme.button.relogin"),
                     btn -> client.setScreen(new AuthMethodScreen(parent))
-                )
+                ).dimensions(
+                    backButton.getX(),
+                    backButton.getY(),
+                    backButton.getWidth(),
+                    backButton.getHeight()
+                ).build()
             );
 
             // Shift the back button down below our new button
-            backButton.y += backButton.getHeight() + 4;
+            backButton.setY(backButton.getY() + backButton.getHeight() + 4);
         }
     }
 

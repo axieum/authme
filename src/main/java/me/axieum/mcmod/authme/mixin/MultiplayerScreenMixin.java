@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.mixin;
 
+import net.minecraft.client.gui.tooltip.Tooltip;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -49,16 +50,16 @@ public abstract class MultiplayerScreenMixin extends Screen
                 // Optionally, enable button dragging
                 getConfig().authButton.draggable ? btn -> {
                     // Sync configuration with the updated button position
-                    LOGGER.info("Moved the auth button to {}, {}", btn.x, btn.y);
-                    getConfig().authButton.x = btn.x;
-                    getConfig().authButton.y = btn.y;
+                    LOGGER.info("Moved the auth button to {}, {}", btn.getX(), btn.getY());
+                    getConfig().authButton.x = btn.getX();
+                    getConfig().authButton.y = btn.getY();
                     CONFIG.save();
                 } : null,
                 // Add a tooltip to greet the player
-                (btn, mtx, x, y) -> renderTooltip(mtx, Text.translatable(
+                Tooltip.of(Text.translatable(
                     "gui.authme.button.auth.tooltip",
                     Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
-                ), x, y),
+                )),
                 // Non-visible text, useful for screen narrator
                 Text.translatable("gui.authme.button.auth")
             )

@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.api.gui.widget;
 
+import net.minecraft.client.gui.tooltip.Tooltip;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -48,7 +49,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
      * @param y           y coordinate
      * @param pressAction on click action
      * @param message     non-visible button text
-     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, TooltipSupplier, Text)
+     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, Tooltip, Text)
      */
     public AuthButtonWidget(int x, int y, PressAction pressAction, @Nullable Text message)
     {
@@ -61,15 +62,15 @@ public class AuthButtonWidget extends TexturedButtonWidget
      * @param x               x coordinate
      * @param y               y coordinate
      * @param pressAction     on click action
-     * @param tooltipSupplier tooltip supplier
+     * @param tooltip         tooltip
      * @param message         non-visible button text
-     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, TooltipSupplier, Text)
+     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, Tooltip, Text)
      */
     public AuthButtonWidget(
-        int x, int y, PressAction pressAction, @Nullable TooltipSupplier tooltipSupplier, @Nullable Text message
+        int x, int y, PressAction pressAction, @Nullable Tooltip tooltip, @Nullable Text message
     )
     {
-        this(null, x, y, pressAction, null, tooltipSupplier, message);
+        this(null, x, y, pressAction, null, tooltip, message);
     }
 
     /**
@@ -98,7 +99,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
      * @param pressAction on click action
      * @param moveAction  on move action
      * @param message     non-visible button text
-     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, TooltipSupplier, Text)
+     * @see #AuthButtonWidget(Screen, int, int, PressAction, MoveAction, Tooltip, Text)
      */
     public AuthButtonWidget(
         @Nullable Screen screen,
@@ -120,7 +121,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
      * @param y               initial y coordinate
      * @param pressAction     on click action
      * @param moveAction      on move action
-     * @param tooltipSupplier tooltip supplier
+     * @param tooltip         tooltip
      * @param message         non-visible button text
      */
     public AuthButtonWidget(
@@ -129,13 +130,14 @@ public class AuthButtonWidget extends TexturedButtonWidget
         int y,
         PressAction pressAction,
         @Nullable MoveAction moveAction,
-        @Nullable TooltipSupplier tooltipSupplier,
+        @Nullable Tooltip tooltip,
         Text message
     )
     {
-        super(x, y, 20, 20, 0, 146, 20, ButtonWidget.WIDGETS_TEXTURE, 256, 256, pressAction, tooltipSupplier, message);
+        super(x, y, 20, 20, 0, 146, 20, ButtonWidget.WIDGETS_TEXTURE, 256, 256, pressAction, message);
         this.screen = screen;
         this.moveAction = moveAction;
+        this.setTooltip(tooltip);
         refreshSessionStatus();
     }
 
@@ -244,10 +246,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
             case OFFLINE -> u = 8;
             default -> u = 16;
         }
-        drawTexture(matrices, x + width - 6, y - 1, u, 60, 8, 8, 128, 128);
-
-        // Render the tooltip on top of the session status
-        if (isHovered()) renderTooltip(matrices, mouseX, mouseY);
+        drawTexture(matrices, getX() + width - 6, getY() - 1, u, 60, 8, 8, 128, 128);
     }
 
     /**

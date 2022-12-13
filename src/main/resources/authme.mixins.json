@@ -6,6 +6,7 @@
   "mixins": [],
   "server": [],
   "client": [
+    "AbuseReportContextAccessor",
     "DisconnectedScreenMixin",
     "MinecraftClientAccessor",
     "MultiplayerScreenMixin",

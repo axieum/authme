@@ -12,16 +12,13 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 
+import me.axieum.mcmod.authme.mixin.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.report.AbuseReportContext;
 import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
 
-import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
-import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
-import me.axieum.mcmod.authme.mixin.SplashTextResourceSupplierAccessor;
-import me.axieum.mcmod.authme.mixin.YggdrasilAuthenticationServiceAccessor;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
 
 /**
@@ -85,12 +82,12 @@ public final class SessionUtils
 
         // Re-create the profile keys
         ((MinecraftClientAccessor) client).setProfileKeys(
-            new ProfileKeys(userApiService, session.getProfile().getId(), client.runDirectory.toPath())
+            ProfileKeys.create(userApiService, session, client.runDirectory.toPath())
         );
 
         // Re-create the abuse report context
         ((MinecraftClientAccessor) client).setAbuseReportContext(
-            AbuseReportContext.create(client.getAbuseReportContext().environment(), userApiService)
+            AbuseReportContext.create(((AbuseReportContextAccessor) (Object) client.getAbuseReportContext()).getEnvironment(), userApiService)
         );
 
         // Necessary for Realms to re-check for a valid session

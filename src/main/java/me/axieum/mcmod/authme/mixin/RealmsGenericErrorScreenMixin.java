@@ -55,14 +55,15 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
             // Create and add the button to the screen above the back button
             final ButtonWidget backButton = (ButtonWidget) children().get(0);
             addDrawableChild(
-                new ButtonWidget(
-                    backButton.x,
-                    backButton.y - backButton.getHeight() - 4,
-                    backButton.getWidth(),
-                    backButton.getHeight(),
+                ButtonWidget.builder(
                     Text.translatable("gui.authme.button.relogin"),
                     btn -> client.setScreen(new AuthMethodScreen(parent))
-                )
+                ).dimensions(
+                    backButton.getX(),
+                    backButton.getY() - backButton.getHeight() - 4,
+                    backButton.getWidth(),
+                    backButton.getHeight()
+                ).build()
             );
         }
     }

@@ -12,8 +12,6 @@ public abstract class AuthScreen extends Screen
     protected final Screen parentScreen;
     // The screen to be returned to after a successful login
     protected final Screen successScreen;
-    // True if repeat keyboard events should be enabled for this screen
-    protected boolean enableKeyboardRepeatEvents = false;
     // True if the login task completed successfully
     protected boolean success = false;
     // True if the screen should be closed on success stat (via render thread)
@@ -38,9 +36,6 @@ public abstract class AuthScreen extends Screen
     {
         super.init();
         assert client != null;
-
-        // Optionally enable keyboard repeat events, e.g. allow holding down backspace
-        client.keyboard.setRepeatEvents(enableKeyboardRepeatEvents);
     }
 
     @Override
@@ -56,11 +51,5 @@ public abstract class AuthScreen extends Screen
     public void close()
     {
         if (client != null) client.setScreen(success ? successScreen : parentScreen);
-    }
-
-    @Override
-    public void removed()
-    {
-        if (enableKeyboardRepeatEvents && client != null) client.keyboard.setRepeatEvents(false);
     }
 }
