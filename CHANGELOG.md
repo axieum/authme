@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/axieum/authme/compare/v4.2.0...v5.0.0) (2022-12-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drops support for Minecraft <= 1.19.2
+
+### Features
+
+* upgrade to Minecraft 1.19.3 (fixes [#70](https://github.com/axieum/authme/issues/70)) ([#71](https://github.com/axieum/authme/issues/71)) ([9753f1a](https://github.com/axieum/authme/commit/9753f1ac8b5de8a0adec7b369e69845a699e56a6))
+
 ## [4.2.0](https://github.com/axieum/authme/compare/v4.1.0...v4.2.0) (2022-10-08)
 
 
