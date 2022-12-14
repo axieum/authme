@@ -180,10 +180,16 @@ public class MojangAuthScreen extends AuthScreen
 
         // Render the username & password field labels
         drawTextWithShadow(
-            matrices, client.textRenderer, usernameField.getMessage(), usernameField.getX(), usernameField.getY() - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            usernameField.getMessage(),
+            usernameField.getX(), usernameField.getY() - 16,
+            0xa0a0a0
         );
         drawTextWithShadow(
-            matrices, client.textRenderer, passwordField.getMessage(), passwordField.getX(), passwordField.getY() - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            passwordField.getMessage(),
+            passwordField.getX(), passwordField.getY() - 16,
+            0xa0a0a0
         );
 
         // Render the current progress/status of the login, if present

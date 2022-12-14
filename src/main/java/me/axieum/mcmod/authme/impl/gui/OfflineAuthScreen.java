@@ -132,7 +132,10 @@ public class OfflineAuthScreen extends AuthScreen
 
         // Render the username field label
         drawTextWithShadow(
-            matrices, client.textRenderer, usernameField.getMessage(), usernameField.getX(), usernameField.getY() - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            usernameField.getMessage(),
+            usernameField.getX(), usernameField.getY() - 16,
+            0xa0a0a0
         );
 
         // Cascade the rendering
