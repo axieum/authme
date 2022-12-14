@@ -18,6 +18,7 @@ import net.minecraft.client.report.AbuseReportContext;
 import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
 
+import me.axieum.mcmod.authme.mixin.AbuseReportContextAccessor;
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
 import me.axieum.mcmod.authme.mixin.SplashTextResourceSupplierAccessor;
@@ -85,12 +86,15 @@ public final class SessionUtils
 
         // Re-create the profile keys
         ((MinecraftClientAccessor) client).setProfileKeys(
-            new ProfileKeys(userApiService, session.getProfile().getId(), client.runDirectory.toPath())
+            ProfileKeys.create(userApiService, session, client.runDirectory.toPath())
         );
 
         // Re-create the abuse report context
         ((MinecraftClientAccessor) client).setAbuseReportContext(
-            AbuseReportContext.create(client.getAbuseReportContext().environment(), userApiService)
+            AbuseReportContext.create(
+                ((AbuseReportContextAccessor) (Object) client.getAbuseReportContext()).getEnvironment(),
+                userApiService
+            )
         );
 
         // Necessary for Realms to re-check for a valid session

@@ -47,7 +47,6 @@ public class MojangAuthScreen extends AuthScreen
     public MojangAuthScreen(Screen parentScreen, Screen successScreen)
     {
         super(Text.translatable("gui.authme.mojang.title"), parentScreen, successScreen);
-        this.enableKeyboardRepeatEvents = true;
         this.closeOnSuccess = true;
     }
 
@@ -83,21 +82,23 @@ public class MojangAuthScreen extends AuthScreen
 
         // Add a login button to submit the form
         addDrawableChild(
-            loginBtn = new ButtonWidget(
-                width / 2 - 100 - 2, height / 2 + 59, 100, 20,
+            loginBtn = ButtonWidget.builder(
                 Text.translatable("gui.authme.mojang.button.login"),
                 button -> login()
-            )
+            ).dimensions(
+                width / 2 - 100 - 2, height / 2 + 59, 100, 20
+            ).build()
         );
         loginBtn.active = isFormValid();
 
         // Add a cancel button to abort the task
         addDrawableChild(
-            new ButtonWidget(
-                width / 2 + 2, height / 2 + 59, 100, 20,
+            ButtonWidget.builder(
                 Text.translatable("gui.cancel"),
                 button -> close()
-            )
+            ).dimensions(
+                width / 2 + 2, height / 2 + 59, 100, 20
+            ).build()
         );
     }
 
@@ -175,19 +176,25 @@ public class MojangAuthScreen extends AuthScreen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.y - 16 - 23, 0xffffff);
+        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username & password field labels
         drawTextWithShadow(
-            matrices, client.textRenderer, usernameField.getMessage(), usernameField.x, usernameField.y - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            usernameField.getMessage(),
+            usernameField.getX(), usernameField.getY() - 16,
+            0xa0a0a0
         );
         drawTextWithShadow(
-            matrices, client.textRenderer, passwordField.getMessage(), passwordField.x, passwordField.y - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            passwordField.getMessage(),
+            passwordField.getX(), passwordField.getY() - 16,
+            0xa0a0a0
         );
 
         // Render the current progress/status of the login, if present
         if (status != null) {
-            drawCenteredText(matrices, client.textRenderer, status, width / 2, loginBtn.y - 20, 0xdddddd);
+            drawCenteredText(matrices, client.textRenderer, status, width / 2, loginBtn.getY() - 20, 0xdddddd);
         }
 
         // Cascade the rendering

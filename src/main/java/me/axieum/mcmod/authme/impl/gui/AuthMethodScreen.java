@@ -2,6 +2,7 @@ package me.axieum.mcmod.authme.impl.gui;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -47,66 +48,55 @@ public class AuthMethodScreen extends Screen
         );
 
         // Add a button for the 'Microsoft' authentication method
-        addDrawableChild(
-            new TexturedButtonWidget(
-                width / 2 - 20 - 10 - 4, height / 2 - 5, 20, 20,
-                0, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> {
-                    if (getConfig().methods.microsoft.isDefaults()) {
-                        client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
-                    } else {
-                        AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
-                        ConfirmScreen confirmScreen = new ConfirmScreen(
-                            accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
-                            Text.translatable("gui.authme.microsoft.warning.title"),
-                            Text.translatable("gui.authme.microsoft.warning.body"),
-                            Text.translatable("gui.authme.microsoft.warning.accept"),
-                            Text.translatable("gui.authme.microsoft.warning.cancel")
-                        );
-                        client.setScreen(confirmScreen);
-                        confirmScreen.disableButtons(40);
-                    }
-                },
-                (btn, mtx, x, y) -> renderTooltip(
-                    mtx, Text.translatable("gui.authme.method.button.microsoft"), x, y
-                ),
-                Text.translatable("gui.authme.method.button.microsoft")
-            )
+        TexturedButtonWidget msButton = new TexturedButtonWidget(
+            width / 2 - 20 - 10 - 4, height / 2 - 5, 20, 20,
+            0, 0, 20, WIDGETS_TEXTURE, 128, 128,
+            button -> {
+                if (getConfig().methods.microsoft.isDefaults()) {
+                    client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
+                } else {
+                    AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
+                    ConfirmScreen confirmScreen = new ConfirmScreen(
+                        accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
+                        Text.translatable("gui.authme.microsoft.warning.title"),
+                        Text.translatable("gui.authme.microsoft.warning.body"),
+                        Text.translatable("gui.authme.microsoft.warning.accept"),
+                        Text.translatable("gui.authme.microsoft.warning.cancel")
+                    );
+                    client.setScreen(confirmScreen);
+                    confirmScreen.disableButtons(40);
+                }
+            },
+            Text.translatable("gui.authme.method.button.microsoft")
         );
+        msButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.microsoft")));
+        addDrawableChild(msButton);
 
         // Add a button for the 'Mojang (or legacy)' authentication method
-        addDrawableChild(
-            new TexturedButtonWidget(
-                width / 2 - 10, height / 2 - 5, 20, 20,
-                20, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new MojangAuthScreen(this, parentScreen)),
-                (btn, mtx, x, y) -> renderTooltip(
-                    mtx, Text.translatable("gui.authme.method.button.mojang"), x, y
-                ),
-                Text.translatable("gui.authme.method.button.mojang")
-            )
+        TexturedButtonWidget mojangButton = new TexturedButtonWidget(
+            width / 2 - 10, height / 2 - 5, 20, 20,
+            20, 0, 20, WIDGETS_TEXTURE, 128, 128,
+            button -> client.setScreen(new MojangAuthScreen(this, parentScreen)),
+            Text.translatable("gui.authme.method.button.mojang")
         );
+        mojangButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.mojang")));
+        addDrawableChild(mojangButton);
 
         // Add a button for the 'Offline' authentication method
-        addDrawableChild(
-            new TexturedButtonWidget(
-                width / 2 + 10 + 4, height / 2 - 5, 20, 20,
-                40, 0, 20, WIDGETS_TEXTURE, 128, 128,
-                button -> client.setScreen(new OfflineAuthScreen(this, parentScreen)),
-                (btn, mtx, x, y) -> renderTooltip(
-                    mtx, Text.translatable("gui.authme.method.button.offline"), x, y
-                ),
-                Text.translatable("gui.authme.method.button.offline")
-            )
+        TexturedButtonWidget offlineButton = new TexturedButtonWidget(
+            width / 2 + 10 + 4, height / 2 - 5, 20, 20,
+            40, 0, 20, WIDGETS_TEXTURE, 128, 128,
+            button -> client.setScreen(new OfflineAuthScreen(this, parentScreen)),
+            Text.translatable("gui.authme.method.button.offline")
         );
+        offlineButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.offline")));
+        addDrawableChild(offlineButton);
 
         // Add a button to go back
         addDrawableChild(
-            new ButtonWidget(
-                width / 2 - 50, height / 2 + 27, 100, 20,
-                Text.translatable("gui.back"),
-                button -> close()
-            )
+            ButtonWidget.builder(Text.translatable("gui.back"), button -> close())
+                .dimensions(width / 2 - 50, height / 2 + 27, 100, 20)
+                .build()
         );
     }
 

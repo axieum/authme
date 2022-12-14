@@ -32,7 +32,6 @@ public class OfflineAuthScreen extends AuthScreen
     public OfflineAuthScreen(Screen parentScreen, Screen successScreen)
     {
         super(Text.translatable("gui.authme.offline.title"), parentScreen, successScreen);
-        this.enableKeyboardRepeatEvents = true;
         this.closeOnSuccess = true;
     }
 
@@ -58,21 +57,23 @@ public class OfflineAuthScreen extends AuthScreen
 
         // Add a login button to submit the form
         addDrawableChild(
-            loginBtn = new ButtonWidget(
-                width / 2 - 100 - 2, height / 2 + 26, 100, 20,
+            loginBtn = ButtonWidget.builder(
                 Text.translatable("gui.authme.offline.button.login"),
                 button -> login()
-            )
+            ).dimensions(
+                width / 2 - 100 - 2, height / 2 + 26, 100, 20
+            ).build()
         );
         loginBtn.active = isFormValid();
 
         // Add a cancel button to abort the task
         addDrawableChild(
-            new ButtonWidget(
-                width / 2 + 2, height / 2 + 26, 100, 20,
+            ButtonWidget.builder(
                 Text.translatable("gui.cancel"),
                 button -> close()
-            )
+            ).dimensions(
+                width / 2 + 2, height / 2 + 26, 100, 20
+            ).build()
         );
     }
 
@@ -127,11 +128,14 @@ public class OfflineAuthScreen extends AuthScreen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.y - 16 - 23, 0xffffff);
+        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username field label
         drawTextWithShadow(
-            matrices, client.textRenderer, usernameField.getMessage(), usernameField.x, usernameField.y - 16, 0xa0a0a0
+            matrices, client.textRenderer,
+            usernameField.getMessage(),
+            usernameField.getX(), usernameField.getY() - 16,
+            0xa0a0a0
         );
 
         // Cascade the rendering
