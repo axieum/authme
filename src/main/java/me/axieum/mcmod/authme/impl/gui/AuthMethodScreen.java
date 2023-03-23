@@ -109,11 +109,11 @@ public class AuthMethodScreen extends Screen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, height / 2 - 27, 0xffffff);
+        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, height / 2 - 27, 0xffffff);
 
         // Render a greeting for the current session
         if (greeting != null) {
-            drawCenteredText(matrices, client.textRenderer, greeting, width / 2, height / 2 - 47, 0xa0a0a0);
+            drawCenteredTextWithShadow(matrices, client.textRenderer, greeting, width / 2, height / 2 - 47, 0xa0a0a0);
         }
 
         // Cascade the rendering

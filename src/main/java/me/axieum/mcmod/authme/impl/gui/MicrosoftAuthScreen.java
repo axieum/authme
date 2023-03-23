@@ -139,11 +139,11 @@ public class MicrosoftAuthScreen extends AuthScreen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);
+        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);
 
         // Render the current progress/status of the login, if present
         if (status != null) {
-            drawCenteredText(matrices, client.textRenderer, status, width / 2, height / 2 - 6, 0xdddddd);
+            drawCenteredTextWithShadow(matrices, client.textRenderer, status, width / 2, height / 2 - 6, 0xdddddd);
         }
 
         // Cascade the rendering

@@ -176,7 +176,7 @@ public class MojangAuthScreen extends AuthScreen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
+        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username & password field labels
         drawTextWithShadow(
@@ -194,7 +194,7 @@ public class MojangAuthScreen extends AuthScreen
 
         // Render the current progress/status of the login, if present
         if (status != null) {
-            drawCenteredText(matrices, client.textRenderer, status, width / 2, loginBtn.getY() - 20, 0xdddddd);
+            drawCenteredTextWithShadow(matrices, client.textRenderer, status, width / 2, loginBtn.getY() - 20, 0xdddddd);
         }
 
         // Cascade the rendering

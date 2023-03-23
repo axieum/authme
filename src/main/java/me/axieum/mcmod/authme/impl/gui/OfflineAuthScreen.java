@@ -128,7 +128,7 @@ public class OfflineAuthScreen extends AuthScreen
         renderBackground(matrices);
 
         // Render a title for the screen
-        drawCenteredText(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
+        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username field label
         drawTextWithShadow(
