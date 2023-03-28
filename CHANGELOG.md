@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/axieum/authme/compare/v5.0.0...v6.0.0) (2023-03-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to Minecraft 1.19.4 ([#78](https://github.com/axieum/authme/issues/78))
+
+### Miscellaneous Chores
+
+* upgrade to Minecraft 1.19.4 ([#78](https://github.com/axieum/authme/issues/78)) ([97c0a1a](https://github.com/axieum/authme/commit/97c0a1ad6a547a0718575bb7ba2f21956524e99c))
+
 ## [5.0.0](https://github.com/axieum/authme/compare/v4.2.0...v5.0.0) (2022-12-14)
 
 
