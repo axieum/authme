@@ -220,12 +220,12 @@ public class AuthButtonWidget extends TexturedButtonWidget
 
             // Move the button with the drag, constraining within the screen's bounds
             if (this.screen != null) {
-                this.setPos(
+                this.setPosition(
                     Math.min(Math.max(0, (int) mouseX - this.width / 2), this.screen.width - this.width),
                     Math.min(Math.max(0, (int) mouseY - this.height / 2), this.screen.height - this.height)
                 );
             } else {
-                this.setPos((int) mouseX - this.width / 2, (int) mouseY - this.height / 2);
+                this.setPosition((int) mouseX - this.width / 2, (int) mouseY - this.height / 2);
             }
         }
 
