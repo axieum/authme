@@ -6,9 +6,10 @@
 
 Authenticate yourself in Minecraft and re-validate your session
 
+[![Build](https://img.shields.io/github/actions/workflow/status/axieum/authme/release.yml?branch=main&style=for-the-badge)][ci:release]
 [![Release](https://img.shields.io/github/v/release/axieum/authme?style=for-the-badge&include_prereleases&sort=semver)][releases]
-[![Available For](https://img.shields.io/badge/dynamic/json?label=Available%20For&style=for-the-badge&color=34aa2f&query=gameVersionLatestFiles%5B0%5D.gameVersion&url=https%3A%2F%2Faddons-ecs.forgesvc.net%2Fapi%2Fv2%2Faddon%2F356643)][curseforge]
-[![Downloads](https://img.shields.io/badge/dynamic/json?label=Downloads&style=for-the-badge&color=f16436&query=downloadCount&url=https%3A%2F%2Faddons-ecs.forgesvc.net%2Fapi%2Fv2%2Faddon%2F356643)][curseforge:files]
+[![Available For](https://cf.way2muchnoise.eu/versions/Available%20For_356643_latest.svg?badge_style=for_the_badge)][curseforge]
+[![Downloads](https://cf.way2muchnoise.eu/full_356643_downloads.svg?badge_style=for_the_badge)][curseforge:files]
 
 </div>
 
@@ -48,6 +49,7 @@ vulnerabilities.
 Auth Me is open-sourced software licenced under the [MIT licence][licence].
 
 [bisecthosting]: https://bisecthosting.com/axieum
+[ci:release]: https://github.com/axieum/authme/actions/workflows/release.yml
 [contributing]: .github/CONTRIBUTING.md
 [curseforge]: https://curseforge.com/minecraft/mc-mods/auth-me
 [curseforge:files]: https://curseforge.com/minecraft/mc-mods/auth-me/files
