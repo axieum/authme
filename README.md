@@ -26,6 +26,13 @@ is available for modern versions of [Minecraft][minecraft] Java Edition.
 - [ReAuth][reauth_mod] by TechnicianLP
 - [OAuth][oauth_mod] by Sintinium
 
+## Sponsors
+
+We would like to extend our thanks to the following sponsors for supporting 
+Auth Me development.
+
+[<img alt="BisectHosting" src="https://www.bisecthosting.com/partners/custom-banners/b9fe4fbe-8cc4-42cc-a545-dfd1b46d20e6.webp" height="80">][bisecthosting]
+
 ## Contributing
 
 Thank you for considering contributing to Auth Me! Please see the
@@ -40,6 +47,7 @@ vulnerabilities.
 
 Auth Me is open-sourced software licenced under the [MIT licence][licence].
 
+[bisecthosting]: https://bisecthosting.com/axieum
 [contributing]: .github/CONTRIBUTING.md
 [curseforge]: https://curseforge.com/minecraft/mc-mods/auth-me
 [curseforge:files]: https://curseforge.com/minecraft/mc-mods/auth-me/files
