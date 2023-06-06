@@ -6,11 +6,11 @@ import java.util.concurrent.Executors;
 
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -168,26 +168,26 @@ public class MojangAuthScreen extends AuthScreen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         assert client != null;
 
         // Render the background before any widgets
-        renderBackground(matrices);
+        renderBackground(context);
 
         // Render a title for the screen
-        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2,
+        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2,
             usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username & password field labels
-        drawTextWithShadow(
-            matrices, client.textRenderer,
+        context.drawTextWithShadow(
+            client.textRenderer,
             usernameField.getMessage(),
             usernameField.getX(), usernameField.getY() - 16,
             0xa0a0a0
         );
-        drawTextWithShadow(
-            matrices, client.textRenderer,
+        context.drawTextWithShadow(
+            client.textRenderer,
             passwordField.getMessage(),
             passwordField.getX(), passwordField.getY() - 16,
             0xa0a0a0
@@ -195,12 +195,12 @@ public class MojangAuthScreen extends AuthScreen
 
         // Render the current progress/status of the login, if present
         if (status != null) {
-            drawCenteredTextWithShadow(matrices, client.textRenderer, status, width / 2,
+            context.drawCenteredTextWithShadow(client.textRenderer, status, width / 2,
                 loginBtn.getY() - 20, 0xdddddd);
         }
 
         // Cascade the rendering
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

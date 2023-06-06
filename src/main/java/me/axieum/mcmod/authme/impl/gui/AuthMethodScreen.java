@@ -1,12 +1,12 @@
 package me.axieum.mcmod.authme.impl.gui;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -112,23 +112,23 @@ public class AuthMethodScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         assert client != null;
 
         // Render the background before any widgets
-        renderBackground(matrices);
+        renderBackground(context);
 
         // Render a title for the screen
-        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, height / 2 - 27, 0xffffff);
+        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2, height / 2 - 27, 0xffffff);
 
         // Render a greeting for the current session
         if (greeting != null) {
-            drawCenteredTextWithShadow(matrices, client.textRenderer, greeting, width / 2, height / 2 - 47, 0xa0a0a0);
+            context.drawCenteredTextWithShadow(client.textRenderer, greeting, width / 2, height / 2 - 47, 0xa0a0a0);
         }
 
         // Cascade the rendering
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

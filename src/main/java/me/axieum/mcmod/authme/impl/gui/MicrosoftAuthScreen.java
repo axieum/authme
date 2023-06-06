@@ -6,10 +6,10 @@ import java.util.concurrent.Executors;
 
 import org.apache.http.conn.ConnectTimeoutException;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -139,23 +139,23 @@ public class MicrosoftAuthScreen extends AuthScreen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         assert client != null;
 
         // Render the background before any widgets
-        renderBackground(matrices);
+        renderBackground(context);
 
         // Render a title for the screen
-        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);
+        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);
 
         // Render the current progress/status of the login, if present
         if (status != null) {
-            drawCenteredTextWithShadow(matrices, client.textRenderer, status, width / 2, height / 2 - 6, 0xdddddd);
+            context.drawCenteredTextWithShadow(client.textRenderer, status, width / 2, height / 2 - 6, 0xdddddd);
         }
 
         // Cascade the rendering
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

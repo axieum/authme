@@ -1,10 +1,10 @@
 package me.axieum.mcmod.authme.impl.gui;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import me.axieum.mcmod.authme.api.gui.AuthScreen;
@@ -120,26 +120,26 @@ public class OfflineAuthScreen extends AuthScreen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         assert client != null;
 
         // Render the background before any widgets
-        renderBackground(matrices);
+        renderBackground(context);
 
         // Render a title for the screen
-        drawCenteredTextWithShadow(matrices, client.textRenderer, title, width / 2,
+        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2,
             usernameField.getY() - 16 - 23, 0xffffff);
 
         // Render the username field label
-        drawTextWithShadow(
-            matrices, client.textRenderer,
+        context.drawTextWithShadow(
+            client.textRenderer,
             usernameField.getMessage(),
             usernameField.getX(), usernameField.getY() - 16,
             0xa0a0a0
         );
 
         // Cascade the rendering
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 }
