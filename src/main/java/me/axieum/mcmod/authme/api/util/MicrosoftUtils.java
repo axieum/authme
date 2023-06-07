@@ -63,8 +63,8 @@ public final class MicrosoftUtils
 
     // Default URLs used in the configuration.
     public static final String CLIENT_ID = "e16699bb-2aa8-46da-b5e3-45cbcce29091";
-    public static final String AUTHORIZE_URL = "https://login.live.com/oauth20_authorize.srf";
-    public static final String TOKEN_URL = "https://login.live.com/oauth20_token.srf";
+    public static final String AUTHORIZE_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
+    public static final String TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
     public static final String XBOX_AUTH_URL = "https://user.auth.xboxlive.com/user/authenticate";
     public static final String XBOX_XSTS_URL = "https://xsts.auth.xboxlive.com/xsts/authorize";
     public static final String MC_AUTH_URL = "https://api.minecraftservices.com/authentication/login_with_xbox";
