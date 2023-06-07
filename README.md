@@ -29,7 +29,7 @@ is available for modern versions of [Minecraft][minecraft] Java Edition.
 
 ## Sponsors
 
-We would like to extend our thanks to the following sponsors for supporting 
+We would like to extend our thanks to the following sponsors for supporting
 Auth Me development.
 
 [<img alt="BisectHosting" src="https://www.bisecthosting.com/partners/custom-banners/b9fe4fbe-8cc4-42cc-a545-dfd1b46d20e6.webp" height="80">][bisecthosting]
