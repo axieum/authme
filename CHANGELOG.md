@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.1.0](https://github.com/axieum/authme/compare/v6.0.0...v6.1.0) (2023-06-07)
+
+
+### Features
+
+* **microsoft:** `ctrl + click` the Microsoft button to choose account (closes [#46](https://github.com/axieum/authme/issues/46)) ([#84](https://github.com/axieum/authme/issues/84)) ([d63c490](https://github.com/axieum/authme/commit/d63c490cdde4151f2508036c5cff2599dba199ae))
+
+
+### Bug Fixes
+
+* **microsoft:** update Microsoft OAuth2 token endpoints (fixes [#57](https://github.com/axieum/authme/issues/57)) ([#83](https://github.com/axieum/authme/issues/83)) ([e606c2a](https://github.com/axieum/authme/commit/e606c2ae7cbab004d90d1b06a2b6f81675454f27))
+
 ## [6.0.0](https://github.com/axieum/authme/compare/v5.0.0...v6.0.0) (2023-03-28)
 
 
