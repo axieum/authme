@@ -4,12 +4,13 @@ plugins {
     id 'maven-publish'
     id 'com.modrinth.minotaur' version '2.7.5'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
 }
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'checkstyle'
+    apply plugin: 'maven-publish'
     apply plugin: 'fabric-loom'
 
     group = project.maven_group
@@ -39,12 +40,6 @@ allprojects {
         compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_jupiter_version}"
-
-        // Subprojects
-        subprojects.each {
-            implementation project(path: ":${it.name}", configuration: 'namedElements')
-            include project("${it.name}:") // nest within distribution
-        }
     }
 
     // Perform tests using the JUnit test suite
@@ -52,9 +47,10 @@ allprojects {
         useJUnitPlatform()
     }
 
-    // Produce a sources distribution
+    // Produce additional distributions
     java {
         withSourcesJar()
+        // withJavadocJar()
     }
 
     // Add the licence to all distributions
@@ -66,11 +62,17 @@ allprojects {
     processResources {
         inputs.property 'id', project.mod_id
         inputs.property 'name', project.mod_name
+        inputs.property 'description', project.mod_description
         inputs.property 'version', project.version
 
         // fabric.mod.json
         filesMatching('fabric.mod.json') {
-            expand(['id': project.mod_id, 'name': project.mod_name, 'version': project.version])
+            expand([
+                'id': project.mod_id,
+                'name': project.mod_name,
+                'description': project.mod_description,
+                'version': project.version,
+            ])
         }
     }
 
@@ -97,6 +99,55 @@ allprojects {
         }
         return "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
     }
+
+    // Define how packages are published
+    publishing {
+        // Declare all publications
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                pom {
+                    name = project.mod_name
+                    description = project.mod_description
+                    url = "https://github.com/${project.github_repo}"
+                    licenses { license { name = 'MIT'; url = 'https://opensource.org/licenses/MIT' } }
+                    developers {
+                        developer {
+                            name = 'Axieum'
+                            email = 'imaxieum@gmail.com'
+                            url = 'https://github.com/axieum'
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:git://github.com/${project.github_repo}.git"
+                        developerConnection = "scm:git:ssh://git@github.com:${project.github_repo}.git"
+                        url = "https://github.com/${project.github_repo}"
+                    }
+                    issueManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/issues" }
+                    ciManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/actions" }
+                    properties = [
+                        'mod_id': project.mod_id,
+                        'minecraft_version': project.minecraft_version,
+                        'loader_version': project.loader_version,
+                        'yarn_mappings': project.yarn_mappings,
+                    ]
+                }
+            }
+        }
+
+        // Add repositories to publish to
+        repositories {
+            // GitHub Packages (https://pkg.github.com)
+            maven {
+                name 'GitHub'
+                url "https://maven.pkg.github.com/${project.github_repo}"
+                credentials {
+                    username System.getenv('GITHUB_ACTOR')
+                    password System.getenv('GITHUB_TOKEN')
+                }
+            }
+        }
+    }
 }
 
 // Define how artifacts are published to CurseForge (https://curseforge.com)
@@ -117,12 +168,12 @@ curseforge {
         // Add the main artifact
         mainArtifact(remapJar) { displayName = "${project.mod_name} v${project.version} for Minecraft ${project.minecraft_version}" }
         // Add any additional artifacts
-        addArtifact sourcesJar
-        addArtifact jar
+        addArtifact remapSourcesJar
+        // addArtifact javadocJar
         subprojects.each {
             addArtifact it.remapJar
-            addArtifact it.sourcesJar
-            addArtifact it.jar
+            addArtifact it.remapSourcesJar
+            // addArtifact it.javadocJar
         }
         // Add any dependencies
         relations {
@@ -137,7 +188,7 @@ curseforge {
     // Configure other options
     options {
         forgeGradleIntegration = false
-        debug = System.getenv('CURSEFORGE_DEBUG') as boolean ?: false
+        debug = (System.getenv('CURSEFORGE_DEBUG') ?: 'false').toBoolean()
     }
 }
 
@@ -147,7 +198,7 @@ modrinth {
     // Set the API token from the environment
     token = System.getenv('MODRINTH_TOKEN') ?: ''
     // Set whether debug mode is enabled
-    debugMode = System.getenv('MODRINTH_DEBUG') as boolean ?: false
+    debugMode = (System.getenv('MODRINTH_DEBUG') ?: 'false').toBoolean()
     // Set the project id
     projectId = project.mr_project_id
     // Set the release name
@@ -165,38 +216,17 @@ modrinth {
     // Add the main artifact
     uploadFile = remapJar
     // Add any additional artifacts
-    additionalFiles.add sourcesJar
-    additionalFiles.add jar
+    additionalFiles.add remapSourcesJar
+    // additionalFiles.add javadocJar
     subprojects.each {
         additionalFiles.add it.remapJar
-        additionalFiles.add it.sourcesJar
-        additionalFiles.add it.jar
+        additionalFiles.add it.remapSourcesJar
+        // additionalFiles.add it.javadocJar
     }
     // Add any dependencies
     if (project.mr_relations_required) dependencies.addAll project.mr_relations_required.split(', ').collect { new ModDependency(it, 'required') }
     if (project.mr_relations_optional) dependencies.addAll project.mr_relations_optional.split(', ').collect { new ModDependency(it, 'optional') }
     if (project.mr_relations_incompatible) dependencies.addAll project.mr_relations_incompatible.split(', ').collect { new ModDependency(it, 'incompatible') }
-}
-
-// Define how packages are published
-publishing {
-    // Declare all publications
-    publications {
-        mavenJava(MavenPublication) { from components.java }
-    }
-
-    // Add repositories to publish to
-    repositories {
-        // GitHub Packages (https://pkg.github.com)
-        maven {
-            name 'GitHub'
-            url "https://maven.pkg.github.com/${project.github_repo}"
-            credentials {
-                username System.getenv('GITHUB_ACTOR')
-                password System.getenv('GITHUB_TOKEN')
-            }
-        }
-    }
 }
 
 publish.finalizedBy tasks.curseforge, tasks.modrinth
