@@ -94,6 +94,30 @@ public final class MicrosoftUtils
     }
 
     /**
+     * Navigates to the Microsoft login with user interaction, and listens for
+     * a successful login callback.
+     *
+     * <p>NB: You must manually interrupt the executor thread if the
+     * completable future is cancelled!
+     *
+     * @param browserMessage function that takes true if success, and returns
+     *                       a message to be shown in the browser after
+     *                       logging in
+     * @param executor       executor to run the login task on
+     * @param prompt         optional Microsoft interaction prompt override
+     * @return completable future for the Microsoft auth token
+     * @see #acquireMSAuthCode(Consumer, Function, Executor)
+     */
+    public static CompletableFuture<String> acquireMSAuthCode(
+        final Function<Boolean, @NotNull String> browserMessage,
+        final Executor executor,
+        final @Nullable MicrosoftPrompt prompt
+    )
+    {
+        return acquireMSAuthCode(url -> Util.getOperatingSystem().open(url), browserMessage, executor, prompt);
+    }
+
+    /**
      * Generates a Microsoft login link, triggers the given browser action, and
      * listens for a successful login callback.
      *
@@ -111,6 +135,31 @@ public final class MicrosoftUtils
         final Consumer<URI> browserAction,
         final Function<Boolean, @NotNull String> browserMessage,
         final Executor executor
+    )
+    {
+        return acquireMSAuthCode(browserAction, browserMessage, executor, null);
+    }
+
+    /**
+     * Generates a Microsoft login link with user interaction, triggers the
+     * given browser action, and listens for a successful login callback.
+     *
+     * <p>NB: You must manually interrupt the executor thread if the
+     * completable future is cancelled!
+     *
+     * @param browserAction  consumer that opens the generated login url
+     * @param browserMessage function that takes true if success, and returns
+     *                       a message to be shown in the browser after
+     *                       logging in
+     * @param executor       executor to run the login task on
+     * @param prompt         optional Microsoft interaction prompt override
+     * @return completable future for the Microsoft auth token
+     */
+    public static CompletableFuture<String> acquireMSAuthCode(
+        final Consumer<URI> browserAction,
+        final Function<Boolean, @NotNull String> browserMessage,
+        final Executor executor,
+        final @Nullable MicrosoftPrompt prompt
     )
     {
         return CompletableFuture.supplyAsync(() -> {
@@ -168,8 +217,10 @@ public final class MicrosoftUtils
                     )
                     .addParameter("scope", "XboxLive.signin offline_access")
                     .addParameter("state", state);
-                if (getConfig().methods.microsoft.prompt != MicrosoftPrompt.DEFAULT) {
-                    uriBuilder.addParameter("prompt", getConfig().methods.microsoft.prompt.toString());
+                if (prompt != null || getConfig().methods.microsoft.prompt != MicrosoftPrompt.DEFAULT) {
+                    uriBuilder.addParameter(
+                        "prompt", (prompt != null ? prompt : getConfig().methods.microsoft.prompt).toString()
+                    );
                 }
                 final URI uri = uriBuilder.build();
 

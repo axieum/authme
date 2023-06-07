@@ -12,6 +12,7 @@
   "gui.authme.method.title": "Pick a login method",
   "gui.authme.method.greeting": "Hello, %s!",
   "gui.authme.method.button.microsoft": "Microsoft",
+  "gui.authme.method.button.microsoft.selectAccount": "Ctrl + click to choose account",
   "gui.authme.method.button.mojang": "Mojang (or legacy)",
   "gui.authme.method.button.offline": "Offline",
 

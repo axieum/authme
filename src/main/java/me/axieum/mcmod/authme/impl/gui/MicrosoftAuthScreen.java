@@ -29,16 +29,20 @@ public class MicrosoftAuthScreen extends AuthScreen
     private CompletableFuture<Void> task = null;
     // The current progress/status of the login task
     private Text status = null;
+    // True if Microsoft should prompt to select an account
+    private final boolean selectAccount;
 
     /**
      * Constructs a new authentication via Microsoft screen.
      *
      * @param parentScreen  parent (or last) screen that opened this screen
      * @param successScreen screen to be returned to after a successful login
+     * @param selectAccount true if Microsoft should prompt to select an account
      */
-    public MicrosoftAuthScreen(Screen parentScreen, Screen successScreen)
+    public MicrosoftAuthScreen(Screen parentScreen, Screen successScreen, boolean selectAccount)
     {
         super(Text.translatable("gui.authme.microsoft.title"), parentScreen, successScreen);
+        this.selectAccount = selectAccount;
         this.closeOnSuccess = true;
     }
 
@@ -71,7 +75,11 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Start the login task
         task = MicrosoftUtils
             // Acquire a Microsoft auth code
-            .acquireMSAuthCode(success -> Text.translatable("gui.authme.microsoft.browser").getString(), executor)
+            .acquireMSAuthCode(
+                success -> Text.translatable("gui.authme.microsoft.browser").getString(),
+                executor,
+                selectAccount ? MicrosoftUtils.MicrosoftPrompt.SELECT_ACCOUNT : null
+            )
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
