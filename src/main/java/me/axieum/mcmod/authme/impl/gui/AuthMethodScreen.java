@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -52,12 +53,16 @@ public class AuthMethodScreen extends Screen
             width / 2 - 20 - 10 - 4, height / 2 - 5, 20, 20,
             0, 0, 20, WIDGETS_TEXTURE, 128, 128,
             button -> {
+                // If 'Left Control' is being held, enforce user interaction
+                final boolean selectAccount = InputUtil.isKeyPressed(
+                    client.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_CONTROL
+                );
                 if (getConfig().methods.microsoft.isDefaults()) {
-                    client.setScreen(new MicrosoftAuthScreen(this, parentScreen));
+                    client.setScreen(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
                 } else {
                     AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
                     ConfirmScreen confirmScreen = new ConfirmScreen(
-                        accepted -> client.setScreen(accepted ? new MicrosoftAuthScreen(this, parentScreen) : this),
+                        a -> client.setScreen(a ? new MicrosoftAuthScreen(this, parentScreen, selectAccount) : this),
                         Text.translatable("gui.authme.microsoft.warning.title"),
                         Text.translatable("gui.authme.microsoft.warning.body"),
                         Text.translatable("gui.authme.microsoft.warning.accept"),
@@ -69,7 +74,13 @@ public class AuthMethodScreen extends Screen
             },
             Text.translatable("gui.authme.method.button.microsoft")
         );
-        msButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.microsoft")));
+        msButton.setTooltip(Tooltip.of(
+            Text.translatable("gui.authme.method.button.microsoft")
+                .append("\n")
+                .append(
+                    Text.translatable("gui.authme.method.button.microsoft.selectAccount").formatted(Formatting.GRAY)
+                )
+        ));
         addDrawableChild(msButton);
 
         // Add a button for the 'Mojang (or legacy)' authentication method
