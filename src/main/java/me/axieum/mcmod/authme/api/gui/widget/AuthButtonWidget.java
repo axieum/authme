@@ -2,13 +2,11 @@ package me.axieum.mcmod.authme.api.gui.widget;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
@@ -233,20 +231,19 @@ public class AuthButtonWidget extends TexturedButtonWidget
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
     {
         // Cascade the rendering
-        super.renderButton(matrices, mouseX, mouseY, delta);
+        super.renderButton(context, mouseX, mouseY, delta);
 
         // Render the current session status
-        RenderSystem.setShaderTexture(0, AuthMe.WIDGETS_TEXTURE);
         final int u;
         switch (sessionStatus) {
             case VALID -> u = 0;
             case OFFLINE -> u = 8;
             default -> u = 16;
         }
-        drawTexture(matrices, getX() + width - 6, getY() - 1, u, 60, 8, 8, 128, 128);
+        context.drawTexture(AuthMe.WIDGETS_TEXTURE, getX() + width - 6, getY() - 1, u, 60, 8, 8, 128, 128);
     }
 
     /**

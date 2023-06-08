@@ -14,6 +14,8 @@ import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
+import net.minecraft.client.realms.RealmsClient;
+import net.minecraft.client.realms.RealmsPeriodicCheckers;
 import net.minecraft.client.report.AbuseReportContext;
 import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
@@ -98,6 +100,8 @@ public final class SessionUtils
         );
 
         // Necessary for Realms to re-check for a valid session
+        RealmsClient realmsClient = RealmsClient.createRealmsClient(client);
+        ((MinecraftClientAccessor) client).setRealmsPeriodicCheckers(new RealmsPeriodicCheckers(realmsClient));
         RealmsMainScreenAccessor.setCheckedClientCompatibility(false);
         RealmsMainScreenAccessor.setRealmsGenericErrorScreen(null);
 
