@@ -29,6 +29,7 @@
       "me.axieum.mcmod.authme.impl.compat.ModMenuApiImpl"
     ]
   },
+  "accessWidener" : "authme.accesswidener",
   "mixins": [
     "authme.mixins.json"
   ],

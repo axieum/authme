@@ -8,6 +8,7 @@ import com.mojang.authlib.minecraft.UserApiService;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
+import net.minecraft.client.realms.RealmsPeriodicCheckers;
 import net.minecraft.client.report.AbuseReportContext;
 import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
@@ -62,4 +63,13 @@ public interface MinecraftClientAccessor
     @Accessor
     @Mutable
     void setAbuseReportContext(AbuseReportContext abuseReportContext);
+
+    /**
+     * Sets the Minecraft Realms periodic checkers.
+     *
+     * @param realmsPeriodicCheckers new Minecraft Realms periodic checkers
+     */
+    @Accessor
+    @Mutable
+    void setRealmsPeriodicCheckers(RealmsPeriodicCheckers realmsPeriodicCheckers);
 }

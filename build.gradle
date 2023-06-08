@@ -19,6 +19,11 @@ allprojects {
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
+    // Configure Loom
+    loom {
+        accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+    }
+
     // Declare dependencies
     dependencies {
         // Fabric
