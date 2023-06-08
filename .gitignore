@@ -12,6 +12,7 @@ run/
 
 # log files
 *.log
+*.log.gz
 
 # packaged files
 *.ear

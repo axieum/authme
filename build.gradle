@@ -15,7 +15,7 @@ allprojects {
 
     group = project.maven_group
     version = project.mod_version
-    archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
+    archivesBaseName = project.mod_id
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
@@ -166,7 +166,7 @@ curseforge {
         // Add all supported game versions
         project.cf_game_versions.split(', ').each { addGameVersion it }
         // Add the main artifact
-        mainArtifact(remapJar) { displayName = "${project.mod_name} v${project.version} for Minecraft ${project.minecraft_version}" }
+        mainArtifact(remapJar) { displayName = "${project.mod_name} v${project.version}" }
         // Add any additional artifacts
         addArtifact remapSourcesJar
         // addArtifact javadocJar
@@ -202,13 +202,15 @@ modrinth {
     // Set the project id
     projectId = project.mr_project_id
     // Set the release name
-    versionName = "${project.mod_name} v${project.version} for Minecraft ${project.minecraft_version}"
+    versionName = "${project.mod_name} v${project.version}"
     // Set the release type
     versionType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
     // Set the release version
     versionNumber = project.version
     // Set the release notes
     changelog = project.getChangelogNotes()
+    // Set the project body sync target
+    // syncBodyFrom = rootProject.file('README.md').getText()
     // Add all supported mod loaders
     loaders = ['fabric']
     // Add all supported game versions
