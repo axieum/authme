@@ -1,5 +1,16 @@
 # Changelog
 
+## [7.0.0](https://github.com/axieum/authme/compare/v6.1.0...v7.0.0) (2023-06-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to Minecraft 1.20 ([#82](https://github.com/axieum/authme/issues/82))
+
+### Features
+
+* upgrade to Minecraft 1.20 ([#82](https://github.com/axieum/authme/issues/82)) ([d960644](https://github.com/axieum/authme/commit/d960644cabf45a08c9bdbbc927154a5d9ec939de))
+
 ## [6.1.0](https://github.com/axieum/authme/compare/v6.0.0...v6.1.0) (2023-06-07)
 
 
