@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.0.1+1.20](https://github.com/axieum/authme/compare/v7.0.0...v7.0.1+1.20) (2023-06-10)
+
+
+### Bug Fixes
+
+* disconnected screen crashes the game when adding the re-login button (fixes [#87](https://github.com/axieum/authme/issues/87)) ([#88](https://github.com/axieum/authme/issues/88)) ([e740900](https://github.com/axieum/authme/commit/e740900ee8a8d75dd21ec6663b7cefbbbd0d6568))
+
+
+### Miscellaneous Chores
+
+* release as v7.0.1+1.20 ([9ab8526](https://github.com/axieum/authme/commit/9ab85267ffc02bab9c93b49c1376c38f95d55ffe))
+
 ## [7.0.0](https://github.com/axieum/authme/compare/v6.1.0...v7.0.0) (2023-06-08)
 
 
