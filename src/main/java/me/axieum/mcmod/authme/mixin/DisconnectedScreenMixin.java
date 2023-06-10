@@ -50,7 +50,7 @@ public abstract class DisconnectedScreenMixin extends Screen
             assert client != null;
 
             // Create and add the button to the screen where the back button is
-            final ButtonWidget backButton = (ButtonWidget) children().get(0);
+            final ButtonWidget backButton = (ButtonWidget) children().get(2);
             addDrawableChild(
                 ButtonWidget.builder(
                     Text.translatable("gui.authme.button.relogin"),
