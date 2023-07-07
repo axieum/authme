@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.1.1+1.19.4](https://github.com/axieum/authme/compare/v6.1.0...v6.1.1+1.19.4) (2023-07-07)
+
+
+### Bug Fixes
+
+* **lang:** update Traditional Chinese ([#92](https://github.com/axieum/authme/issues/92)) ([5323b41](https://github.com/axieum/authme/commit/5323b41513b6506156087facbf69f4e322687588))
+* **microsoft:** 'Chat disabled due to missing profile public key' error ([#91](https://github.com/axieum/authme/issues/91)) ([e4574bf](https://github.com/axieum/authme/commit/e4574bf0e6e31aeffa4f4b5edaa63eaa51941777))
+
 ## [6.1.0](https://github.com/axieum/authme/compare/v6.0.0...v6.1.0) (2023-06-07)
 
 
