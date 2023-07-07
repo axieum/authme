@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.2+1.20](https://github.com/axieum/authme/compare/v7.0.1+1.20...v7.0.2+1.20) (2023-07-07)
+
+
+### Bug Fixes
+
+* **microsoft:** 'Chat disabled due to missing profile public key' error ([#91](https://github.com/axieum/authme/issues/91)) ([3fcdb51](https://github.com/axieum/authme/commit/3fcdb51a65d2bdf5476f7c5e4be6aa566f452858))
+
 ## [7.0.1+1.20](https://github.com/axieum/authme/compare/v7.0.0...v7.0.1+1.20) (2023-06-10)
 
 
