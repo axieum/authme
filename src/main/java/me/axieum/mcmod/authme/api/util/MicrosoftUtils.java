@@ -572,7 +572,7 @@ public final class MicrosoftUtils
                                        mcToken,
                                        Optional.empty(),
                                        Optional.empty(),
-                                       Session.AccountType.MOJANG
+                                       Session.AccountType.MSA
                                    );
                                })
                                // Otherwise, throw an exception with the error description if present
