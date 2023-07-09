@@ -59,6 +59,6 @@
   "text.autoconfig.authme.option.methods.offline": "Офлайн",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "Последнее имя пользователя",
 
-  "modmenu.summaryTranslation.authme":"Авторизация и ревалидация сессии внутри Minecraft",
+  "modmenu.summaryTranslation.authme":"Авторизация и ревалидация сессии внутри Minecraft.",
   "modmenu.descriptionTranslation.authme": "Повторно входите в ваш аккаунт и исправляйте ошибки подключения к сервисам авторизации (сессии) прямо не выходя из игры."
 }
