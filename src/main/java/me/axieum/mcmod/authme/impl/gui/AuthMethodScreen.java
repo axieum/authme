@@ -6,7 +6,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.Session;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -103,10 +105,29 @@ public class AuthMethodScreen extends Screen
         offlineButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.offline")));
         addDrawableChild(offlineButton);
 
+        // Add a button to login using saved session if one exists
+        boolean hasSavedSession = getConfig().autoLogin.savedSession.hasSavedSession();
+        if (hasSavedSession) {
+            addDrawableChild(
+                ButtonWidget.builder(Text.translatable("gui.authme.savedSession.button"), button -> {
+                    Session session = getConfig().autoLogin.savedSession.getSession();
+                    SessionUtils.setSession(session);
+                    // Add a toast that greets the player
+                    SystemToast.add(
+                        client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
+                        Text.translatable("gui.authme.toast.greeting", Text.literal(session.getUsername())), null
+                    );
+                    close();
+                })
+                .dimensions(width / 2 - 50, height / 2 + 27, 100, 20)
+                .build()
+            );
+        }
+
         // Add a button to go back
         addDrawableChild(
             ButtonWidget.builder(Text.translatable("gui.back"), button -> close())
-                .dimensions(width / 2 - 50, height / 2 + 27, 100, 20)
+                .dimensions(width / 2 - 50, height / 2 + 27 + (hasSavedSession ? 27 : 0), 100, 20)
                 .build()
         );
     }

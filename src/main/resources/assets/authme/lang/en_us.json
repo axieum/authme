@@ -39,6 +39,8 @@
   "gui.authme.offline.field.username": "Choose a Username",
   "gui.authme.offline.button.login": "Play Offline",
 
+  "gui.authme.savedSession.button": "Use Saved Session",
+
   "text.autoconfig.authme.title": "Auth Me Config",
   "text.autoconfig.authme.option.authButton": "Auth Button",
   "text.autoconfig.authme.option.authButton.x": "X Coordinate",
@@ -58,5 +60,15 @@
   "text.autoconfig.authme.option.methods.mojang": "Mojang (or legacy)",
   "text.autoconfig.authme.option.methods.mojang.lastUsername": "Last Used Username",
   "text.autoconfig.authme.option.methods.offline": "Offline",
-  "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username"
+  "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username",
+  "text.autoconfig.authme.option.autoLogin" : "Auto login",
+  "text.autoconfig.authme.option.autoLogin.saveSession": "Save session",
+  "text.autoconfig.authme.option.autoLogin.doAutoLogin": "Auto login",
+  "text.autoconfig.authme.option.autoLogin.savedSession": "Saved session - DO NOT SHARE",
+  "text.autoconfig.authme.option.autoLogin.savedSession.username": "Username",
+  "text.autoconfig.authme.option.autoLogin.savedSession.uuid": "UUID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.accessToken": "Access Token",
+  "text.autoconfig.authme.option.autoLogin.savedSession.xuid": "XUID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.clientId": "Client ID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.accountType": "Account Type"
 }

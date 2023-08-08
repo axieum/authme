@@ -1,6 +1,7 @@
 package me.axieum.mcmod.authme.impl.config;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -10,6 +11,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.util.Session;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
@@ -33,6 +36,62 @@ public class AuthMeConfig implements ConfigData
 
         @Comment("True if the button can be dragged to a new position")
         public boolean draggable = true;
+    }
+
+    @Comment("Auto Login")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public AutoLogin autoLogin = new AutoLogin();
+
+    /**
+     * Auto login config.
+     */
+    public static class AutoLogin
+    {
+        @Comment("Save session after login to be used for auto login")
+        public boolean saveSession = false;
+
+        @Comment("Automatically attempt to login using a saved session")
+        public boolean doAutoLogin = false;
+
+        @Comment("Saved session (valid for 24h) - DO NOT SHARE")
+        @ConfigEntry.Gui.CollapsibleObject()
+        public SavedSessionSchema savedSession = new SavedSessionSchema();
+
+        public static class SavedSessionSchema
+        {
+            public String username = "";
+            public String uuid = "";
+            public String accessToken = "";
+            public String xuid = "";
+            public String clientId = "";
+            public String accountType = "";
+
+            public boolean hasSavedSession()
+            {
+                return !(username.isEmpty() || uuid.isEmpty() || accessToken.isEmpty()
+                    || Session.AccountType.byName(accountType) == null);
+            }
+
+            public Session getSession()
+            {
+                return new Session(username,
+                    uuid,
+                    accessToken,
+                    xuid.isEmpty() ? Optional.empty() : Optional.of(xuid),
+                    clientId.isEmpty() ? Optional.empty() : Optional.of(clientId),
+                    Session.AccountType.byName(accountType));
+            }
+
+            public void setSession(Session session)
+            {
+                username = session.getUsername();
+                uuid = session.getUuid();
+                accessToken = session.getAccessToken();
+                xuid = session.getXuid().orElse("");
+                clientId = session.getClientId().orElse("");
+                accountType = session.getAccountType().getName();
+            }
+        }
     }
 
     @Comment("Login Methods")
