@@ -23,7 +23,7 @@ public abstract class RunArgsNetworkMixin
     @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true)
     private static Session modifyLaunchSession(Session oldSession)
     {
-        AuthMeConfig.AutoLogin autoLogin = AuthMe.getConfig().autoLogin;
+        AuthMeConfig.AutoLoginSchema autoLogin = AuthMe.getConfig().autoLogin;
         return autoLogin.doAutoLogin && autoLogin.savedSession.hasSavedSession()
             ? autoLogin.savedSession.getSession() : oldSession;
     }

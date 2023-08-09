@@ -40,12 +40,12 @@ public class AuthMeConfig implements ConfigData
 
     @Comment("Auto Login")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public AutoLogin autoLogin = new AutoLogin();
+    public AutoLoginSchema autoLogin = new AutoLoginSchema();
 
     /**
      * Auto login config.
      */
-    public static class AutoLogin
+    public static class AutoLoginSchema
     {
         @Comment("Save session after login to be used for auto login")
         public boolean saveSession = false;
@@ -53,17 +53,24 @@ public class AuthMeConfig implements ConfigData
         @Comment("Automatically attempt to login using a saved session")
         public boolean doAutoLogin = false;
 
-        @Comment("Saved session (valid for 24h) - DO NOT SHARE")
+        @Comment("Saved session (valid for 24h if account type is msa - Microsoft)")
         @ConfigEntry.Gui.CollapsibleObject()
         public SavedSessionSchema savedSession = new SavedSessionSchema();
 
         public static class SavedSessionSchema
         {
+            @Comment("Player username")
             public String username = "";
+            @Comment("Player UUID")
             public String uuid = "";
+            @ConfigEntry.Gui.Excluded
+            @Comment("Access Token - DO NOT SHARE")
             public String accessToken = "";
+            @ConfigEntry.Gui.Excluded
             public String xuid = "";
+            @ConfigEntry.Gui.Excluded
             public String clientId = "";
+            @Comment("Account type (legacy/mojang/msa)")
             public String accountType = "";
 
             public boolean hasSavedSession()

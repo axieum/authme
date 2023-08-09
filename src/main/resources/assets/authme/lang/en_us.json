@@ -64,7 +64,7 @@
   "text.autoconfig.authme.option.autoLogin" : "Auto login",
   "text.autoconfig.authme.option.autoLogin.saveSession": "Save session",
   "text.autoconfig.authme.option.autoLogin.doAutoLogin": "Auto login",
-  "text.autoconfig.authme.option.autoLogin.savedSession": "Saved session - DO NOT SHARE",
+  "text.autoconfig.authme.option.autoLogin.savedSession": "Saved session",
   "text.autoconfig.authme.option.autoLogin.savedSession.username": "Username",
   "text.autoconfig.authme.option.autoLogin.savedSession.uuid": "UUID",
   "text.autoconfig.authme.option.autoLogin.savedSession.accessToken": "Access Token",
