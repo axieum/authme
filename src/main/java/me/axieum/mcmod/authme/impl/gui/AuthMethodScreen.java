@@ -14,6 +14,8 @@ import net.minecraft.util.Formatting;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
 import me.axieum.mcmod.authme.impl.AuthMe;
+import me.axieum.mcmod.authme.impl.config.AuthMeConfig;
+import static me.axieum.mcmod.authme.impl.AuthMe.CONFIG;
 import static me.axieum.mcmod.authme.impl.AuthMe.WIDGETS_TEXTURE;
 import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
 
@@ -60,11 +62,17 @@ public class AuthMethodScreen extends Screen
                     client.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_CONTROL
                 );
                 if (getConfig().methods.microsoft.isDefaults()) {
-                    client.setScreen(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
+                    saveSessionWarning(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
                 } else {
                     AuthMe.LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
                     ConfirmScreen confirmScreen = new ConfirmScreen(
-                        a -> client.setScreen(a ? new MicrosoftAuthScreen(this, parentScreen, selectAccount) : this),
+                        accepted -> {
+                            if (accepted) {
+                                saveSessionWarning(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
+                            } else {
+                                client.setScreen(this);
+                            }
+                        },
                         Text.translatable("gui.authme.microsoft.warning.title"),
                         Text.translatable("gui.authme.microsoft.warning.body"),
                         Text.translatable("gui.authme.microsoft.warning.accept"),
@@ -89,7 +97,7 @@ public class AuthMethodScreen extends Screen
         TexturedButtonWidget mojangButton = new TexturedButtonWidget(
             width / 2 - 10, height / 2 - 5, 20, 20,
             20, 0, 20, WIDGETS_TEXTURE, 128, 128,
-            button -> client.setScreen(new MojangAuthScreen(this, parentScreen)),
+            button -> saveSessionWarning(new MojangAuthScreen(this, parentScreen)),
             Text.translatable("gui.authme.method.button.mojang")
         );
         mojangButton.setTooltip(Tooltip.of(Text.translatable("gui.authme.method.button.mojang")));
@@ -156,5 +164,32 @@ public class AuthMethodScreen extends Screen
     public void close()
     {
         if (client != null) client.setScreen(parentScreen);
+    }
+
+    public void saveSessionWarning(Screen nextScreen)
+    {
+        assert client != null;
+        AuthMeConfig.AutoLoginSchema autoLogin = getConfig().autoLogin;
+        if (autoLogin.saveSession && !autoLogin.warningScreenConfirmed) {
+            ConfirmScreen confirmScreen = new ConfirmScreen(
+                accepted -> {
+                    if (accepted) {
+                        client.setScreen(nextScreen);
+                        autoLogin.warningScreenConfirmed = true;
+                        CONFIG.save();
+                    } else {
+                        client.setScreen(this);
+                    }
+                },
+                Text.translatable("gui.authme.autoLogin.warning.title"),
+                Text.translatable("gui.authme.autoLogin.warning.body"),
+                Text.translatable("gui.authme.autoLogin.warning.accept"),
+                Text.translatable("gui.authme.autoLogin.warning.cancel")
+            );
+            client.setScreen(confirmScreen);
+            confirmScreen.disableButtons(40);
+        } else {
+            client.setScreen(nextScreen);
+        }
     }
 }

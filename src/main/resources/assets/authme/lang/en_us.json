@@ -29,6 +29,11 @@
   "gui.authme.microsoft.warning.accept": "I know what I'm doing",
   "gui.authme.microsoft.warning.cancel": "Back to safety",
 
+  "gui.authme.autoLogin.warning.title": "Warning! Session will be saved to disk after login",
+  "gui.authme.autoLogin.warning.body": "Your access token, which is used for logging into your account and is valid for 24h, will be stored on your device's disk after you log in. Use at your own risk!",
+  "gui.authme.autoLogin.warning.accept": "I understand",
+  "gui.authme.autoLogin.warning.cancel": "Back",
+
   "gui.authme.mojang.title": "Login via Mojang (Legacy)",
   "gui.authme.mojang.field.username": "Username / Email",
   "gui.authme.mojang.field.password": "Password",
