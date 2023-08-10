@@ -1,6 +1,7 @@
 package me.axieum.mcmod.authme.impl.config;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -11,8 +12,11 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.util.Session;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import me.axieum.mcmod.authme.api.util.EncryptionUtil;
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils;
 import me.axieum.mcmod.authme.api.util.MicrosoftUtils.MicrosoftPrompt;
 
@@ -33,6 +37,77 @@ public class AuthMeConfig implements ConfigData
 
         @Comment("True if the button can be dragged to a new position")
         public boolean draggable = true;
+    }
+
+    @Comment("Auto Login")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public AutoLoginSchema autoLogin = new AutoLoginSchema();
+
+    /**
+     * Auto login config.
+     */
+    public static class AutoLoginSchema
+    {
+        @Comment("Save session after login to disc to be reused.")
+        public boolean saveSession = false;
+
+        @Comment("Automatically attempt to login using a saved session")
+        public boolean doAutoLogin = false;
+
+        @Comment("Whether the warning screen has been confirmed")
+        @ConfigEntry.Gui.Excluded
+        public boolean warningScreenConfirmed = false;
+
+        @Comment("Saved session (valid for 24h if account type is msa - Microsoft)")
+        @ConfigEntry.Gui.CollapsibleObject()
+        public SavedSessionSchema savedSession = new SavedSessionSchema();
+
+        public static class SavedSessionSchema
+        {
+            @Comment("Player username")
+            public String username = "";
+            @Comment("Player UUID")
+            public String uuid = "";
+            @ConfigEntry.Gui.Excluded // hide option from config screen
+            @Comment("Encrypted Access Token - DO NOT SHARE WITH ANYONE")
+            public String accessToken = "";
+            @ConfigEntry.Gui.Excluded
+            @Comment("Encryption key - DO NOT SHARE WITH ANYONE")
+            public String encryptionKey = "";
+            @ConfigEntry.Gui.Excluded
+            public String xuid = "";
+            @ConfigEntry.Gui.Excluded
+            public String clientId = "";
+            @Comment("Account type (legacy/mojang/msa)")
+            public String accountType = "";
+
+            public boolean hasSavedSession()
+            {
+                return !(username.isEmpty() || uuid.isEmpty() || accessToken.isEmpty() || encryptionKey.isEmpty()
+                    || Session.AccountType.byName(accountType) == null);
+            }
+
+            public Session getSession()
+            {
+                return new Session(username,
+                    uuid,
+                    EncryptionUtil.decrypt(accessToken, encryptionKey),
+                    xuid.isEmpty() ? Optional.empty() : Optional.of(xuid),
+                    clientId.isEmpty() ? Optional.empty() : Optional.of(clientId),
+                    Session.AccountType.byName(accountType));
+            }
+
+            public void setSession(Session session)
+            {
+                username = session.getUsername();
+                uuid = session.getUuid();
+                encryptionKey = EncryptionUtil.generateKey();
+                accessToken = EncryptionUtil.encrypt(session.getAccessToken(), encryptionKey);
+                xuid = session.getXuid().orElse("");
+                clientId = session.getClientId().orElse("");
+                accountType = session.getAccountType().getName();
+            }
+        }
     }
 
     @Comment("Login Methods")

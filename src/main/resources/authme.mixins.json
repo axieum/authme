@@ -12,6 +12,7 @@
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
     "RealmsMainScreenAccessor",
+    "RunArgsNetworkMixin",
     "SplashTextResourceSupplierAccessor",
     "YggdrasilAuthenticationServiceAccessor"
   ],

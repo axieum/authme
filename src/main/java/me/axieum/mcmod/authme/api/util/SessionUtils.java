@@ -20,6 +20,7 @@ import net.minecraft.client.report.AbuseReportContext;
 import net.minecraft.client.util.ProfileKeys;
 import net.minecraft.client.util.Session;
 
+import me.axieum.mcmod.authme.impl.AuthMe;
 import me.axieum.mcmod.authme.mixin.AbuseReportContextAccessor;
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
@@ -108,6 +109,12 @@ public final class SessionUtils
         // The cached status is now stale
         lastStatus = SessionStatus.UNKNOWN;
         lastStatusCheck = 0;
+
+        // Save session for auto login
+        if (AuthMe.getConfig().autoLogin.saveSession) {
+            AuthMe.getConfig().autoLogin.savedSession.setSession(session);
+            AuthMe.CONFIG.save();
+        }
 
         LOGGER.info("Minecraft session for {} (uuid={}) has been applied", session.getUsername(), session.getUuid());
     }

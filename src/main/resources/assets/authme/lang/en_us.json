@@ -29,6 +29,11 @@
   "gui.authme.microsoft.warning.accept": "I know what I'm doing",
   "gui.authme.microsoft.warning.cancel": "Back to safety",
 
+  "gui.authme.autoLogin.warning.title": "Warning! Session will be saved to disk after login",
+  "gui.authme.autoLogin.warning.body": "Your access token, which is used for logging into your account and is valid for 24h, will be stored on your device's disk after you log in. Use at your own risk!",
+  "gui.authme.autoLogin.warning.accept": "I understand",
+  "gui.authme.autoLogin.warning.cancel": "Back",
+
   "gui.authme.mojang.title": "Login via Mojang (Legacy)",
   "gui.authme.mojang.field.username": "Username / Email",
   "gui.authme.mojang.field.password": "Password",
@@ -38,6 +43,8 @@
   "gui.authme.offline.title": "Login Offline",
   "gui.authme.offline.field.username": "Choose a Username",
   "gui.authme.offline.button.login": "Play Offline",
+
+  "gui.authme.savedSession.button": "Use Saved Session",
 
   "text.autoconfig.authme.title": "Auth Me Config",
   "text.autoconfig.authme.option.authButton": "Auth Button",
@@ -58,5 +65,15 @@
   "text.autoconfig.authme.option.methods.mojang": "Mojang (or legacy)",
   "text.autoconfig.authme.option.methods.mojang.lastUsername": "Last Used Username",
   "text.autoconfig.authme.option.methods.offline": "Offline",
-  "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username"
+  "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username",
+  "text.autoconfig.authme.option.autoLogin" : "Auto login",
+  "text.autoconfig.authme.option.autoLogin.saveSession": "Save session",
+  "text.autoconfig.authme.option.autoLogin.doAutoLogin": "Auto login",
+  "text.autoconfig.authme.option.autoLogin.savedSession": "Saved session",
+  "text.autoconfig.authme.option.autoLogin.savedSession.username": "Username",
+  "text.autoconfig.authme.option.autoLogin.savedSession.uuid": "UUID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.accessToken": "Access Token",
+  "text.autoconfig.authme.option.autoLogin.savedSession.xuid": "XUID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.clientId": "Client ID",
+  "text.autoconfig.authme.option.autoLogin.savedSession.accountType": "Account Type"
 }
