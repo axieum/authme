@@ -1,5 +1,22 @@
 # Changelog
 
+## [8.0.0+1.20.2](https://github.com/axieum/authme/compare/v7.0.2+1.20...v8.0.0+1.20.2) (2023-10-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Mojang (or legacy) authentication is no longer available, see https://aka.ms/MinecraftPostMigrationFAQ
+
+### Features
+
+* add error message for when the account has not purchased Minecraft (closes [#101](https://github.com/axieum/authme/issues/101)) ([#104](https://github.com/axieum/authme/issues/104)) ([a6b34e9](https://github.com/axieum/authme/commit/a6b34e94f4a21452a319673497cce0097de2f367))
+* upgrade to Minecraft 1.20.2 ([#102](https://github.com/axieum/authme/issues/102)) ([c1adb99](https://github.com/axieum/authme/commit/c1adb99e758bb1a12f61d1e8dadba3ce0c10ea7b))
+
+
+### Miscellaneous Chores
+
+* release as v8.0.0+1.20.2 ([8736a6a](https://github.com/axieum/authme/commit/8736a6a281c94f53bddf1133e6abff6d42820762))
+
 ## [7.0.2+1.20](https://github.com/axieum/authme/compare/v7.0.1+1.20...v7.0.2+1.20) (2023-07-07)
 
 
