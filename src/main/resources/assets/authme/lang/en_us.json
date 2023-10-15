@@ -4,6 +4,7 @@
   "gui.authme.button.relogin": "Re-login",
 
   "gui.authme.error.generic": "Something went wrong! Please go back and try again.",
+  "gui.authme.error.notPurchased": "The account has not purchased Minecraft!",
   "gui.authme.error.timeout": "Timed out! Please go back and try again.",
 
   "gui.authme.toast.greeting": "Hello, %s!",

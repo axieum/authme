@@ -129,10 +129,15 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // On any exception, update the status and cancel button
             .exceptionally(error -> {
-                status = Text.translatable(
-                    error.getCause() instanceof ConnectTimeoutException ? "gui.authme.error.timeout"
-                                                                        : "gui.authme.error.generic"
-                ).formatted(Formatting.RED);
+                final String key;
+                if (error.getCause() instanceof ConnectTimeoutException) {
+                    key = "gui.authme.error.timeout";
+                } else if ("NOT_FOUND: Not Found".equals(error.getCause().getMessage())) {
+                    key = "gui.authme.error.notPurchased";
+                } else {
+                    key = "gui.authme.error.generic";
+                }
+                status = Text.translatable(key).formatted(Formatting.RED);
                 cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
             });
