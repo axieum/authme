@@ -144,7 +144,7 @@ public class MicrosoftAuthScreen extends AuthScreen
         assert client != null;
 
         // Render the background before any widgets
-        renderBackground(context);
+        renderBackground(context, mouseX, mouseY, delta);
 
         // Render a title for the screen
         context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);

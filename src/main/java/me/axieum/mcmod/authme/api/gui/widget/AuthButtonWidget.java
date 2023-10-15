@@ -3,15 +3,16 @@ package me.axieum.mcmod.authme.api.gui.widget;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
 import me.axieum.mcmod.authme.api.util.SessionUtils.SessionStatus;
-import me.axieum.mcmod.authme.impl.AuthMe;
 
 /**
  * The textured button widget for opening the authentication screens.
@@ -26,6 +27,15 @@ public class AuthButtonWidget extends TexturedButtonWidget
     private boolean didDrag = false;
     // The last known status of the Minecraft session
     private SessionStatus sessionStatus = SessionStatus.UNKNOWN;
+
+    // The authentication button textures
+    public static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(
+        new Identifier("widget/locked_button"),
+        new Identifier("widget/locked_button_disabled"),
+        new Identifier("widget/locked_button_highlighted")
+    );
+    // The session status icon texture
+    public static final Identifier SESSION_STATUS_TEXTURE = new Identifier("authme", "textures/gui/session_status.png");
 
     /**
      * Constructs a fixed (no drag) authentication button.
@@ -132,7 +142,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
         Text message
     )
     {
-        super(x, y, 20, 20, 0, 146, 20, ButtonWidget.WIDGETS_TEXTURE, 256, 256, pressAction, message);
+        super(x, y, 20, 20, BUTTON_TEXTURES, pressAction, message);
         this.screen = screen;
         this.moveAction = moveAction;
         this.setTooltip(tooltip);
@@ -243,7 +253,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
             case OFFLINE -> u = 8;
             default -> u = 16;
         }
-        context.drawTexture(AuthMe.WIDGETS_TEXTURE, getX() + width - 6, getY() - 1, u, 60, 8, 8, 128, 128);
+        context.drawTexture(SESSION_STATUS_TEXTURE, getX() + width - 6, getY() - 1, u, 0, 8, 8, 24, 8);
     }
 
     /**

@@ -3,7 +3,6 @@
   "gui.authme.button.auth.tooltip": "Hei, %s!",
   "gui.authme.button.relogin": "Kirjaudu uudelleen",
 
-  "gui.authme.error.credentials": "Väärä käyttäjätunnus tai salasana",
   "gui.authme.error.generic": "Jokin meni pieleen! Mene takaisin ja yritä uudelleen.",
   "gui.authme.error.timeout": "Aikakatkaisu! Mene takaisin ja yritä uudelleen.",
 
@@ -25,10 +24,6 @@
   "gui.authme.microsoft.status.mcProfile": "Haetaan Minecraft-profiiliasi...",
 
   "gui.authme.mojang.title": "Mojang (vanha)-kirjautuminen",
-  "gui.authme.mojang.field.username": "Käyttäjätunnus / sähköposti",
-  "gui.authme.mojang.field.password": "Salasana",
-  "gui.authme.mojang.button.login": "Kirjaudu",
-  "gui.authme.mojang.status.loggingIn": "Kirjaudutaan Mojang-tiliin...",
 
   "gui.authme.offline.title": "Yhteydetön peli",
   "gui.authme.offline.field.username": "Valitse pelinimi",
@@ -50,8 +45,6 @@
   "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS-valtuutuksen osoite",
   "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft-valtuutuksen osoite",
   "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft-profiilin osoite",
-  "text.autoconfig.authme.option.methods.mojang": "Mojang (vanha menetelmä)",
-  "text.autoconfig.authme.option.methods.mojang.lastUsername": "Viimeksi käytetty käyttäjätunnus",
   "text.autoconfig.authme.option.methods.offline": "Yhteydetön",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "Viimeksi käytetty käyttäjätunnus"
 }

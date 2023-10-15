@@ -3,7 +3,6 @@
   "gui.authme.button.auth.tooltip": "Bonjour, %s !",
   "gui.authme.button.relogin": "Reconnection",
 
-  "gui.authme.error.credentials": "Nom d'utilisateur ou mot de passe incorrect !",
   "gui.authme.error.generic": "Quelque chose n'a pas fonctionné ! Veuillez réessayez.",
   "gui.authme.error.timeout": "Temps d'attente dépassé ! Veuillez réessayez.",
 
@@ -25,10 +24,6 @@
   "gui.authme.microsoft.status.mcProfile": "Récupération de votre profil Minecraft...",
 
   "gui.authme.mojang.title": "Connexion grâce à Mojang (ou legacy)",
-  "gui.authme.mojang.field.username": "Nom d'utilisateur / Email",
-  "gui.authme.mojang.field.password": "Mot de passe",
-  "gui.authme.mojang.button.login": "Connexion",
-  "gui.authme.mojang.status.loggingIn": "Connexion à Mojang...",
 
   "gui.authme.offline.title": "Se connecter hors-ligne",
   "gui.authme.offline.field.username": "Choisissez un nom d'utilisateur",
@@ -50,8 +45,6 @@
   "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "URL d'authentification Xbox XSTS",
   "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "URL d'authentification Minecraft",
   "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "URL du profil Minecraft",
-  "text.autoconfig.authme.option.methods.mojang": "Mojang (ou legacy)",
-  "text.autoconfig.authme.option.methods.mojang.lastUsername": "Dernier nom d'utilisateur utilisé",
   "text.autoconfig.authme.option.methods.offline": "Hors-ligne",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username"
 }

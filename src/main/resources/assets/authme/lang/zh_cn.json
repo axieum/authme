@@ -3,7 +3,6 @@
   "gui.authme.button.auth.tooltip": "欢迎回来, %s!",
   "gui.authme.button.relogin": "再次登录",
 
-  "gui.authme.error.credentials": "用户名或密码错误!",
   "gui.authme.error.generic": "出现了一些问题! 请返回再重试一遍.",
   "gui.authme.error.timeout": "超时! 请返回再重试一遍.",
 
@@ -25,10 +24,6 @@
   "gui.authme.microsoft.status.mcProfile": "正在获取您的 Minecraft 账号信息...",
 
   "gui.authme.mojang.title": "通过 Mojang (早期账户) 登录",
-  "gui.authme.mojang.field.username": "用户名 / 邮箱",
-  "gui.authme.mojang.field.password": "密码",
-  "gui.authme.mojang.button.login": "登录",
-  "gui.authme.mojang.status.loggingIn": "登录到 Mojang...",
 
   "gui.authme.offline.title": "使用离线登录",
   "gui.authme.offline.field.username": "输入用户名",
@@ -50,8 +45,6 @@
   "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS 验证 接口连接",
   "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft 验证接口连接",
   "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft 账户信息接口连接",
-  "text.autoconfig.authme.option.methods.mojang": "Mojang (早期账户)",
-  "text.autoconfig.authme.option.methods.mojang.lastUsername": "最后一次使用的用户名",
   "text.autoconfig.authme.option.methods.offline": "Offline",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "最后一次使用的用户名"
 }

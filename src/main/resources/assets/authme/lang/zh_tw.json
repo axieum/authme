@@ -3,7 +3,6 @@
   "gui.authme.button.auth.tooltip": "您好，%s！",
   "gui.authme.button.relogin": "重新登入",
 
-  "gui.authme.error.credentials": "使用者名稱錯誤或密碼錯誤！",
   "gui.authme.error.generic": "有些東西出錯了！請返回重試。",
   "gui.authme.error.timeout": "已逾時！請返回重試。",
 
@@ -30,10 +29,6 @@
   "gui.authme.microsoft.warning.cancel": "回到安全",
 
   "gui.authme.mojang.title": "透過 Mojang 登入（舊版）",
-  "gui.authme.mojang.field.username": "使用者名稱／電子郵件",
-  "gui.authme.mojang.field.password": "密碼",
-  "gui.authme.mojang.button.login": "登入",
-  "gui.authme.mojang.status.loggingIn": "登入至 Mojang...",
 
   "gui.authme.offline.title": "離線登入",
   "gui.authme.offline.field.username": "選擇使用者名稱",
@@ -55,8 +50,6 @@
   "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS 授權 Url",
   "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft 驗證 Url",
   "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft 個人資料 Url",
-  "text.autoconfig.authme.option.methods.mojang": "Mojang（或舊版登入）",
-  "text.autoconfig.authme.option.methods.mojang.lastUsername": "最後使用的使用者名稱",
   "text.autoconfig.authme.option.methods.offline": "離線",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "最後使用的使用者名稱"
 }
