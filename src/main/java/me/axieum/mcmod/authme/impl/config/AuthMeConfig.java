@@ -96,19 +96,6 @@ public class AuthMeConfig implements ConfigData
             }
         }
 
-        @Comment("Login via Mojang (or legacy)")
-        @ConfigEntry.Gui.CollapsibleObject
-        public MojangLoginSchema mojang = new MojangLoginSchema();
-
-        /**
-         * Login via Mojang (or legacy) configuration schema.
-         */
-        public static class MojangLoginSchema
-        {
-            @Comment("Last used username")
-            public @Nullable String lastUsername = "";
-        }
-
         @Comment("Login Offline")
         @ConfigEntry.Gui.CollapsibleObject
         public OfflineLoginSchema offline = new OfflineLoginSchema();

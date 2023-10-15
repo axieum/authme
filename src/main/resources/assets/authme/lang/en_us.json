@@ -3,7 +3,6 @@
   "gui.authme.button.auth.tooltip": "Hello, %s!",
   "gui.authme.button.relogin": "Re-login",
 
-  "gui.authme.error.credentials": "Incorrect username or password!",
   "gui.authme.error.generic": "Something went wrong! Please go back and try again.",
   "gui.authme.error.timeout": "Timed out! Please go back and try again.",
 
@@ -14,6 +13,7 @@
   "gui.authme.method.button.microsoft": "Microsoft",
   "gui.authme.method.button.microsoft.selectAccount": "Ctrl + click to choose account",
   "gui.authme.method.button.mojang": "Mojang (or legacy)",
+  "gui.authme.method.button.mojang.unavailable": "Unavailable, click to learn more",
   "gui.authme.method.button.offline": "Offline",
 
   "gui.authme.microsoft.title": "Login via Microsoft",
@@ -30,10 +30,6 @@
   "gui.authme.microsoft.warning.cancel": "Back to safety",
 
   "gui.authme.mojang.title": "Login via Mojang (Legacy)",
-  "gui.authme.mojang.field.username": "Username / Email",
-  "gui.authme.mojang.field.password": "Password",
-  "gui.authme.mojang.button.login": "Login",
-  "gui.authme.mojang.status.loggingIn": "Logging into Mojang...",
 
   "gui.authme.offline.title": "Login Offline",
   "gui.authme.offline.field.username": "Choose a Username",
@@ -55,8 +51,6 @@
   "text.autoconfig.authme.option.methods.microsoft.xboxXstsUrl": "Xbox XSTS Authorization Url",
   "text.autoconfig.authme.option.methods.microsoft.mcAuthUrl": "Minecraft Authentication Url",
   "text.autoconfig.authme.option.methods.microsoft.mcProfileUrl": "Minecraft Profile Url",
-  "text.autoconfig.authme.option.methods.mojang": "Mojang (or legacy)",
-  "text.autoconfig.authme.option.methods.mojang.lastUsername": "Last Used Username",
   "text.autoconfig.authme.option.methods.offline": "Offline",
   "text.autoconfig.authme.option.methods.offline.lastUsername": "Last Used Username"
 }

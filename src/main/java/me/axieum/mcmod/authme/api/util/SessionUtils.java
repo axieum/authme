@@ -4,27 +4,23 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import com.mojang.authlib.Agent;
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
-import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.realms.RealmsClient;
 import net.minecraft.client.realms.RealmsPeriodicCheckers;
-import net.minecraft.client.report.AbuseReportContext;
-import net.minecraft.client.util.ProfileKeys;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.ProfileKeys;
+import net.minecraft.client.session.Session;
+import net.minecraft.client.session.report.AbuseReportContext;
 
 import me.axieum.mcmod.authme.mixin.AbuseReportContextAccessor;
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
-import me.axieum.mcmod.authme.mixin.RealmsMainScreenAccessor;
+import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
 import me.axieum.mcmod.authme.mixin.SplashTextResourceSupplierAccessor;
-import me.axieum.mcmod.authme.mixin.YggdrasilAuthenticationServiceAccessor;
 import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
 
 /**
@@ -66,10 +62,6 @@ public final class SessionUtils
         ((MinecraftClientAccessor) client).setSession(session);
         ((SplashTextResourceSupplierAccessor) client.getSplashTextLoader()).setSession(session);
 
-        // Refresh the session properties
-        client.getSessionProperties().clear();
-        client.getSessionProperties();
-
         // Re-create the user API service (ignore offline session)
         UserApiService userApiService = UserApiService.OFFLINE;
         if (!OFFLINE_TOKEN.equals(session.getAccessToken())) {
@@ -102,14 +94,15 @@ public final class SessionUtils
         // Necessary for Realms to re-check for a valid session
         RealmsClient realmsClient = RealmsClient.createRealmsClient(client);
         ((MinecraftClientAccessor) client).setRealmsPeriodicCheckers(new RealmsPeriodicCheckers(realmsClient));
-        RealmsMainScreenAccessor.setCheckedClientCompatibility(false);
-        RealmsMainScreenAccessor.setRealmsGenericErrorScreen(null);
+        RealmsAvailabilityAccessor.setCurrentFuture(null);
 
         // The cached status is now stale
         lastStatus = SessionStatus.UNKNOWN;
         lastStatusCheck = 0;
 
-        LOGGER.info("Minecraft session for {} (uuid={}) has been applied", session.getUsername(), session.getUuid());
+        LOGGER.info(
+            "Minecraft session for {} (uuid={}) has been applied", session.getUsername(), session.getUuidOrNull()
+        );
     }
 
     /**
@@ -123,7 +116,7 @@ public final class SessionUtils
     {
         return new Session(
             username,
-            UUID.nameUUIDFromBytes(("offline:" + username).getBytes()).toString(),
+            UUID.nameUUIDFromBytes(("offline:" + username).getBytes()),
             OFFLINE_TOKEN,
             Optional.empty(),
             Optional.empty(),
@@ -152,16 +145,14 @@ public final class SessionUtils
         return CompletableFuture.supplyAsync(() -> {
             // Fetch the current session
             final Session session = getSession();
-            final GameProfile profile = session.getProfile();
-            final String token = session.getAccessToken();
-            final String id = UUID.randomUUID().toString();
+            final String serverId = UUID.randomUUID().toString();
 
             // Attempt to join the Minecraft Session Service server
             final YggdrasilMinecraftSessionService sessionService = getSessionService();
             try {
                 LOGGER.info("Verifying Minecraft session...");
-                sessionService.joinServer(profile, token, id);
-                if (sessionService.hasJoinedServer(profile, id, null).isComplete()) {
+                sessionService.joinServer(session.getUuidOrNull(), session.getAccessToken(), serverId);
+                if (sessionService.hasJoinedServer(session.getUsername(), serverId, null) != null) {
                     LOGGER.info("The Minecraft session is valid");
                     lastStatus = SessionStatus.VALID;
                 } else {
@@ -196,24 +187,7 @@ public final class SessionUtils
      */
     public static YggdrasilAuthenticationService getAuthService()
     {
-        final YggdrasilAuthenticationService authService = getSessionService().getAuthenticationService();
-
-        // Provide a random client token if not set
-        if (((YggdrasilAuthenticationServiceAccessor) authService).getClientToken() == null) {
-            ((YggdrasilAuthenticationServiceAccessor) authService).setClientToken(UUID.randomUUID().toString());
-        }
-
-        return authService;
-    }
-
-    /**
-     * Returns the Yggdrasil User Authentication provider.
-     *
-     * @return Yggdrasil User Authentication instance
-     */
-    public static YggdrasilUserAuthentication getAuthProvider()
-    {
-        return (YggdrasilUserAuthentication) getAuthService().createUserAuthentication(Agent.MINECRAFT);
+        return ((MinecraftClientAccessor) MinecraftClient.getInstance()).getAuthenticationService();
     }
 
     /**

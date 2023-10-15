@@ -11,9 +11,8 @@
     "MinecraftClientAccessor",
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
-    "RealmsMainScreenAccessor",
-    "SplashTextResourceSupplierAccessor",
-    "YggdrasilAuthenticationServiceAccessor"
+    "RealmsAvailabilityAccessor",
+    "SplashTextResourceSupplierAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

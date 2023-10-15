@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import net.minecraft.client.resource.SplashTextResourceSupplier;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.Session;
 
 /**
  * Provides the means to access protected members of the Splash Text Resource supplier.
