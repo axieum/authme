@@ -65,11 +65,7 @@ public final class SessionUtils
         // Re-create the user API service (ignore offline session)
         UserApiService userApiService = UserApiService.OFFLINE;
         if (!OFFLINE_TOKEN.equals(session.getAccessToken())) {
-            try {
-                userApiService = getAuthService().createUserApiService(session.getAccessToken());
-            } catch (AuthenticationException e) {
-                LOGGER.error("Failed to verify authentication for new user API service!", e);
-            }
+            userApiService = getAuthService().createUserApiService(session.getAccessToken());
         }
         ((MinecraftClientAccessor) client).setUserApiService(userApiService);
 

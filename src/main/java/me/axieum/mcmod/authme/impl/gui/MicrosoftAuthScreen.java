@@ -119,7 +119,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 SessionUtils.setSession(session);
                 // Add a toast that greets the player
                 SystemToast.add(
-                    client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
+                    client.getToastManager(), SystemToast.Type.PERIODIC_NOTIFICATION,
                     Text.translatable("gui.authme.toast.greeting", Text.literal(session.getUsername())), null
                 );
                 // Mark the task as successful, in turn closing the screen
