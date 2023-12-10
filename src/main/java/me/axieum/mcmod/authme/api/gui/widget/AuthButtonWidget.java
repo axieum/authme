@@ -241,10 +241,10 @@ public class AuthButtonWidget extends TexturedButtonWidget
     }
 
     @Override
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta)
     {
         // Cascade the rendering
-        super.renderButton(context, mouseX, mouseY, delta);
+        super.renderWidget(context, mouseX, mouseY, delta);
 
         // Render the current session status
         final int u;

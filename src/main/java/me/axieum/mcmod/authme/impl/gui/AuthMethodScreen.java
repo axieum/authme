@@ -108,7 +108,7 @@ public class AuthMethodScreen extends Screen
         TexturedButtonWidget mojangButton = new TexturedButtonWidget(
             width / 2 - 10, height / 2 - 5, 20, 20,
             MOJANG_BUTTON_TEXTURES,
-            button -> ConfirmLinkScreen.open(AuthMe.MOJANG_ACCOUNT_MIGRATION_FAQ_URL, this, true),
+            ConfirmLinkScreen.opening(this, AuthMe.MOJANG_ACCOUNT_MIGRATION_FAQ_URL),
             Text.translatable("gui.authme.method.button.mojang")
         );
         mojangButton.setTooltip(Tooltip.of(
