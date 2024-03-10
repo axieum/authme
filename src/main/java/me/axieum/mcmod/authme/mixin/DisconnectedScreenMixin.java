@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.mixin;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,56 +12,90 @@ import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
-import me.axieum.mcmod.authme.AuthMe;
-import me.axieum.mcmod.authme.gui.AuthScreen;
+import me.axieum.mcmod.authme.impl.gui.AuthMethodScreen;
+import static me.axieum.mcmod.authme.impl.AuthMe.LOGGER;
 
+/**
+ * Injects a button into the disconnected screen to open the authentication screen.
+ */
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen
 {
     @Shadow
     @Final
-    private Text reason;
+    private Screen parent;
 
     @Shadow
     @Final
-    private Screen parent;
+    private Text reason;
 
-    protected DisconnectedScreenMixin(Text title)
+    private DisconnectedScreenMixin(Text title)
     {
         super(title);
     }
 
+    /**
+     * Injects into the creation of the screen and adds the authentication button.
+     *
+     * @param ci injection callback info
+     */
     @Inject(method = "init", at = @At("TAIL"))
-    private void init(CallbackInfo info)
+    private void init(CallbackInfo ci)
     {
-        // Determine if the disconnection reason is session related
-        if (reason == null || !getTranslationKey(reason).startsWith("disconnect.loginFailed")) return;
+        // Determine if the disconnection reason is user or session related
+        if (isUserRelated(reason)) {
+            LOGGER.info("Adding auth button to the disconnected screen");
+            assert client != null;
 
-        final ButtonWidget backButton = (ButtonWidget) ((ScreenAccess) this).getChildren().get(0);
+            // Create and add the button to the screen where the back button is
+            final ButtonWidget backButton = (ButtonWidget) children().get(2);
+            addDrawableChild(
+                ButtonWidget.builder(
+                    Text.translatable("gui.authme.button.relogin"),
+                    btn -> client.setScreen(new AuthMethodScreen(parent))
+                ).dimensions(
+                    backButton.getX(),
+                    backButton.getY(),
+                    backButton.getWidth(),
+                    backButton.getHeight()
+                ).build()
+            );
 
-        // Inject the authentication button where the back button was
-        AuthMe.LOGGER.debug("Injecting authentication button into disconnection screen");
-        this.addDrawableChild(new ButtonWidget(backButton.x,
-                                               backButton.y,
-                                               backButton.getWidth(),
-                                               20,
-                                               new TranslatableText("gui.authme.disconnect.button.auth"),
-                                               button -> this.client.openScreen(new AuthScreen(parent))));
-
-        // Move back button below
-        backButton.y += 26;
+            // Shift the back button down below our new button
+            backButton.setY(backButton.getY() + backButton.getHeight() + 4);
+        }
     }
 
     /**
-     * Returns the translation key for a text component.
+     * Determines if a server disconnection reason is user or session related.
      *
-     * @param component text component
-     * @return translation key of translation text component else empty string
+     * @param reason disconnect reason text
+     * @return true if the disconnection reason is user or session related
      */
-    private static String getTranslationKey(Text component)
+    private static boolean isUserRelated(final @Nullable Text reason)
     {
-        return component instanceof TranslatableText ? ((TranslatableText) component).getKey() : "";
+        if (reason != null && reason.getContent() instanceof TranslatableTextContent content) {
+            final String key = content.getKey();
+            return key != null && switch (key) {
+                case "disconnect.kicked",
+                    "multiplayer.disconnect.banned",
+                    "multiplayer.disconnect.banned.reason",
+                    "multiplayer.disconnect.banned.expiration",
+                    "multiplayer.disconnect.duplicate_login",
+                    "multiplayer.disconnect.kicked",
+                    "multiplayer.disconnect.unverified_username",
+                    "multiplayer.disconnect.not_whitelisted",
+                    "multiplayer.disconnect.name_taken",
+                    "multiplayer.disconnect.missing_public_key",
+                    "multiplayer.disconnect.expired_public_key",
+                    "multiplayer.disconnect.invalid_public_key_signature",
+                    "multiplayer.disconnect.unsigned_chat",
+                    "multiplayer.disconnect.chat_validation_failed" -> true;
+                default -> key.startsWith("disconnect.loginFailed");
+            };
+        }
+        return false;
     }
 }

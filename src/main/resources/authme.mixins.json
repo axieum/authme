@@ -6,12 +6,13 @@
   "mixins": [],
   "server": [],
   "client": [
+    "AbuseReportContextAccessor",
     "DisconnectedScreenMixin",
-    "MinecraftClientAccess",
+    "MinecraftClientAccessor",
     "MultiplayerScreenMixin",
     "RealmsGenericErrorScreenMixin",
-    "RealmsMainScreenAccess",
-    "ScreenAccess"
+    "RealmsAvailabilityAccessor",
+    "SplashTextResourceSupplierAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

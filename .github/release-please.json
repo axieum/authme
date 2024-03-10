@@ -1,0 +1,13 @@
+{
+  "release-type": "simple",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: release v${version}",
+  "extra-files": ["gradle.properties"],
+  "packages": {
+    ".": {
+      "component": "authme",
+      "include-component-in-tag": false
+    }
+  }
+}

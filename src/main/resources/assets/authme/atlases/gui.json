@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {"type": "single", "resource": "authme:widget/blank_button"},
+    {"type": "single", "resource": "authme:widget/blank_button_disabled"},
+    {"type": "single", "resource": "authme:widget/blank_button_focused"},
+    {"type": "single", "resource": "authme:widget/microsoft_button"},
+    {"type": "single", "resource": "authme:widget/microsoft_button_disabled"},
+    {"type": "single", "resource": "authme:widget/microsoft_button_focused"},
+    {"type": "single", "resource": "authme:widget/mojang_button"},
+    {"type": "single", "resource": "authme:widget/mojang_button_disabled"},
+    {"type": "single", "resource": "authme:widget/mojang_button_focused"},
+    {"type": "single", "resource": "authme:widget/offline_button"},
+    {"type": "single", "resource": "authme:widget/offline_button_disabled"},
+    {"type": "single", "resource": "authme:widget/offline_button_focused"}
+  ]
+}

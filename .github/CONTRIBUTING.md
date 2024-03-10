@@ -61,12 +61,6 @@ made regularly.
 At any given time, the latest code that exists in production can be found under
 the `main` branch.
 
-#### `next` / `next-major`
-
-An upcoming major release can be found under the `next` or `next-major`
-branches. For example, if `main` is currently on `v2.4.1`, the next major
-release is expected to be on `v3.0.0`.
-
 #### `beta` / `alpha`
 
 The latest Beta and Alpha releases can be found under the `beta` and `alpha`
@@ -117,18 +111,15 @@ pattern `+([0-9])?(.{+([0-9]),x}).x`, e.g. `2.x`.
 ## Continuous Integration & Deployment (CI/CD)
 
 This project uses [GitHub Actions][github:actions] in tandem
-with [semantic-release][semantic-release] to automate building, testing and
+with [release-please][release-please] to automate building, testing and
 deploying new versions of the codebase.
-
-Please refer to the following [recipes][semantic-release:recipes] for triggering
-new releases.
 
 ### How it works?
 
 When new commits make their way into one of the release branches outlined in
 the [Branching Strategy](#branching-strategy), a
-GitHub [workflow][workflow:publish] is triggered. This workflow in turn
-executes [semantic-release][semantic-release].
+GitHub [workflow][workflow:release] is triggered. This workflow in turn
+executes [release-please][release-please].
 
 ## Code Style
 
@@ -149,7 +140,6 @@ this functionality to your IDE.
 [conventionalcommits]: https://www.conventionalcommits.org/
 [github:actions]: https://github.com/features/actions
 [github:flow]: https://guides.github.com/introduction/flow
-[semantic-release]: https://github.com/semantic-release/semantic-release
-[semantic-release:recipes]: https://github.com/semantic-release/semantic-release/blob/v17.4.4/docs/recipes
+[release-please]: https://github.com/googleapis/release-please
 [semver]: https://semver.org/
-[workflow:publish]: workflows/publish.yml
+[workflow:release]: workflows/release.yml
