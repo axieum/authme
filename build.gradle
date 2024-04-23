@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
     id 'com.modrinth.minotaur' version '2.8.4'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
 }
 
 allprojects {
@@ -17,7 +17,7 @@ allprojects {
     version = project.mod_version
     archivesBaseName = project.mod_id
 
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_21
 
     // Configure Loom
     loom {
