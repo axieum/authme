@@ -4,6 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 
@@ -22,6 +23,9 @@ public class OfflineAuthScreen extends AuthScreen
     private TextFieldWidget usernameField;
     // The login button widget
     private ButtonWidget loginBtn;
+    // The title of the screen
+    private TextWidget titleWidget = null;
+    private TextWidget usernameFieldMessageWidget = null;
 
     /**
      * Constructs a new offline authentication screen.
@@ -75,6 +79,14 @@ public class OfflineAuthScreen extends AuthScreen
                 width / 2 + 2, height / 2 + 26, 100, 20
             ).build()
         );
+
+        titleWidget = this.addDrawableChild(
+            new TextWidget(this.width, this.height, title, this.textRenderer))
+            .setTextColor(0xffffff);
+
+        usernameFieldMessageWidget = this.addDrawableChild(
+                new TextWidget(this.width, this.height, usernameField.getMessage(), this.textRenderer))
+            .setTextColor(0xa0a0a0);
     }
 
     /**
@@ -128,16 +140,18 @@ public class OfflineAuthScreen extends AuthScreen
         renderBackground(context, mouseX, mouseY, delta);
 
         // Render a title for the screen
-        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2,
-            usernameField.getY() - 16 - 23, 0xffffff);
+        if (titleWidget != null) {
+            int xPos = width / 2 - titleWidget.getWidth() / 2;
+            int yPos = height / 2 - titleWidget.getHeight() / 2;
+            titleWidget.setPosition(xPos, yPos - 16 - 23);
+        }
 
         // Render the username field label
-        context.drawTextWithShadow(
-            client.textRenderer,
-            usernameField.getMessage(),
-            usernameField.getX(), usernameField.getY() - 16,
-            0xa0a0a0
-        );
+        if (usernameFieldMessageWidget != null) {
+            int xPos = width / 2 - usernameFieldMessageWidget.getWidth() / 2;
+            int yPos = height / 2 - usernameFieldMessageWidget.getHeight() / 2;
+            usernameFieldMessageWidget.setPosition(xPos, yPos - 16);
+        }
 
         // Cascade the rendering
         super.render(context, mouseX, mouseY, delta);

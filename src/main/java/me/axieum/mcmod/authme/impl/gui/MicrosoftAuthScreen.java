@@ -9,6 +9,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -28,7 +29,9 @@ public class MicrosoftAuthScreen extends AuthScreen
     // The completable future for all Microsoft login tasks
     private CompletableFuture<Void> task = null;
     // The current progress/status of the login task
-    private Text status = null;
+    private TextWidget statusWidget = null;
+    // The title of the screen
+    private TextWidget titleWidget = null;
     // True if Microsoft should prompt to select an account
     private final boolean selectAccount;
 
@@ -66,8 +69,11 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Prevent the task from starting several times
         if (task != null) return;
 
+        titleWidget = this.addDrawableChild(new TextWidget(this.width, this.height, title, this.textRenderer))
+            .setTextColor(0xffffff);
+
         // Set the initial progress/status of the login task
-        status = Text.translatable("gui.authme.microsoft.status.checkBrowser");
+        setStatusWidget(Text.translatable("gui.authme.microsoft.status.checkBrowser"));
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
@@ -83,25 +89,25 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                status = Text.translatable("gui.authme.microsoft.status.msAccessToken");
+                setStatusWidget(Text.translatable("gui.authme.microsoft.status.msAccessToken"));
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                status = Text.translatable("gui.authme.microsoft.status.xboxAccessToken");
+                setStatusWidget(Text.translatable("gui.authme.microsoft.status.xboxAccessToken"));
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                status = Text.translatable("gui.authme.microsoft.status.xboxXstsToken");
+                setStatusWidget(Text.translatable("gui.authme.microsoft.status.xboxXstsToken"));
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                status = Text.translatable("gui.authme.microsoft.status.mcAccessToken");
+                setStatusWidget(Text.translatable("gui.authme.microsoft.status.mcAccessToken"));
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -109,7 +115,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                status = Text.translatable("gui.authme.microsoft.status.mcProfile");
+                setStatusWidget(Text.translatable("gui.authme.microsoft.status.mcProfile"));
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -137,7 +143,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else {
                     key = "gui.authme.error.generic";
                 }
-                status = Text.translatable(key).formatted(Formatting.RED);
+                setStatusWidget(Text.translatable(key).formatted(Formatting.RED));
                 cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
             });
@@ -152,11 +158,17 @@ public class MicrosoftAuthScreen extends AuthScreen
         renderBackground(context, mouseX, mouseY, delta);
 
         // Render a title for the screen
-        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2, height / 2 - 32, 0xffffff);
+        if (titleWidget != null) {
+            int xPos = width / 2 - titleWidget.getWidth() / 2;
+            int yPos = height / 2 - titleWidget.getHeight() / 2;
+            titleWidget.setPosition(xPos, yPos - 32);
+        }
 
         // Render the current progress/status of the login, if present
-        if (status != null) {
-            context.drawCenteredTextWithShadow(client.textRenderer, status, width / 2, height / 2 - 6, 0xdddddd);
+        if (statusWidget != null) {
+            int xPos = width / 2 - statusWidget.getWidth() / 2;
+            int yPos = height / 2 - statusWidget.getHeight() / 2;
+            statusWidget.setPosition(xPos, yPos - 6);
         }
 
         // Cascade the rendering
@@ -174,5 +186,12 @@ public class MicrosoftAuthScreen extends AuthScreen
 
         // Cascade the closing
         super.close();
+    }
+
+    private void setStatusWidget(Text status)
+    {
+        this.remove(statusWidget);
+        statusWidget = this.addDrawableChild(new TextWidget(status, this.textRenderer))
+            .setTextColor(0xdddddd);
     }
 }

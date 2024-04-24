@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -24,8 +25,8 @@ public class AuthMethodScreen extends Screen
 {
     // The parent (or last) screen that opened this screen
     private final Screen parentScreen;
-    // A greeting message shown for the current session
-    private Text greeting = null;
+    private TextWidget greetingsWidget;
+    private TextWidget titleWidget;
 
     // The 'Microsoft' authentication method button textures
     public static final ButtonTextures MICROSOFT_BUTTON_TEXTURES = new ButtonTextures(
@@ -63,11 +64,17 @@ public class AuthMethodScreen extends Screen
         super.init();
         assert client != null;
 
-        // Set the greeting message
-        greeting = Text.translatable(
+        titleWidget = this.addDrawableChild(new TextWidget(this.width, this.height, title, this.textRenderer))
+            .setTextColor(0xffffff);
+
+        // A greeting message shown for the current session
+        Text greeting = Text.translatable(
             "gui.authme.method.greeting",
             Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
         );
+
+        greetingsWidget = this.addDrawableChild(new TextWidget(this.width, this.height, greeting, this.textRenderer))
+            .setTextColor(0xa0a0a0);
 
         // Add a button for the 'Microsoft' authentication method
         TexturedButtonWidget msButton = new TexturedButtonWidget(
@@ -145,11 +152,16 @@ public class AuthMethodScreen extends Screen
         renderBackground(context, mouseX, mouseY, delta);
 
         // Render a title for the screen
-        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2, height / 2 - 27, 0xffffff);
+        if (titleWidget != null) {
+            int xPos = width / 2 - titleWidget.getWidth() / 2;
+            int yPos = height / 2 - titleWidget.getHeight() / 2;
+            titleWidget.setPosition(xPos, yPos - 27);
+        }
 
-        // Render a greeting for the current session
-        if (greeting != null) {
-            context.drawCenteredTextWithShadow(client.textRenderer, greeting, width / 2, height / 2 - 47, 0xa0a0a0);
+        if (greetingsWidget != null) {
+            int xPos = width / 2 - greetingsWidget.getWidth() / 2;
+            int yPos = height / 2 - greetingsWidget.getHeight() / 2;
+            greetingsWidget.setPosition(xPos, yPos - 47);
         }
 
         // Cascade the rendering
