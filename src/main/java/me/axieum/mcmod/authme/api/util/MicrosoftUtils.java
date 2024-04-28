@@ -48,7 +48,8 @@ import static me.axieum.mcmod.authme.impl.AuthMe.getConfig;
 /**
  * Utility methods for authenticating via Microsoft.
  *
- * <p>For more information refer to: https://wiki.vg/Microsoft_Authentication_Scheme
+ * <p>For more information refer to:
+ * <a href="https://wiki.vg/Microsoft_Authentication_Scheme">https://wiki.vg/Microsoft_Authentication_Scheme</a>
  */
 public final class MicrosoftUtils
 {
