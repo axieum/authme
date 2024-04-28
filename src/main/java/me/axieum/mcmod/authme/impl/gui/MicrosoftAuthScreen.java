@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.http.conn.ConnectTimeoutException;
 
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextWidget;
@@ -30,8 +29,6 @@ public class MicrosoftAuthScreen extends AuthScreen
     private CompletableFuture<Void> task = null;
     // The current progress/status of the login task
     private TextWidget statusWidget = null;
-    // The title of the screen
-    private TextWidget titleWidget = null;
     // True if Microsoft should prompt to select an account
     private final boolean selectAccount;
 
@@ -55,6 +52,20 @@ public class MicrosoftAuthScreen extends AuthScreen
         super.init();
         assert client != null;
 
+        // Add a title
+        TextWidget titleWidget = new TextWidget(width, height, title, textRenderer);
+        titleWidget.setTextColor(0xffffff);
+        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 27);
+        addDrawableChild(titleWidget);
+
+        // Add a status message
+        statusWidget = new TextWidget(width, height, title, textRenderer);
+        statusWidget.setTextColor(0xdddddd);
+        statusWidget.setPosition(
+            width / 2 - statusWidget.getWidth() / 2, height / 2 - statusWidget.getHeight() / 2 - 1
+        );
+        addDrawableChild(statusWidget);
+
         // Add a cancel button to abort the task
         final ButtonWidget cancelBtn;
         addDrawableChild(
@@ -69,11 +80,8 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Prevent the task from starting several times
         if (task != null) return;
 
-        titleWidget = this.addDrawableChild(new TextWidget(this.width, this.height, title, this.textRenderer))
-            .setTextColor(0xffffff);
-
         // Set the initial progress/status of the login task
-        setStatusWidget(Text.translatable("gui.authme.microsoft.status.checkBrowser"));
+        statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.checkBrowser"));
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
@@ -89,25 +97,25 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                setStatusWidget(Text.translatable("gui.authme.microsoft.status.msAccessToken"));
+                statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.msAccessToken"));
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                setStatusWidget(Text.translatable("gui.authme.microsoft.status.xboxAccessToken"));
+                statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.xboxAccessToken"));
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                setStatusWidget(Text.translatable("gui.authme.microsoft.status.xboxXstsToken"));
+                statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.xboxXstsToken"));
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                setStatusWidget(Text.translatable("gui.authme.microsoft.status.mcAccessToken"));
+                statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.mcAccessToken"));
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -115,7 +123,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                setStatusWidget(Text.translatable("gui.authme.microsoft.status.mcProfile"));
+                statusWidget.setMessage(Text.translatable("gui.authme.microsoft.status.mcProfile"));
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -143,36 +151,10 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else {
                     key = "gui.authme.error.generic";
                 }
-                setStatusWidget(Text.translatable(key).formatted(Formatting.RED));
+                statusWidget.setMessage(Text.translatable(key).formatted(Formatting.RED));
                 cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
             });
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta)
-    {
-        assert client != null;
-
-        // Render the background before any widgets
-        renderBackground(context, mouseX, mouseY, delta);
-
-        // Render a title for the screen
-        if (titleWidget != null) {
-            int xPos = width / 2 - titleWidget.getWidth() / 2;
-            int yPos = height / 2 - titleWidget.getHeight() / 2;
-            titleWidget.setPosition(xPos, yPos - 32);
-        }
-
-        // Render the current progress/status of the login, if present
-        if (statusWidget != null) {
-            int xPos = width / 2 - statusWidget.getWidth() / 2;
-            int yPos = height / 2 - statusWidget.getHeight() / 2;
-            statusWidget.setPosition(xPos, yPos - 6);
-        }
-
-        // Cascade the rendering
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
@@ -186,12 +168,5 @@ public class MicrosoftAuthScreen extends AuthScreen
 
         // Cascade the closing
         super.close();
-    }
-
-    private void setStatusWidget(Text status)
-    {
-        this.remove(statusWidget);
-        statusWidget = this.addDrawableChild(new TextWidget(status, this.textRenderer))
-            .setTextColor(0xdddddd);
     }
 }

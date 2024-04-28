@@ -1,6 +1,5 @@
 package me.axieum.mcmod.authme.impl.gui;
 
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -25,8 +24,6 @@ public class AuthMethodScreen extends Screen
 {
     // The parent (or last) screen that opened this screen
     private final Screen parentScreen;
-    private TextWidget greetingsWidget;
-    private TextWidget titleWidget;
 
     // The 'Microsoft' authentication method button textures
     public static final ButtonTextures MICROSOFT_BUTTON_TEXTURES = new ButtonTextures(
@@ -64,17 +61,26 @@ public class AuthMethodScreen extends Screen
         super.init();
         assert client != null;
 
-        titleWidget = this.addDrawableChild(new TextWidget(this.width, this.height, title, this.textRenderer))
-            .setTextColor(0xffffff);
+        // Add a title
+        TextWidget titleWidget = new TextWidget(width, height, title, textRenderer);
+        titleWidget.setTextColor(0xffffff);
+        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 22);
+        addDrawableChild(titleWidget);
 
-        // A greeting message shown for the current session
-        Text greeting = Text.translatable(
-            "gui.authme.method.greeting",
-            Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
+        // Add a greeting message
+        TextWidget greetingWidget = new TextWidget(
+            width, height,
+            Text.translatable(
+                "gui.authme.method.greeting",
+                Text.literal(SessionUtils.getSession().getUsername()).formatted(Formatting.YELLOW)
+            ),
+            textRenderer
         );
-
-        greetingsWidget = this.addDrawableChild(new TextWidget(this.width, this.height, greeting, this.textRenderer))
-            .setTextColor(0xa0a0a0);
+        greetingWidget.setTextColor(0xa0a0a0);
+        greetingWidget.setPosition(
+            width / 2 - greetingWidget.getWidth() / 2, height / 2 - greetingWidget.getHeight() / 2 - 42
+        );
+        addDrawableChild(greetingWidget);
 
         // Add a button for the 'Microsoft' authentication method
         TexturedButtonWidget msButton = new TexturedButtonWidget(
@@ -141,31 +147,6 @@ public class AuthMethodScreen extends Screen
                 .dimensions(width / 2 - 50, height / 2 + 27, 100, 20)
                 .build()
         );
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta)
-    {
-        assert client != null;
-
-        // Render the background before any widgets
-        renderBackground(context, mouseX, mouseY, delta);
-
-        // Render a title for the screen
-        if (titleWidget != null) {
-            int xPos = width / 2 - titleWidget.getWidth() / 2;
-            int yPos = height / 2 - titleWidget.getHeight() / 2;
-            titleWidget.setPosition(xPos, yPos - 27);
-        }
-
-        if (greetingsWidget != null) {
-            int xPos = width / 2 - greetingsWidget.getWidth() / 2;
-            int yPos = height / 2 - greetingsWidget.getHeight() / 2;
-            greetingsWidget.setPosition(xPos, yPos - 47);
-        }
-
-        // Cascade the rendering
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
