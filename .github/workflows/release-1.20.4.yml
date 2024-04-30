@@ -1,13 +1,12 @@
 # Prepares, builds and publishes new releases
 
-name: Release
+name: Release 1.20.4
 
 # On changes to release branches
 on:
   push:
     branches:
-      - main
-      - master
+      - mc/1.20.4
   workflow_dispatch:
 
 jobs:
@@ -22,6 +21,7 @@ jobs:
         uses: google-github-actions/release-please-action@v4
         with:
           config-file: .github/release-please.json
+          target-branch: mc/1.20.4
           token: ${{ secrets.GITHUB_TOKEN }}
 
     outputs:
@@ -44,10 +44,10 @@ jobs:
       - name: ✨ Checkout repository
         uses: actions/checkout@v4
 
-      - name: ☕ Set up JDK 21
+      - name: ☕ Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 17
           distribution: temurin
 
       - name: 🐘 Set up Gradle
