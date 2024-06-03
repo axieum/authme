@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -51,7 +52,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
             assert client != null;
 
             // Create and add the button to the screen above the back button
-            final ButtonWidget backButton = (ButtonWidget) children().get(0);
+            final ButtonWidget backButton = (ButtonWidget) children().getFirst();
             addDrawableChild(
                 ButtonWidget.builder(
                     Text.translatable("gui.authme.button.relogin"),
@@ -72,6 +73,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
      * @param reason disconnect reason text
      * @return true if the disconnection reason is user or session related
      */
+    @Unique
     private static boolean isUserRelated(final @Nullable Text reason)
     {
         if (reason != null && reason.getContent() instanceof TranslatableTextContent content) {

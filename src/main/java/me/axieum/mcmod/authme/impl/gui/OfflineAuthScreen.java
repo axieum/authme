@@ -1,9 +1,9 @@
 package me.axieum.mcmod.authme.impl.gui;
 
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 
@@ -41,6 +41,12 @@ public class OfflineAuthScreen extends AuthScreen
         super.init();
         assert client != null;
 
+        // Add a title
+        TextWidget titleWidget = new TextWidget(width, height, title, textRenderer);
+        titleWidget.setTextColor(0xffffff);
+        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 40);
+        addDrawableChild(titleWidget);
+
         // Add a username text field
         addDrawableChild(
             usernameField = new TextFieldWidget(
@@ -54,6 +60,15 @@ public class OfflineAuthScreen extends AuthScreen
             usernameField.setText(getConfig().methods.offline.lastUsername);
         }
         usernameField.setChangedListener(value -> loginBtn.active = isFormValid());
+
+        // Add a label for the username field
+        TextWidget labelWidget = new TextWidget(width, height, usernameField.getMessage(), textRenderer);
+        labelWidget.setTextColor(0xdddddd);
+        labelWidget.setPosition(
+            width / 2 - labelWidget.getWidth() / 2 - 51,
+            height / 2 - labelWidget.getHeight() / 2 - 17
+        );
+        addDrawableChild(labelWidget);
 
         // Add a login button to submit the form
         addDrawableChild(
@@ -117,29 +132,5 @@ public class OfflineAuthScreen extends AuthScreen
     public boolean isFormValid()
     {
         return !usernameField.getText().isBlank();
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta)
-    {
-        assert client != null;
-
-        // Render the background before any widgets
-        renderBackground(context, mouseX, mouseY, delta);
-
-        // Render a title for the screen
-        context.drawCenteredTextWithShadow(client.textRenderer, title, width / 2,
-            usernameField.getY() - 16 - 23, 0xffffff);
-
-        // Render the username field label
-        context.drawTextWithShadow(
-            client.textRenderer,
-            usernameField.getMessage(),
-            usernameField.getX(), usernameField.getY() - 16,
-            0xa0a0a0
-        );
-
-        // Cascade the rendering
-        super.render(context, mouseX, mouseY, delta);
     }
 }

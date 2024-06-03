@@ -28,7 +28,7 @@ public class PasswordFieldWidget extends TextFieldWidget
         );
         // NB: Overriding the rendered characters affects interaction, as the
         // rendered characters have different widths to the actual underlying text.
-        // i.e. setRenderTextProvider((value, limit) -> StringUtils.repeat('\u204E', value.length()));
+        // i.e. setRenderTextProvider((value, limit) -> StringUtils.repeat('⁎', value.length()));
     }
 
     @Override
