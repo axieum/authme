@@ -1,10 +1,13 @@
 package me.axieum.mcmod.authme.mixin;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import com.mojang.authlib.minecraft.UserApiService;
+import com.mojang.authlib.yggdrasil.ProfileResult;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import net.minecraft.client.MinecraftClient;
@@ -28,6 +31,15 @@ public interface MinecraftClientAccessor
     @Accessor
     @Mutable
     void setSession(Session session);
+
+    /**
+     * Sets the game profile.
+     *
+     * @param future the future of the new game profile
+     */
+    @Accessor
+    @Mutable
+    void setGameProfileFuture(CompletableFuture<ProfileResult> future);
 
     /**
      * Returns the Minecraft authentication service.

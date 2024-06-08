@@ -16,6 +16,7 @@ import net.minecraft.client.realms.RealmsPeriodicCheckers;
 import net.minecraft.client.session.ProfileKeys;
 import net.minecraft.client.session.Session;
 import net.minecraft.client.session.report.AbuseReportContext;
+import net.minecraft.util.Util;
 
 import me.axieum.mcmod.authme.mixin.AbuseReportContextAccessor;
 import me.axieum.mcmod.authme.mixin.MinecraftClientAccessor;
@@ -61,6 +62,11 @@ public final class SessionUtils
         // Use an accessor mixin to update the 'private final' Minecraft session
         ((MinecraftClientAccessor) client).setSession(session);
         ((SplashTextResourceSupplierAccessor) client.getSplashTextLoader()).setSession(session);
+
+        // Re-create the game profile future
+        ((MinecraftClientAccessor) client).setGameProfileFuture(
+            CompletableFuture.supplyAsync(() -> client.getSessionService().fetchProfile(session.getUuidOrNull(), true),
+                Util.getDownloadWorkerExecutor()));
 
         // Re-create the user API service (ignore offline session)
         UserApiService userApiService = UserApiService.OFFLINE;
