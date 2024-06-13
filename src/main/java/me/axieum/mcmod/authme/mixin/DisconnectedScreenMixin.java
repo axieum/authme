@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 
@@ -30,7 +31,7 @@ public abstract class DisconnectedScreenMixin extends Screen
 
     @Shadow
     @Final
-    private Text reason;
+    private DisconnectionInfo info;
 
     private DisconnectedScreenMixin(Text title)
     {
@@ -46,7 +47,7 @@ public abstract class DisconnectedScreenMixin extends Screen
     private void init(CallbackInfo ci)
     {
         // Determine if the disconnection reason is user or session related
-        if (isUserRelated(reason)) {
+        if (isUserRelated(info.reason())) {
             LOGGER.info("Adding auth button to the disconnected screen");
             assert client != null;
 

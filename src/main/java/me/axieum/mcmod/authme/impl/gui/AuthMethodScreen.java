@@ -27,21 +27,21 @@ public class AuthMethodScreen extends Screen
 
     // The 'Microsoft' authentication method button textures
     public static final ButtonTextures MICROSOFT_BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier("authme", "widget/microsoft_button"),
-        new Identifier("authme", "widget/microsoft_button_disabled"),
-        new Identifier("authme", "widget/microsoft_button_focused")
+        Identifier.of("authme", "widget/microsoft_button"),
+        Identifier.of("authme", "widget/microsoft_button_disabled"),
+        Identifier.of("authme", "widget/microsoft_button_focused")
     );
     // The 'Mojang (or legacy)' authentication method button textures
     public static final ButtonTextures MOJANG_BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier("authme", "widget/mojang_button"),
-        new Identifier("authme", "widget/mojang_button_disabled"),
-        new Identifier("authme", "widget/mojang_button_focused")
+        Identifier.of("authme", "widget/mojang_button"),
+        Identifier.of("authme", "widget/mojang_button_disabled"),
+        Identifier.of("authme", "widget/mojang_button_focused")
     );
     // The 'Offline' authentication method button textures
     public static final ButtonTextures OFFLINE_BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier("authme", "widget/offline_button"),
-        new Identifier("authme", "widget/offline_button_disabled"),
-        new Identifier("authme", "widget/offline_button_focused")
+        Identifier.of("authme", "widget/offline_button"),
+        Identifier.of("authme", "widget/offline_button_disabled"),
+        Identifier.of("authme", "widget/offline_button_focused")
     );
 
     /**

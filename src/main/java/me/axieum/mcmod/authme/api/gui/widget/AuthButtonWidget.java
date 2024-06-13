@@ -30,12 +30,12 @@ public class AuthButtonWidget extends TexturedButtonWidget
 
     // The authentication button textures
     public static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier("widget/locked_button"),
-        new Identifier("widget/locked_button_disabled"),
-        new Identifier("widget/locked_button_highlighted")
+        Identifier.of("widget/locked_button"),
+        Identifier.of("widget/locked_button_disabled"),
+        Identifier.of("widget/locked_button_highlighted")
     );
     // The session status icon texture
-    public static final Identifier SESSION_STATUS_TEXTURE = new Identifier("authme", "textures/gui/session_status.png");
+    public static final Identifier SESSION_STATUS_TEXTURE = Identifier.of("authme", "textures/gui/session_status.png");
 
     /**
      * Constructs a fixed (no drag) authentication button.
