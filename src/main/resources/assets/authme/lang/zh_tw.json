@@ -4,6 +4,7 @@
   "gui.authme.button.relogin": "重新登入",
 
   "gui.authme.error.generic": "有些東西出錯了！請返回重試。",
+  "gui.authme.error.notPurchased": "此帳戶尚未購買 Minecraft！",
   "gui.authme.error.timeout": "已逾時！請返回重試。",
 
   "gui.authme.toast.greeting": "您好，%s！",
@@ -13,6 +14,7 @@
   "gui.authme.method.button.microsoft": "Microsoft",
   "gui.authme.method.button.microsoft.selectAccount": "Ctrl + 點一下以選取帳號",
   "gui.authme.method.button.mojang": "Mojang（或舊版登入）",
+  "gui.authme.method.button.mojang.unavailable": "暫時無法使用，點擊以獲取更多資訊",
   "gui.authme.method.button.offline": "離線",
 
   "gui.authme.microsoft.title": "透過 Microsoft 登入",
