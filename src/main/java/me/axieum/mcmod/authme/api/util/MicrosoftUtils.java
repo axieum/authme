@@ -4,10 +4,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -64,13 +61,15 @@ public final class MicrosoftUtils
         .build();
 
     // Default URLs used in the configuration.
-    public static final String CLIENT_ID = "e16699bb-2aa8-46da-b5e3-45cbcce29091";
+    public static final String CLIENT_ID = "e16699bb-2aa8-46da-b5e3-45cbcce29091"; // AuthMe ClientID
     public static final String AUTHORIZE_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
     public static final String TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
     public static final String XBOX_AUTH_URL = "https://user.auth.xboxlive.com/user/authenticate";
     public static final String XBOX_XSTS_URL = "https://xsts.auth.xboxlive.com/xsts/authorize";
     public static final String MC_AUTH_URL = "https://api.minecraftservices.com/authentication/login_with_xbox";
     public static final String MC_PROFILE_URL = "https://api.minecraftservices.com/minecraft/profile";
+
+    private static String refreshToken = null;
 
     private MicrosoftUtils() {}
 
@@ -284,17 +283,32 @@ public final class MicrosoftUtils
                 final HttpPost request = new HttpPost(URI.create(getConfig().methods.microsoft.tokenUrl));
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                // Choose whether to use a refresh token or continue normally
+
+
+                List<BasicNameValuePair> params = new ArrayList<>(List.of(
+                    new BasicNameValuePair("client_id", getConfig().methods.microsoft.clientId),
+                    // We must provide the exact redirect URI that was used to obtain the auth code
+                    new BasicNameValuePair(
+                        "redirect_uri",
+                        String.format("http://localhost:%d/callback", getConfig().methods.microsoft.port)
+                    )
+                ));
+
+                // If we don't have a refresh token, login normally.
+                // Otherwise use our existing refresh token to login via our existing session
+                if (refreshToken == null) {
+                    params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+                    params.add(new BasicNameValuePair("code", authCode));
+                } else {
+                    params.add(new BasicNameValuePair("grant_type", "refresh_token"));
+                    params.add(new BasicNameValuePair("refresh_token", refreshToken));
+                }
+
+                // construct request
                 request.setEntity(new UrlEncodedFormEntity(
-                    List.of(
-                        new BasicNameValuePair("client_id", getConfig().methods.microsoft.clientId),
-                        new BasicNameValuePair("grant_type", "authorization_code"),
-                        new BasicNameValuePair("code", authCode),
-                        // We must provide the exact redirect URI that was used to obtain the auth code
-                        new BasicNameValuePair(
-                            "redirect_uri",
-                            String.format("http://localhost:%d/callback", getConfig().methods.microsoft.port)
-                        )
-                    ),
+                    params,
                     "UTF-8"
                 ));
 
@@ -310,8 +324,11 @@ public final class MicrosoftUtils
                                .filter(token -> !token.isBlank())
                                // If present, log success and return
                                .map(token -> {
+                                   refreshToken = json.get("refresh_token").getAsString();
                                    LOGGER.info("Acquired Microsoft access token! ({})",
                                        StringUtils.abbreviateMiddle(token, "...", 32));
+                                   LOGGER.info("New Microsoft refresh token: {}",
+                                       StringUtils.abbreviateMiddle(refreshToken, "...", 32));
                                    return token;
                                })
                                // Otherwise, throw an exception with the error description if present
