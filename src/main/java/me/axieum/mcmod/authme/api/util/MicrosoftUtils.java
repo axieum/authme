@@ -284,9 +284,7 @@ public final class MicrosoftUtils
                 request.setConfig(REQUEST_CONFIG);
                 request.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                // Choose whether to use a refresh token or continue normally
-
-
+                // Create list of params
                 List<BasicNameValuePair> params = new ArrayList<>(List.of(
                     new BasicNameValuePair("client_id", getConfig().methods.microsoft.clientId),
                     // We must provide the exact redirect URI that was used to obtain the auth code
@@ -306,7 +304,7 @@ public final class MicrosoftUtils
                     params.add(new BasicNameValuePair("refresh_token", refreshToken));
                 }
 
-                // construct request
+                // Construct request
                 request.setEntity(new UrlEncodedFormEntity(
                     params,
                     "UTF-8"
