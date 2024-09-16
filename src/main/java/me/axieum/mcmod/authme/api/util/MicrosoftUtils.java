@@ -306,6 +306,10 @@ public final class MicrosoftUtils
                 // Also check whether prompt type is only DEFAULT, to not trap the user with the token when changing acc
                 if (refreshToken != null
                     && (promptType == null || promptType == MicrosoftPrompt.DEFAULT)) {
+
+                    LOGGER.info("Login will use refresh token: {}",
+                        StringUtils.abbreviateMiddle(refreshToken, "...", 32));
+
                     params.add(new BasicNameValuePair("grant_type", "refresh_token"));
                     params.add(new BasicNameValuePair("refresh_token", refreshToken));
                 } else {
