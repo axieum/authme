@@ -4,8 +4,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,6 +74,7 @@ public final class MicrosoftUtils
     public static final String MC_PROFILE_URL = "https://api.minecraftservices.com/minecraft/profile";
 
     private static String refreshToken = null;
+    private static MicrosoftPrompt promptType;
 
     private MicrosoftUtils() {}
 
@@ -168,6 +169,7 @@ public final class MicrosoftUtils
     )
     {
         return CompletableFuture.supplyAsync(() -> {
+            promptType = prompt;
             LOGGER.info("Acquiring Microsoft auth code...");
             try {
                 // Generate a random "state" to be included in the request that will in turn be returned with the token
@@ -226,6 +228,7 @@ public final class MicrosoftUtils
                     uriBuilder.addParameter(
                         "prompt", (prompt != null ? prompt : getConfig().methods.microsoft.prompt).toString()
                     );
+
                 }
                 final URI uri = uriBuilder.build();
 
@@ -299,13 +302,15 @@ public final class MicrosoftUtils
                 ));
 
                 // If we don't have a refresh token, login normally.
-                // Otherwise use our existing refresh token to login via our existing session
-                if (refreshToken == null) {
-                    params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-                    params.add(new BasicNameValuePair("code", authCode));
-                } else {
+                // Otherwise, use our existing refresh token to login via our existing session
+                // Also check whether prompt type is only DEFAULT, to not trap the user with the token when changing acc
+                if (refreshToken != null
+                    && (promptType == null || promptType == MicrosoftPrompt.DEFAULT)) {
                     params.add(new BasicNameValuePair("grant_type", "refresh_token"));
                     params.add(new BasicNameValuePair("refresh_token", refreshToken));
+                } else {
+                    params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+                    params.add(new BasicNameValuePair("code", authCode));
                 }
 
                 // Construct request
