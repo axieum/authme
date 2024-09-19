@@ -19,6 +19,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.security.auth.login.CredentialException;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
@@ -73,8 +75,11 @@ public final class MicrosoftUtils
     public static final String MC_AUTH_URL = "https://api.minecraftservices.com/authentication/login_with_xbox";
     public static final String MC_PROFILE_URL = "https://api.minecraftservices.com/minecraft/profile";
 
+    // Maximum number of times to retry acquiring access token
+    private static final int MAX_RETRIES = 1;
+
     private static String refreshToken = null;
-    private static MicrosoftPrompt promptType;
+    private static MicrosoftPrompt msPromptType;
 
     private MicrosoftUtils() {}
 
@@ -169,7 +174,7 @@ public final class MicrosoftUtils
     )
     {
         return CompletableFuture.supplyAsync(() -> {
-            promptType = prompt;
+            msPromptType = prompt;
             LOGGER.info("Acquiring Microsoft auth code...");
             try {
                 // Generate a random "state" to be included in the request that will in turn be returned with the token
@@ -283,8 +288,34 @@ public final class MicrosoftUtils
      */
     public static CompletableFuture<String> acquireMSAccessToken(final String authCode, final Executor executor)
     {
+        CompletableFuture<String> tokenFuture = attemptMSAccessToken(authCode, executor);
+
+        // Failure logic
+        for (int i = 0; i < MAX_RETRIES; i++) {
+            // Retry the request
+            tokenFuture = tokenFuture
+                .thenApply(CompletableFuture::completedFuture)
+                .exceptionally(error -> {
+                    // Check for specific failed refreshToken case.
+                    // If it isn't, throw error.
+                    if (error.getCause() instanceof CredentialException)
+                        return attemptMSAccessToken(authCode, executor);
+                    else if (error instanceof RuntimeException)
+                        throw (RuntimeException) error;
+                    else
+                        throw new CompletionException(error);
+                })
+                .thenCompose(Function.identity());
+        }
+
+        return tokenFuture;
+    }
+
+    @NotNull
+    private static CompletableFuture<String> attemptMSAccessToken(String authCode, Executor executor)
+    {
         return CompletableFuture.supplyAsync(() -> {
-            LOGGER.info("Exchanging Microsoft auth code for an access token...");
+            LOGGER.info("Exchanging Microsoft auth code/refresh token for an access token...");
             try (CloseableHttpClient client = HttpClients.createMinimal()) {
                 // Build a new HTTP request
                 final HttpPost request = new HttpPost(URI.create(getConfig().methods.microsoft.tokenUrl));
@@ -301,18 +332,17 @@ public final class MicrosoftUtils
                     )
                 ));
 
-                // If we don't have a refresh token, login normally.
-                // Otherwise, use our existing refresh token to login via our existing session
-                // Also check whether prompt type is only DEFAULT, to not trap the user with the token when changing acc
-                if (refreshToken != null
-                    && (promptType == null || promptType == MicrosoftPrompt.DEFAULT)) {
-
+                if (usingRefreshToken()) {
+                    // Prepare params for REFRESH TOKEN login
                     LOGGER.info("Login will use refresh token: {}",
                         StringUtils.abbreviateMiddle(refreshToken, "...", 32));
 
                     params.add(new BasicNameValuePair("grant_type", "refresh_token"));
                     params.add(new BasicNameValuePair("refresh_token", refreshToken));
                 } else {
+                    // Prepare params for AUTH CODE login
+                    LOGGER.info("Login will use auth code: {}",
+                        StringUtils.abbreviateMiddle(authCode, "...", 32));
                     params.add(new BasicNameValuePair("grant_type", "authorization_code"));
                     params.add(new BasicNameValuePair("code", authCode));
                 }
@@ -331,25 +361,34 @@ public final class MicrosoftUtils
                 // Attempt to parse the response body as JSON and extract the access token
                 final JsonObject json = JsonHelper.deserialize(EntityUtils.toString(res.getEntity()));
                 return Optional.ofNullable(json.get("access_token"))
-                               .map(JsonElement::getAsString)
-                               .filter(token -> !token.isBlank())
-                               // If present, log success and return
-                               .map(token -> {
-                                   refreshToken = json.get("refresh_token").getAsString();
-                                   LOGGER.info("Acquired Microsoft access token! ({})",
-                                       StringUtils.abbreviateMiddle(token, "...", 32));
-                                   LOGGER.info("New Microsoft refresh token: {}",
-                                       StringUtils.abbreviateMiddle(refreshToken, "...", 32));
-                                   return token;
-                               })
-                               // Otherwise, throw an exception with the error description if present
-                               .orElseThrow(() -> new Exception(
-                                   json.has("error") ? String.format(
-                                       "%s: %s",
-                                       json.get("error").getAsString(),
-                                       json.get("error_description").getAsString()
-                                   ) : "There was no access token or error description present."
-                               ));
+                    .map(JsonElement::getAsString)
+                    .filter(token -> !token.isBlank())
+                    // If present, log success and return
+                    .map(token -> {
+                        refreshToken = json.get("refresh_token").getAsString();
+                        LOGGER.info("Acquired Microsoft access token! ({})",
+                            StringUtils.abbreviateMiddle(token, "...", 32));
+                        LOGGER.info("New Microsoft refresh token: {}",
+                            StringUtils.abbreviateMiddle(refreshToken, "...", 32));
+                        return token;
+                    }).orElseThrow(() -> {
+                        // Check if using refresh token and throw fitting exception
+                        if (usingRefreshToken()) return new CredentialException("Refresh token login failed");
+                        // Getting access token without refreshToken failed as well, throw generic exception.
+                        return new Exception(
+                            json.has("error")
+                                ? String.format(
+                                "%s: %s",
+                                json.get("error").getAsString(),
+                                json.get("error_description").getAsString()
+                            ) : "There was no access token or error description present."
+                        );
+                    });
+            } catch (CredentialException e) {
+                LOGGER.warn("Failed logging in using refresh token. Invalidating...");
+                // Invalidate refresh token
+                refreshToken = null;
+                throw new CompletionException(e);
             } catch (InterruptedException e) {
                 LOGGER.warn("Microsoft access token acquisition was cancelled!");
                 throw new CancellationException("Interrupted");
@@ -626,6 +665,18 @@ public final class MicrosoftUtils
                 throw new CompletionException(e);
             }
         }, executor);
+    }
+
+    /**
+     * Check whether the current login will use a refresh token or an auth code.
+     * <br>
+     * (Whether both refreshToken is null and the login prompt is default.)
+     *
+     * @return whether the login uses refresh token
+     */
+    private static boolean usingRefreshToken()
+    {
+        return refreshToken != null && (msPromptType == null || msPromptType == MicrosoftPrompt.DEFAULT);
     }
 
     /**
