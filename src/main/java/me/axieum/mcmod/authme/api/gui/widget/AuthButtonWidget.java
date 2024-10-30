@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.api.gui.widget;
 
+import net.minecraft.client.render.RenderLayer;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.DrawContext;
@@ -253,7 +254,8 @@ public class AuthButtonWidget extends TexturedButtonWidget
             case OFFLINE -> u = 8;
             default -> u = 16;
         }
-        context.drawTexture(SESSION_STATUS_TEXTURE, getX() + width - 6, getY() - 1, u, 0, 8, 8, 24, 8);
+
+        context.drawTexture(gui -> RenderLayer.getGuiTexturedOverlay(SESSION_STATUS_TEXTURE), SESSION_STATUS_TEXTURE, getX() + width - 6, getY() - 1, u, 0, 8, 8, 24, 8);
     }
 
     /**
