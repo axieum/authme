@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -253,7 +254,19 @@ public class AuthButtonWidget extends TexturedButtonWidget
             case OFFLINE -> u = 8;
             default -> u = 16;
         }
-        context.drawTexture(SESSION_STATUS_TEXTURE, getX() + width - 6, getY() - 1, u, 0, 8, 8, 24, 8);
+
+        context.drawTexture(
+            gui -> RenderLayer.getGuiTexturedOverlay(SESSION_STATUS_TEXTURE),
+            SESSION_STATUS_TEXTURE,
+            getX() + width - 6,
+            getY() - 1,
+            u,
+            0,
+            8,
+            8,
+            24,
+            8
+        );
     }
 
     /**
