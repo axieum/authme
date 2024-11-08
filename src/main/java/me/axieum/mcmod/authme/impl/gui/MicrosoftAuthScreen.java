@@ -151,6 +151,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else {
                     key = "gui.authme.error.generic";
                 }
+                LOGGER.error("Error while attempting to log in: ", error);
                 statusWidget.setMessage(Text.translatable(key).formatted(Formatting.RED));
                 cancelBtn.setMessage(Text.translatable("gui.back"));
                 return null; // return a default value
