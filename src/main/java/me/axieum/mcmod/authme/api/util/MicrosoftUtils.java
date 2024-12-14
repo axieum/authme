@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,12 +17,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -62,6 +63,9 @@ public final class MicrosoftUtils
         .setConnectTimeout(30_000)
         .setSocketTimeout(30_000)
         .build();
+
+    // A secure random for OAuth2 state generation
+    private static final RandomGenerator SECURE_RANDOM = RandomGenerator.of("SecureRandom");
 
     // Default URLs used in the configuration.
     public static final String CLIENT_ID = "e16699bb-2aa8-46da-b5e3-45cbcce29091";
@@ -168,7 +172,7 @@ public final class MicrosoftUtils
             LOGGER.info("Acquiring Microsoft auth code...");
             try {
                 // Generate a random "state" to be included in the request that will in turn be returned with the token
-                final String state = RandomStringUtils.randomAlphanumeric(8);
+                final String state = generateState();
 
                 // Prepare a temporary HTTP server we can listen for the OAuth2 callback on
                 final HttpServer server = HttpServer.create(
@@ -598,6 +602,18 @@ public final class MicrosoftUtils
                 throw new CompletionException(e);
             }
         }, executor);
+    }
+
+    /**
+     * Generates a random OAuth2 state.
+     *
+     * @return OAuth2 state
+     */
+    public static String generateState()
+    {
+        byte[] randomBytes = new byte[16];
+        SECURE_RANDOM.nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
     /**
