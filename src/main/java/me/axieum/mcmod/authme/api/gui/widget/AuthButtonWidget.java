@@ -190,7 +190,7 @@ public class AuthButtonWidget extends TexturedButtonWidget
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
         if (this.moveAction != null) {
-            return this.isValidClickButton(button) && this.clicked(mouseX, mouseY);
+            return this.isValidClickButton(button);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
