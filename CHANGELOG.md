@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.0+1.21.4](https://github.com/axieum/authme/compare/v8.0.0+1.21.3...v8.0.0+1.21.4) (2024-12-14)
+
+
+### Build System
+
+* add support for Minecraft 1.21.4+ ([#127](https://github.com/axieum/authme/issues/127)) ([d72a55a](https://github.com/axieum/authme/commit/d72a55a81cb5f10240cc211a29f0d8d63e817ebd))
+
 ## [8.0.0+1.21.3](https://github.com/axieum/authme/compare/v8.0.0+1.21...v8.0.0+1.21.3) (2024-11-07)
 
 
