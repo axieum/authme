@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.0.1+1.21.1](https://github.com/axieum/authme/compare/v9.0.0+1.21.1...v9.0.1+1.21.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* humbled the button that thought it was the main character—it refused to lose focus ([c218c51](https://github.com/axieum/authme/commit/c218c518764ee9d097a9363a57e5c955c64311b2))
+
 ## [9.0.0+1.21.1](https://github.com/axieum/authme/compare/v8.0.0+1.21.4...v9.0.0+1.21.1) (2025-02-10)
 
 
