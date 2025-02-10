@@ -61,6 +61,11 @@ jobs:
             cf_project_id
             mr_project_id
 
+      - name: 🔨 Build artifacts
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: 'build'
+
       - name: 🪶 Publish to Maven
         uses: gradle/gradle-build-action@v2
         with:
