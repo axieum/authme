@@ -23,3 +23,8 @@ build:
   - '**/gradle.properties'
   - '**/settings.gradle'
   - '.github/workflows/build.yml'
+
+# Add labels for changes to each submodule
+common: 'common/**'
+fabric: 'fabric/**'
+neoforge: 'neoforge/**'

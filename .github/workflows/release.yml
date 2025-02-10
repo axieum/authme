@@ -18,27 +18,23 @@ jobs:
 
     steps:
       - name: 🙌 Prepare release
-        id: release-please
-        uses: google-github-actions/release-please-action@v4
+        id: release
+        uses: googleapis/release-please-action@v4
         with:
           config-file: .github/release-please.json
           token: ${{ secrets.GITHUB_TOKEN }}
 
     outputs:
-      paths_released: ${{ steps.release-please.outputs.paths_released }}
-      releases: ${{ toJson(steps.release-please.outputs) }}
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
 
-  publish:
+  build-and-publish-jar:
     name: Publish
 
-    runs-on: ubuntu-latest
-    needs: release
-    if: ${{ needs.release.outputs.paths_released != '[]' }}
+    needs: [ release ]
+    if: ${{ needs.release.outputs.release_created == 'true' }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        path: ${{ fromJson(needs.release.outputs.paths_released) }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: ✨ Checkout repository
@@ -53,20 +49,75 @@ jobs:
       - name: 🐘 Set up Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: 📢 Publish new release
+      - name: 🔍 Get Gradle properties
+        id: props
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: gradle.properties
+          properties:
+            mod_name
+            minecraft_version
+            enabled_platforms
+            cf_project_id
+            mr_project_id
+
+      - name: 🪶 Publish to Maven
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ matrix.path == '.' && ':publish' || format('{0}:publish', matrix.path) }}
+          arguments: 'publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          CURSEFORGE_DEBUG: ${{ secrets.CURSEFORGE_DEBUG }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          MODRINTH_DEBUG: ${{ secrets.MODRINTH_DEBUG }}
+
+      - name: 📜 Publish Fabric release
+        id: fabric
+        if: contains(steps.props.outputs.enabled_platforms, 'fabric')
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          name: "[Fabric] ${{ steps.props.outputs.mod_name }} ${{ needs.release.outputs.tag_name }}"
+          files: |
+            fabric/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            fabric/build/devlibs/*-sources.jar
+          version: ${{ needs.release.outputs.tag_name }}
+          changelog-file: CHANGELOG.md
+          loaders: |
+            fabric
+            quilt
+          java: 21
+          game-versions: ${{ steps.props.outputs.minecraft_version }}
+          curseforge-id: ${{ steps.props.outputs.cf_project_id }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-id: ${{ steps.props.outputs.mr_project_id }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: 🦊 Publish NeoForge release
+        id: neoforge
+        if: contains(steps.props.outputs.enabled_platforms, 'neoforge')
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          name: "[NeoForge] ${{ steps.props.outputs.mod_name }} ${{ needs.release.outputs.tag_name }}"
+          files: |
+            neoforge/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            neoforge/build/devlibs/*-sources.jar
+          version: ${{ needs.release.outputs.tag_name }}
+          changelog-file: CHANGELOG.md
+          loaders: |
+            neoforge
+          java: 21
+          game-versions: ${{ steps.props.outputs.minecraft_version }}
+          curseforge-id: ${{ steps.props.outputs.cf_project_id }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-id: ${{ steps.props.outputs.mr_project_id }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
       - name: 📦 Upload artifacts
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ fromJson(needs.release.outputs.releases)[matrix.path == '.' && 'tag_name' || format('{0}--tag_name', matrix.path)] }}
-          files: ${{ matrix.path }}/**/build/libs/*
+          tag_name: ${{ needs.release.outputs.tag_name }}
+          files: |
+            **/build/devlibs/*-sources.jar
+            **/build/libs/*.jar
+            !**/build/libs/*-dev-shadow.jar
+            !**/build/libs/*-sources.jar
+            !build/**
+            !common/**
           token: ${{ secrets.GITHUB_TOKEN }}

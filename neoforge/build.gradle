@@ -1,0 +1,91 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+dependencies {
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    shadowCommon(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
+
+    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+
+    modImplementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-${project.resourceful_config_version}")
+}
+
+processResources {
+    inputs.property 'mod_id', project.mod_id
+    inputs.property 'mod_name', project.mod_name
+    inputs.property 'mod_description', project.mod_description
+    inputs.property 'mod_author', project.mod_author
+    inputs.property 'mod_license', project.mod_license
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', project.minecraft_version
+    inputs.property 'neoforge_version', project.neoforge_version
+    inputs.property 'neoforge_loader_version_range', project.neoforge_loader_version_range
+
+    // neoforge.mods.toml
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand([
+            'mod_id': project.mod_id,
+            'mod_name': project.mod_name,
+            'mod_description': project.mod_description,
+            'mod_author': project.mod_author,
+            'mod_license': project.mod_license,
+            'version': project.version,
+            'minecraft_version': project.minecraft_version,
+            'neoforge_version': project.neoforge_version,
+            'neoforge_loader_version_range': project.neoforge_loader_version_range,
+        ])
+    }
+}
+
+jar {
+    archiveAppendix.set project.name
+    archiveClassifier.set 'dev'
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveAppendix.set project.name
+    archiveClassifier.set 'dev-shadow'
+    exclude 'architectury.common.json'
+}
+
+remapJar {
+    dependsOn tasks.shadowJar
+    setInput tasks.shadowJar.archiveFile
+    archiveAppendix.set project.name
+    archiveClassifier.set null
+}
+
+sourcesJar {
+    def commonSources = project(':common').tasks.sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+    archiveAppendix.set project.name
+}
+
+javadocJar {
+    def commonJavadocs = project(':common').tasks.javadocJar
+    dependsOn commonJavadocs
+    from commonJavadocs.archiveFile.map { zipTree(it) }
+    archiveAppendix.set project.name
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
