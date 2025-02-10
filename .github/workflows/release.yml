@@ -116,10 +116,8 @@ jobs:
         with:
           tag_name: ${{ needs.release.outputs.tag_name }}
           files: |
-            **/build/devlibs/*-sources.jar
-            **/build/libs/*.jar
-            !**/build/libs/*-dev-shadow.jar
-            !**/build/libs/*-sources.jar
-            !build/**
-            !common/**
+            fabric/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            fabric/build/devlibs/*-sources.jar
+            neoforge/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            neoforge/build/devlibs/*-sources.jar
           token: ${{ secrets.GITHUB_TOKEN }}
