@@ -75,7 +75,8 @@ jobs:
         with:
           name: "[Fabric] ${{ steps.props.outputs.mod_name }} ${{ needs.release.outputs.tag_name }}"
           files: |
-            fabric/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            fabric/build/libs/!(*-@(dev|dev-shadow|javadoc|sources)).jar
+            fabric/build/libs/*-javadoc.jar
             fabric/build/devlibs/*-sources.jar
           version: ${{ needs.release.outputs.tag_name }}
           changelog-file: CHANGELOG.md
@@ -96,7 +97,8 @@ jobs:
         with:
           name: "[NeoForge] ${{ steps.props.outputs.mod_name }} ${{ needs.release.outputs.tag_name }}"
           files: |
-            neoforge/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+            neoforge/build/libs/!(*-@(dev|dev-shadow|javadoc|sources)).jar
+            neoforge/build/libs/*-javadoc.jar
             neoforge/build/devlibs/*-sources.jar
           version: ${{ needs.release.outputs.tag_name }}
           changelog-file: CHANGELOG.md
