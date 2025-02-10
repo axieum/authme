@@ -31,10 +31,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: 🧪 Run tests
-        run: ./gradlew check
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: 'check'
 
       - name: 🔨 Build artifacts
-        run: ./gradlew build publishToMavenLocal
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: 'build publishToMavenLocal'
 
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v4
