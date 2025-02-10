@@ -1,0 +1,26 @@
+architectury {
+    common rootProject.enabled_platforms.split(", ")
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    modApi "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-${project.resourceful_config_version}"
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+}
+
+processResources {
+    inputs.property 'mod_id', project.mod_id
+    inputs.property 'mod_name', project.mod_name
+    inputs.property 'mod_description', project.mod_description
+    inputs.property 'mod_author', project.mod_author
+    inputs.property 'mod_license', project.mod_license
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', project.minecraft_version
+
+    // pack.mcmeta
+    filesMatching('pack.mcmeta') { expand(['mod_name': project.mod_name]) }
+}

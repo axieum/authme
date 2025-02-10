@@ -1,6 +1,6 @@
 <div align="center">
 
-<img alt="Auth Me Icon" src="src/main/resources/assets/authme/icon.png" width="128">
+<img alt="Auth Me Icon" src="common/src/main/resources/icon.png" width="128">
 
 # Auth Me
 
@@ -19,8 +19,8 @@ Auth Me is a **Minecraft mod** that brings account authentication into the game
 in the efforts of overcoming the infamous session validation error when
 connecting to a server.
 
-It is a **client-side** only mod, built on the [Fabric][fabric] mod loader and
-is available for modern versions of [Minecraft][minecraft] Java Edition.
+It is a **client-side** only mod and is available for modern versions
+of [Minecraft][minecraft] Java Edition.
 
 #### Alternatives
 

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "sources": "https://github.com/axieum/authme",
+    "issues": "https://github.com/axieum/authme/issues"
+  },
+  "license": "${mod_license}",
+  "icon": "icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.axieum.mcmod.authme.impl.fabric.AuthMeFabric"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
+  ],
+  "depends": {
+    "minecraft": "~${minecraft_version}",
+    "fabricloader": "${fabric_loader_version_range}",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-resource-loader-v0": "*",
+    "resourcefulconfig": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "mc-publish": {
+      "dependencies": [
+        "resourcefulconfig(embedded){curseforge:714059}{modrinth:M1953qlQ}"
+      ]
+    }
+  }
+}

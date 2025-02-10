@@ -6,3 +6,6 @@ contact_links:
   - name: About Fabric
     url: https://fabricmc.net/
     about: Please find information regarding the Fabric mod loader here
+  - name: About NeoForge
+    url: https://neoforged.net/
+    about: Please find information regarding the NeoForge mod loader here

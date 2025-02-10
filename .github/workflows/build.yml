@@ -4,14 +4,12 @@ name: Build
 
 # On pull requests
 on:
+  push:
+    branches:
+      - '!main'
+      - '!master'
   pull_request:
-    paths:
-      - '**/src/**'
-      - '**/build.gradle'
-      - '**/gradle.properties'
-      - '**/settings.gradle'
-      - .github/workflows/build.yml
-      - LICENCE.txt
+  workflow_dispatch:
 
 jobs:
   build:
@@ -39,20 +37,28 @@ jobs:
         run: ./gradlew build publishToMavenLocal
 
       - name: 📦 Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts
-          path: '**/build/libs/'
+          path: |
+            **/build/devlibs/*-sources.jar
+            **/build/libs/*.jar
+            !**/build/libs/*-dev-shadow.jar
+            !**/build/libs/*-sources.jar
+            !build/**
+            !common/**
 
       - name: 📝 Upload reports
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reports
-          path: '**/build/reports/'
+          path: |
+            **/build/reports/
+            !build/**
 
       - name: 🗃 Upload Maven local
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: maven
           path: ~/.m2/repository/

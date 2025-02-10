@@ -1,55 +1,36 @@
 plugins {
-    id 'java'
-    id 'checkstyle'
-    id 'maven-publish'
-    id 'com.modrinth.minotaur' version '2.8.7'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'fabric-loom' version '1.8-SNAPSHOT'
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'dev.architectury.loom' version '1.7-SNAPSHOT' apply false
+}
+
+architectury {
+    minecraft = project.minecraft_version
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        mappings loom.officialMojangMappings()
+    }
 }
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'checkstyle'
     apply plugin: 'maven-publish'
-    apply plugin: 'fabric-loom'
+    apply plugin: 'architectury-plugin'
 
-    group = project.maven_group
-    version = project.mod_version
-    archivesBaseName = project.mod_id
+    group = rootProject.maven_group
+    version = rootProject.version
+    archivesBaseName = rootProject.archives_base_name
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_21
-
-    // Configure Loom
-    loom {
-        accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
-    }
-
-    // Declare dependencies
-    dependencies {
-        // Fabric
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-        // Mods
-        include(fabricApi.module("fabric-api-base", project.fabric_version))
-        modImplementation include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
-        modImplementation include(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-        modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
-        modImplementation include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-            exclude group: 'com.terraformersmc'
-            exclude group: 'net.fabricmc.fabric-api'
-        }
-
-        // Needed by ModMenu
-        modLocalRuntime fabricApi.module("fabric-screen-api-v1", project.fabric_version)
-        modLocalRuntime fabricApi.module("fabric-key-binding-api-v1", project.fabric_version)
-
-        // Code Quality
-        compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
-        testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_jupiter_version}"
-    }
 
     // Perform tests using the JUnit test suite
     test {
@@ -58,31 +39,14 @@ allprojects {
 
     // Produce additional distributions
     java {
+        withJavadocJar()
         withSourcesJar()
-        // withJavadocJar()
     }
 
     // Add the licence to all distributions
     tasks.withType(Jar).configureEach {
         it.from rootProject.file('LICENCE.txt')
-    }
-
-    // Process any resources
-    processResources {
-        inputs.property 'id', project.mod_id
-        inputs.property 'name', project.mod_name
-        inputs.property 'description', project.mod_description
-        inputs.property 'version', project.version
-
-        // fabric.mod.json
-        filesMatching('fabric.mod.json') {
-            expand([
-                'id': project.mod_id,
-                'name': project.mod_name,
-                'description': project.mod_description,
-                'version': project.version,
-            ])
-        }
+        it.duplicatesStrategy = 'EXCLUDE'
     }
 
     // Perform linting using Checkstyle
@@ -94,52 +58,48 @@ allprojects {
     // Add any additional repositories
     repositories {
         mavenCentral()
-        maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
-        maven { name 'Shedaniel'; url 'https://maven.shedaniel.me/' }
-        maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
-    }
-
-    // Read the `CHANGELOG.md` for the project version's changelog notes if present
-    ext.getChangelogNotes = { ->
-        final File changelog = project.file("CHANGELOG.md")
-        if (changelog.canRead()) {
-            def match = changelog.text =~ "(?ms)^## \\[\\Q${project.version}\\E].*?(?=^## |\\Z)"
-            if (match.find() && !match.group().isBlank()) return match.group().trim()
-        }
-        return "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+        maven { name = 'Architectury'; url = 'https://maven.architectury.dev/' }
+        maven { name = 'Fabric'; url = 'https://maven.fabricmc.net/' }
+        maven { name = 'Forge'; url = 'https://maven.minecraftforge.net/' }
+        maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' }
+        maven { name = 'NeoForge'; url = 'https://maven.neoforged.net/releases/' }
+        maven { name = 'Sponge'; url = 'https://repo.spongepowered.org/repository/maven-public' }
+        maven { name = 'Team Resourceful'; url = 'https://maven.teamresourceful.com/repository/maven-public/' }
+        maven { name = 'TerraformersMC'; url = 'https://maven.terraformersmc.com/' }
     }
 
     // Define how packages are published
     publishing {
         // Declare all publications
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                pom {
-                    name = project.mod_name
-                    description = project.mod_description
-                    url = "https://github.com/${project.github_repo}"
-                    licenses { license { name = 'MIT'; url = 'https://opensource.org/licenses/MIT' } }
-                    developers {
-                        developer {
-                            name = 'Axieum'
-                            email = 'imaxieum@gmail.com'
-                            url = 'https://github.com/axieum'
-                        }
-                    }
-                    scm {
-                        connection = "scm:git:git://github.com/${project.github_repo}.git"
-                        developerConnection = "scm:git:ssh://git@github.com:${project.github_repo}.git"
+        if (project != rootProject) {
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
+                    artifactId "${rootProject.archives_base_name}-${project.name}"
+                    pom {
+                        name = project.mod_name
+                        description = project.mod_description
                         url = "https://github.com/${project.github_repo}"
+                        licenses { license { name = 'MIT'; url = 'https://opensource.org/licenses/MIT' } }
+                        developers {
+                            developer {
+                                name = project.mod_author
+                                email = project.mod_author_email
+                                url = "https://github.com/${project.mod_author}"
+                            }
+                        }
+                        scm {
+                            connection = "scm:git:git://github.com/${project.github_repo}.git"
+                            developerConnection = "scm:git:ssh://git@github.com:${project.github_repo}.git"
+                            url = "https://github.com/${project.github_repo}"
+                        }
+                        issueManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/issues" }
+                        ciManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/actions" }
+                        properties = [
+                            'mod_id'           : project.mod_id,
+                            'minecraft_version': project.minecraft_version,
+                        ]
                     }
-                    issueManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/issues" }
-                    ciManagement { system = 'GitHub'; url = "https://github.com/${project.github_repo}/actions" }
-                    properties = [
-                        'mod_id': project.mod_id,
-                        'minecraft_version': project.minecraft_version,
-                        'loader_version': project.loader_version,
-                        'yarn_mappings': project.yarn_mappings,
-                    ]
                 }
             }
         }
@@ -158,86 +118,3 @@ allprojects {
         }
     }
 }
-
-// Define how artifacts are published to CurseForge (https://curseforge.com)
-curseforge {
-    // Set the API token from the environment
-    apiKey System.getenv('CURSEFORGE_TOKEN') ?: ''
-
-    // Declare all projects
-    project {
-        // Set the project id
-        id = project.cf_project_id
-        // Set the release type
-        releaseType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
-        // Set the release notes
-        changelog = project.getChangelogNotes()
-        // Add all supported game versions
-        project.cf_game_versions.split(', ').each { addGameVersion it }
-        // Add the main artifact
-        mainArtifact(remapJar) { displayName = "${project.mod_name} v${project.version}" }
-        // Add any additional artifacts
-        addArtifact remapSourcesJar
-        // addArtifact javadocJar
-        subprojects.each {
-            addArtifact it.remapJar
-            addArtifact it.remapSourcesJar
-            // addArtifact it.javadocJar
-        }
-        // Add any dependencies
-        relations {
-            if (project.cf_relations_required) project.cf_relations_required.split(', ').each { requiredDependency it }
-            if (project.cf_relations_optional) project.cf_relations_optional.split(', ').each { optionalDependency it }
-            if (project.cf_relations_embedded) project.cf_relations_embedded.split(', ').each { embeddedLibrary it }
-            if (project.cf_relations_tools) project.cf_relations_tools.split(', ').each { tool it }
-            if (project.cf_relations_incompatible) project.cf_relations_incompatible.split(', ').each { incompatible it }
-        }
-    }
-
-    // Configure other options
-    options {
-        forgeGradleIntegration = false
-        debug = (System.getenv('CURSEFORGE_DEBUG') ?: 'false').toBoolean()
-    }
-}
-
-// Define how artifacts are published to Modrinth (https://modrinth.com)
-import com.modrinth.minotaur.dependencies.ModDependency
-modrinth {
-    // Set the API token from the environment
-    token = System.getenv('MODRINTH_TOKEN') ?: ''
-    // Set whether debug mode is enabled
-    debugMode = (System.getenv('MODRINTH_DEBUG') ?: 'false').toBoolean()
-    // Set the project id
-    projectId = project.mr_project_id
-    // Set the release name
-    versionName = "${project.mod_name} v${project.version}"
-    // Set the release type
-    versionType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
-    // Set the release version
-    versionNumber = project.version
-    // Set the release notes
-    changelog = project.getChangelogNotes()
-    // Set the project body sync target
-    syncBodyFrom = rootProject.file('README.md').getText()
-    // Add all supported mod loaders
-    loaders = ['fabric']
-    // Add all supported game versions
-    project.mr_game_versions.split(', ').each { gameVersions.add it }
-    // Add the main artifact
-    uploadFile = remapJar
-    // Add any additional artifacts
-    additionalFiles.add remapSourcesJar
-    // additionalFiles.add javadocJar
-    subprojects.each {
-        additionalFiles.add it.remapJar
-        additionalFiles.add it.remapSourcesJar
-        // additionalFiles.add it.javadocJar
-    }
-    // Add any dependencies
-    if (project.mr_relations_required) dependencies.addAll project.mr_relations_required.split(', ').collect { new ModDependency(it, 'required') }
-    if (project.mr_relations_optional) dependencies.addAll project.mr_relations_optional.split(', ').collect { new ModDependency(it, 'optional') }
-    if (project.mr_relations_incompatible) dependencies.addAll project.mr_relations_incompatible.split(', ').collect { new ModDependency(it, 'incompatible') }
-}
-
-publish.finalizedBy tasks.curseforge, tasks.modrinth

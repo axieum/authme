@@ -1,0 +1,46 @@
+modLoader = "javafml"
+loaderVersion = "${neoforge_loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/axieum/authme/issues"
+clientSideOnly = true
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+displayURL = "https://github.com/axieum/authme"
+logoFile = "icon.png"
+authors = "${mod_author}"
+description = '''${mod_description}'''
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[mixins]]
+config = "${mod_id}.neoforge.mixins.json"
+
+[[dependencies.'${mod_id}']]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.'${mod_id}']]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.'${mod_id}']]
+modId = "resourcefulconfig"
+type = "required"
+versionRange = "*"
+ordering = "BEFORE"
+side = "BOTH"
+
+[mc-publish]
+dependencies = [
+    "resourcefulconfig(embedded){curseforge:714059}{modrinth:M1953qlQ}"
+]
