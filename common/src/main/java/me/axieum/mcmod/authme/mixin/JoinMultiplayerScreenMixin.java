@@ -33,7 +33,7 @@ public abstract class JoinMultiplayerScreenMixin extends Screen
      *
      * @param ci injection callback info
      */
-    @Inject(method = "init", at = @At("TAIL"))
+    @Inject(method = "init", at = @At("HEAD"))
     private void init(CallbackInfo ci)
     {
         LOGGER.info("Adding auth button to the multiplayer screen");

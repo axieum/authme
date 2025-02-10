@@ -190,7 +190,7 @@ public class AuthButtonWidget extends ImageButton
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
         if (this.moveAction != null) {
-            return this.isValidClickButton(button);
+            return this.isValidClickButton(button) && this.clicked(mouseX, mouseY);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
