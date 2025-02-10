@@ -112,7 +112,7 @@ public class OfflineAuthScreen extends AuthScreen
 
         // Add a toast that greets the player
         SystemToast.add(
-            minecraft.getToasts(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+            minecraft.getToastManager(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
             Component.translatable("gui.authme.toast.greeting", Component.literal(usernameField.getValue())), null
         );
 

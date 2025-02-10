@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -256,6 +257,7 @@ public class AuthButtonWidget extends ImageButton
         }
 
         context.blit(
+            gui -> RenderType.guiTexturedOverlay(SESSION_STATUS_TEXTURE),
             SESSION_STATUS_TEXTURE,
             getX() + width - 6,
             getY() - 1,
