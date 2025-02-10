@@ -132,7 +132,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 SessionUtils.setUser(user);
                 // Add a toast that greets the player
                 SystemToast.add(
-                    minecraft.getToasts(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+                    minecraft.getToastManager(), SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                     Component.translatable("gui.authme.toast.greeting", Component.literal(user.getName())), null
                 );
                 // Mark the task as successful, in turn closing the screen
