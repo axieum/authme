@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.0.1+1.21.3](https://github.com/axieum/authme/compare/v9.0.1+1.21.1...v9.0.1+1.21.3) (2025-02-10)
+
+
+### Build System
+
+* add support for Minecraft 1.21.3+ ([#134](https://github.com/axieum/authme/issues/134)) ([eec4563](https://github.com/axieum/authme/commit/eec456304aa43e9eaf96f0e858b15b05675d1a79))
+
 ## [9.0.1+1.21.1](https://github.com/axieum/authme/compare/v9.0.0+1.21.1...v9.0.1+1.21.1) (2025-02-10)
 
 
