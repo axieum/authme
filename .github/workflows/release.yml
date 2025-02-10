@@ -36,6 +36,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: ✨ Checkout repository
         uses: actions/checkout@v4
@@ -117,12 +120,11 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
       - name: 📦 Upload artifacts
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.release.outputs.tag_name }}
-          files: |
-            fabric/build/libs/!(*-@(dev|dev-shadow|sources)).jar
-            fabric/build/devlibs/*-sources.jar
-            neoforge/build/libs/!(*-@(dev|dev-shadow|sources)).jar
-            neoforge/build/devlibs/*-sources.jar
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          shopt -s extglob
+          gh release upload ${{ needs.release.outputs.tag_name }} fabric/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+          gh release upload ${{ needs.release.outputs.tag_name }} fabric/build/devlibs/*-sources.jar
+          gh release upload ${{ needs.release.outputs.tag_name }} neoforge/build/libs/!(*-@(dev|dev-shadow|sources)).jar
+          gh release upload ${{ needs.release.outputs.tag_name }} neoforge/build/devlibs/*-sources.jar
