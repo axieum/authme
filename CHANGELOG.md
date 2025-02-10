@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.0.0+1.21.1](https://github.com/axieum/authme/compare/v8.0.0+1.21.4...v9.0.0+1.21.1) (2025-02-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* The mod now produces both a Fabric and NeoForge distribution via Architectury and configuration via Resourceful Config.
+
+### Features
+
+* add NeoForge support ([#130](https://github.com/axieum/authme/issues/130)) ([100e390](https://github.com/axieum/authme/commit/100e3909512b24f5d8e32be4f40d8ffb6b8810cd))
+
 ## [8.0.0+1.21.4](https://github.com/axieum/authme/compare/v8.0.0+1.21.3...v8.0.0+1.21.4) (2024-12-14)
 
 
