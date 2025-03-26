@@ -1,2 +1,4 @@
-accessWidener v2 named
-accessible class com/mojang/realmsclient/gui/screens/RealmsGenericErrorScreen$ErrorMessage
+accessWidener	v2		named
+accessible		class	com/mojang/realmsclient/gui/screens/RealmsGenericErrorScreen$ErrorMessage
+accessible		method	com/mojang/realmsclient/client/RealmsClient <init> (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/client/Minecraft;)V
+accessible		field	com/mojang/realmsclient/client/RealmsClient realmsClientInstance Lcom/mojang/realmsclient/client/RealmsClient;
