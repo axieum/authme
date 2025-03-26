@@ -97,9 +97,12 @@ public final class SessionUtils
         );
 
         // Necessary for Realms to re-check for a valid session
-        RealmsClient realmsClient = RealmsClient.create(client);
-        ((MinecraftAccessor) client).setRealmsDataFetcher(new RealmsDataFetcher(realmsClient));
-        RealmsAvailabilityAccessor.setFuture(null);
+        synchronized (RealmsClient.class) {
+            RealmsClient realmsClient = new RealmsClient(user.getSessionId(), user.getName(), client);
+            RealmsClient.realmsClientInstance = realmsClient;
+            ((MinecraftAccessor) client).setRealmsDataFetcher(new RealmsDataFetcher(realmsClient));
+            RealmsAvailabilityAccessor.setFuture(null);
+        }
 
         // The cached status is now stale
         lastStatus = SessionStatus.UNKNOWN;

@@ -7,6 +7,10 @@ architectury {
     neoForge()
 }
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
 configurations {
     common
     shadowCommon
@@ -68,6 +72,7 @@ remapJar {
     setInput tasks.shadowJar.archiveFile
     archiveAppendix.set project.name
     archiveClassifier.set null
+    atAccessWideners.add "${project.mod_id}.accesswidener"
 }
 
 sourcesJar {

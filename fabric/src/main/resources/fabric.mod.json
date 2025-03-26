@@ -19,6 +19,7 @@
       "me.axieum.mcmod.authme.impl.fabric.AuthMeFabric"
     ]
   },
+  "accessWidener": "${mod_id}.accesswidener",
   "mixins": [
     "${mod_id}.mixins.json",
     "${mod_id}.fabric.mixins.json"
