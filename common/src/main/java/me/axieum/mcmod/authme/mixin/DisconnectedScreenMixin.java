@@ -77,7 +77,7 @@ public abstract class DisconnectedScreenMixin extends Screen
      * @return true if the disconnection reason is user or session related
      */
     @Unique
-    @SuppressWarnings("checkstyle:methodname")
+    @SuppressWarnings({"checkstyle:illegalidentifiername", "checkstyle:methodname"})
     private static boolean authme$isUserRelated(final @Nullable Component reason)
     {
         if (reason != null && reason.getContents() instanceof TranslatableContents content) {
