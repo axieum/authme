@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -63,25 +64,22 @@ public class AuthMethodScreen extends Screen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = new StringWidget(width, height, title, font);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
         titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 22);
-        addRenderableWidget(titleWidget);
 
         // Add a greeting message
-        StringWidget greetingWidget = new StringWidget(
-            width, height,
+        StringWidget greetingWidget = addRenderableWidget(new StringWidget(
             Component.translatable(
                 "gui.authme.method.greeting",
                 Component.literal(SessionUtils.getUser().getName()).withStyle(ChatFormatting.YELLOW)
             ),
             font
-        );
+        ));
         greetingWidget.setColor(0xa0a0a0);
         greetingWidget.setPosition(
             width / 2 - greetingWidget.getWidth() / 2, height / 2 - greetingWidget.getHeight() / 2 - 42
         );
-        addRenderableWidget(greetingWidget);
 
         // Add a button for the 'Microsoft' authentication method
         ImageButton msButton = new ImageButton(

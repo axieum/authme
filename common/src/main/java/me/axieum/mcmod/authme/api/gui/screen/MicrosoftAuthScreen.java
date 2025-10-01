@@ -53,18 +53,16 @@ public class MicrosoftAuthScreen extends AuthScreen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = new StringWidget(width, height, title, font);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
         titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 27);
-        addRenderableWidget(titleWidget);
 
         // Add a status message
-        statusWidget = new StringWidget(width, height, title, font);
+        statusWidget = addRenderableWidget(new StringWidget(title, font));
         statusWidget.setColor(0xdddddd);
         statusWidget.setPosition(
-            width / 2 - statusWidget.getWidth() / 2, height / 2 - statusWidget.getHeight() / 2 - 1
+                width / 2 - statusWidget.getWidth() / 2, height / 2 - statusWidget.getHeight() / 2 - 1
         );
-        addRenderableWidget(statusWidget);
 
         // Add a cancel button to abort the task
         final Button cancelBtn;
