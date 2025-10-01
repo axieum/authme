@@ -1,3 +1,6 @@
 {
-  "accessWidener": "authme.accesswidener"
+  "accessWidener": "authme.accesswidener",
+  "injected_interfaces": {
+    "net/minecraft/class_310": ["me/axieum/mcmod/authme/mixinHelper/YggdrasilAuthenticationServiceGetter"]
+  }
 }

@@ -90,7 +90,7 @@ public class AuthMethodScreen extends Screen
             button -> {
                 // If 'Left Control' is being held, enforce user interaction
                 final boolean selectAccount = InputConstants.isKeyDown(
-                    minecraft.getWindow().getWindow(), InputConstants.KEY_LCONTROL
+                    minecraft.getWindow(), InputConstants.KEY_LCONTROL
                 );
                 if (Config.LoginMethods.Microsoft.isDefaults()) {
                     minecraft.setScreen(new MicrosoftAuthScreen(this, parentScreen, selectAccount));

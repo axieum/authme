@@ -5,12 +5,13 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import com.mojang.authlib.exceptions.AuthenticationException;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
-import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import com.mojang.realmsclient.client.RealmsClient;
 import com.mojang.realmsclient.gui.RealmsDataFetcher;
 
+import me.axieum.mcmod.authme.mixin.*;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.User;
@@ -18,10 +19,6 @@ import net.minecraft.client.gui.screens.social.PlayerSocialManager;
 import net.minecraft.client.multiplayer.ProfileKeyPairManager;
 import net.minecraft.client.multiplayer.chat.report.ReportingContext;
 
-import me.axieum.mcmod.authme.mixin.MinecraftAccessor;
-import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
-import me.axieum.mcmod.authme.mixin.ReportingContextAccessor;
-import me.axieum.mcmod.authme.mixin.SplashManagerAccessor;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 
 /**
@@ -66,7 +63,7 @@ public final class SessionUtils
         // Re-create the game profile future
         ((MinecraftAccessor) client).setProfileFuture(
             CompletableFuture.supplyAsync(
-                () -> client.getMinecraftSessionService().fetchProfile(user.getProfileId(), true),
+                () -> client.services().sessionService().fetchProfile(user.getProfileId(), true),
                 Util.nonCriticalIoPool()
             )
         );
@@ -127,8 +124,7 @@ public final class SessionUtils
             UUID.nameUUIDFromBytes(("offline:" + username).getBytes()),
             OFFLINE_TOKEN,
             Optional.empty(),
-            Optional.empty(),
-            User.Type.LEGACY
+            Optional.empty()
         );
     }
 
@@ -156,7 +152,7 @@ public final class SessionUtils
             final String serverId = UUID.randomUUID().toString();
 
             // Attempt to join the Minecraft Session Service server
-            final YggdrasilMinecraftSessionService sessionService = getSessionService();
+            final MinecraftSessionService sessionService = getSessionService();
             try {
                 LOGGER.info("Verifying Minecraft session...");
                 sessionService.joinServer(session.getProfileId(), session.getAccessToken(), serverId);
@@ -183,9 +179,9 @@ public final class SessionUtils
      *
      * @return Yggdrasil Minecraft Session Service instance
      */
-    public static YggdrasilMinecraftSessionService getSessionService()
+    public static MinecraftSessionService getSessionService()
     {
-        return (YggdrasilMinecraftSessionService) Minecraft.getInstance().getMinecraftSessionService();
+        return Minecraft.getInstance().services().sessionService();
     }
 
     /**
@@ -195,7 +191,7 @@ public final class SessionUtils
      */
     public static YggdrasilAuthenticationService getAuthService()
     {
-        return ((MinecraftAccessor) Minecraft.getInstance()).getAuthenticationService();
+        return Minecraft.getInstance().authme$getAuthService();
     }
 
     /**

@@ -593,8 +593,7 @@ public final class MicrosoftUtils
                                        uuid,
                                        mcToken,
                                        Optional.empty(),
-                                       Optional.empty(),
-                                       User.Type.MSA
+                                       Optional.empty()
                                    );
                                })
                                // Otherwise, throw an exception with the error description if present

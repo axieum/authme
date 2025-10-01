@@ -4,6 +4,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.minecraft.client.Minecraft;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import net.minecraft.ChatFormatting;
@@ -85,6 +86,8 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
 
+        Minecraft client = Minecraft.getInstance();
+
         // Start the login task
         task = MicrosoftUtils
             // Acquire a Microsoft auth code
@@ -96,25 +99,25 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.msAccessToken"));
+                client.execute(() -> statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.msAccessToken")));
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxAccessToken"));
+                client.execute(() -> statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxAccessToken")));
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxXstsToken"));
+                client.execute(() -> statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxXstsToken")));
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcAccessToken"));
+                client.execute(() -> statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcAccessToken")));
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -122,7 +125,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcProfile"));
+                client.execute(() -> statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcProfile")));
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -150,7 +153,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else {
                     key = "gui.authme.error.generic";
                 }
-                statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED));
+                client.execute(() -> statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED)));
                 cancelBtn.setMessage(Component.translatable("gui.back"));
                 return null; // return a default value
             });

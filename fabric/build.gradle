@@ -27,7 +27,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     modImplementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.resourceful_config_version}")
-    modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    //modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}" not updated yet
 }
 
 processResources {

@@ -42,14 +42,6 @@ public interface MinecraftAccessor
     void setProfileFuture(CompletableFuture<ProfileResult> future);
 
     /**
-     * Returns the Minecraft authentication service.
-     *
-     * @return the Minecraft authentication service
-     */
-    @Accessor
-    YggdrasilAuthenticationService getAuthenticationService();
-
-    /**
      * Sets the Minecraft user API service.
      *
      * @param userApiService new Minecraft user API service

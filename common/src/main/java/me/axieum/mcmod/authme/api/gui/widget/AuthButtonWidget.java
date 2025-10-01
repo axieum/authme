@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.api.gui.widget;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -188,24 +189,24 @@ public class AuthButtonWidget extends ImageButton
      * @see #mouseReleased for super invocation
      */
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick)
     {
         if (this.moveAction != null) {
-            return this.isValidClickButton(button);
+            return this.isValidClickButton(mouseButtonEvent.buttonInfo());
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseButtonEvent, doubleClick);
     }
 
     /**
      * Adjusts the default mouse up behaviour to trigger a click.
      *
-     * @see ImageButton#mouseClicked(double, double, int)
+     * @see ImageButton#mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl)
      */
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button)
+    public boolean mouseReleased(MouseButtonEvent mouseButtonEvent)
     {
-        if (this.moveAction == null) return super.mouseReleased(mouseX, mouseY, button);
-        if (!this.isValidClickButton(button)) return false;
+        if (this.moveAction == null) return super.mouseReleased(mouseButtonEvent);
+        if (!this.isValidClickButton(mouseButtonEvent.buttonInfo())) return false;
         // Check if the user just finished dragging
         if (this.didDrag) {
             // Invoke any callbacks and reset the dragging status
@@ -213,7 +214,7 @@ public class AuthButtonWidget extends ImageButton
             return this.didDrag = false;
         }
         // Else, continue as a button press
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseButtonEvent, false);
     }
 
     /**
@@ -222,7 +223,7 @@ public class AuthButtonWidget extends ImageButton
      * @see #mouseReleased for where dragging is finalised
      */
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY)
+    protected void onDrag(MouseButtonEvent mouseButtonEvent, double deltaX, double deltaY)
     {
         if (this.moveAction != null) {
             // Flag the widget as in a dragging state
@@ -231,15 +232,15 @@ public class AuthButtonWidget extends ImageButton
             // Move the button with the drag, constraining within the screen's bounds
             if (this.screen != null) {
                 this.setPosition(
-                    Math.min(Math.max(0, (int) mouseX - this.width / 2), this.screen.width - this.width),
-                    Math.min(Math.max(0, (int) mouseY - this.height / 2), this.screen.height - this.height)
+                    Math.min(Math.max(0, (int) mouseButtonEvent.x() - this.width / 2), this.screen.width - this.width),
+                    Math.min(Math.max(0, (int) mouseButtonEvent.y() - this.height / 2), this.screen.height - this.height)
                 );
             } else {
-                this.setPosition((int) mouseX - this.width / 2, (int) mouseY - this.height / 2);
+                this.setPosition((int) mouseButtonEvent.x() - this.width / 2, (int) mouseButtonEvent.y() - this.height / 2);
             }
         }
 
-        super.onDrag(mouseX, mouseY, deltaX, deltaY);
+        super.onDrag(mouseButtonEvent, deltaX, deltaY);
     }
 
     @Override
