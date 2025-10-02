@@ -1,6 +1,5 @@
 package me.axieum.mcmod.authme.api.gui.widget;
 
-import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -223,24 +223,23 @@ public class AuthButtonWidget extends ImageButton
      * @see #mouseReleased for where dragging is finalised
      */
     @Override
-    protected void onDrag(MouseButtonEvent mouseButtonEvent, double deltaX, double deltaY)
+    protected void onDrag(MouseButtonEvent event, double deltaX, double deltaY)
     {
         if (this.moveAction != null) {
             // Flag the widget as in a dragging state
             this.didDrag = true;
-
             // Move the button with the drag, constraining within the screen's bounds
             if (this.screen != null) {
                 this.setPosition(
-                    Math.min(Math.max(0, (int) mouseButtonEvent.x() - this.width / 2), this.screen.width - this.width),
-                    Math.min(Math.max(0, (int) mouseButtonEvent.y() - this.height / 2), this.screen.height - this.height)
+                    Math.min(Math.max(0, (int) event.x() - this.width / 2), this.screen.width - this.width),
+                    Math.min(Math.max(0, (int) event.y() - this.height / 2), this.screen.height - this.height)
                 );
             } else {
-                this.setPosition((int) mouseButtonEvent.x() - this.width / 2, (int) mouseButtonEvent.y() - this.height / 2);
+                this.setPosition((int) event.x() - this.width / 2, (int) event.y() - this.height / 2);
             }
         }
 
-        super.onDrag(mouseButtonEvent, deltaX, deltaY);
+        super.onDrag(event, deltaX, deltaY);
     }
 
     @Override
