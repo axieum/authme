@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.api.gui.screen;
 
+import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -51,5 +52,21 @@ public abstract class AuthScreen extends Screen
     public void onClose()
     {
         if (minecraft != null) minecraft.setScreen(success ? successScreen : parentScreen);
+    }
+
+    /**
+     * Centers the position of a LayoutElement.
+     *
+     * @param element the LayoutElement to center.
+     * @param screen the Screen to center the element in.
+     * @param xOffset the horizontal offset to be applied.
+     * @param yOffset the vertical offset to be applied.
+     */
+    protected static void centerPosition(LayoutElement element, Screen screen, int xOffset, int yOffset)
+    {
+        element.setPosition(
+                screen.width / 2 - element.getWidth() / 2 + xOffset,
+                screen.height / 2 - element.getHeight() / 2 - 22 + yOffset
+        );
     }
 }

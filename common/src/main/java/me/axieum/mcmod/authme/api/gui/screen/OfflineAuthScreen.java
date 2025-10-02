@@ -42,7 +42,7 @@ public class OfflineAuthScreen extends AuthScreen
         // Add a title
         StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
-        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 40);
+        AuthScreen.centerPosition(titleWidget, this, 0, -40);
 
         // Add a username text field
         addRenderableWidget(
@@ -61,10 +61,7 @@ public class OfflineAuthScreen extends AuthScreen
         // Add a label for the username field
         StringWidget labelWidget = addRenderableWidget(new StringWidget(usernameField.getMessage(), font));
         labelWidget.setColor(0xdddddd);
-        labelWidget.setPosition(
-            width / 2 - labelWidget.getWidth() / 2 - 51,
-            height / 2 - labelWidget.getHeight() / 2 - 17
-        );
+        AuthScreen.centerPosition(labelWidget, this, -51, -17);
 
         // Add a login button to submit the form
         addRenderableWidget(

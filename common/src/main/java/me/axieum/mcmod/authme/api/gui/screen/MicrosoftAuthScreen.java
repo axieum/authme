@@ -55,14 +55,12 @@ public class MicrosoftAuthScreen extends AuthScreen
         // Add a title
         StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
-        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 27);
+        AuthScreen.centerPosition(titleWidget, this, 0, -27);
 
         // Add a status message
         statusWidget = addRenderableWidget(new StringWidget(title, font));
         statusWidget.setColor(0xdddddd);
-        statusWidget.setPosition(
-                width / 2 - statusWidget.getWidth() / 2, height / 2 - statusWidget.getHeight() / 2 - 1
-        );
+        AuthScreen.centerPosition(statusWidget, this, 0, -1);
 
         // Add a cancel button to abort the task
         final Button cancelBtn;
@@ -79,12 +77,11 @@ public class MicrosoftAuthScreen extends AuthScreen
         if (task != null) return;
 
         // Set the initial progress/status of the login task
-        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.checkBrowser"));
+        Minecraft client = Minecraft.getInstance();
+        updateStatusWidget(client, "gui.authme.microsoft.status.checkBrowser");
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
-
-        Minecraft client = Minecraft.getInstance();
 
         // Start the login task
         task = MicrosoftUtils
@@ -97,29 +94,25 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.msAccessToken")));
+                updateStatusWidget(client, "gui.authme.microsoft.status.msAccessToken");
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxAccessToken")));
+                updateStatusWidget(client, "gui.authme.microsoft.status.xboxAccessToken");
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxXstsToken")));
+                updateStatusWidget(client, "gui.authme.microsoft.status.xboxXstsToken");
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcAccessToken")));
+                updateStatusWidget(client, "gui.authme.microsoft.status.mcAccessToken");
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -127,8 +120,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcProfile")));
+                updateStatusWidget(client, "gui.authme.microsoft.status.mcProfile");
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -161,6 +153,14 @@ public class MicrosoftAuthScreen extends AuthScreen
                 cancelBtn.setMessage(Component.translatable("gui.back"));
                 return null; // return a default value
             });
+    }
+
+    private void updateStatusWidget(Minecraft client, String translatableKey)
+    {
+        client.execute(() -> {
+            statusWidget.setMessage(Component.translatable(translatableKey));
+            AuthScreen.centerPosition(statusWidget, this, 0, -1);
+        });
     }
 
     @Override

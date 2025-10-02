@@ -65,7 +65,7 @@ public class AuthMethodScreen extends Screen
         // Add a title
         StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
-        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 22);
+        AuthScreen.centerPosition(titleWidget, this, 0, -22);
 
         // Add a greeting message
         StringWidget greetingWidget = addRenderableWidget(new StringWidget(
@@ -76,9 +76,7 @@ public class AuthMethodScreen extends Screen
             font
         ));
         greetingWidget.setColor(0xa0a0a0);
-        greetingWidget.setPosition(
-            width / 2 - greetingWidget.getWidth() / 2, height / 2 - greetingWidget.getHeight() / 2 - 42
-        );
+        AuthScreen.centerPosition(greetingWidget, this, 0, -42);
 
         // Add a button for the 'Microsoft' authentication method
         ImageButton msButton = new ImageButton(
