@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public final class MicrosoftUtils
         .build();
 
     /** A secure random for OAuth2 state generation. */
-    private static final RandomGenerator SECURE_RANDOM = RandomGenerator.of("SecureRandom");
+    private static final RandomGenerator SECURE_RANDOM = new SecureRandom();
 
     /** The default client id used in the configuration. */
     public static final String CLIENT_ID = "e16699bb-2aa8-46da-b5e3-45cbcce29091";
