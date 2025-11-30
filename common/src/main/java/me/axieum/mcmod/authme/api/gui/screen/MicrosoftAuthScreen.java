@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.toasts.SystemToast;
@@ -52,18 +53,14 @@ public class MicrosoftAuthScreen extends AuthScreen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = new StringWidget(width, height, title, font);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
-        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 27);
-        addRenderableWidget(titleWidget);
+        AuthScreen.centerPosition(titleWidget, this, 0, -27);
 
         // Add a status message
-        statusWidget = new StringWidget(width, height, title, font);
+        statusWidget = addRenderableWidget(new StringWidget(title, font));
         statusWidget.setColor(0xdddddd);
-        statusWidget.setPosition(
-            width / 2 - statusWidget.getWidth() / 2, height / 2 - statusWidget.getHeight() / 2 - 1
-        );
-        addRenderableWidget(statusWidget);
+        AuthScreen.centerPosition(statusWidget, this, 0, -1);
 
         // Add a cancel button to abort the task
         final Button cancelBtn;
@@ -80,7 +77,8 @@ public class MicrosoftAuthScreen extends AuthScreen
         if (task != null) return;
 
         // Set the initial progress/status of the login task
-        statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.checkBrowser"));
+        Minecraft client = Minecraft.getInstance();
+        updateStatusWidget(client, "gui.authme.microsoft.status.checkBrowser");
 
         // Prepare a new executor thread to run the login task on
         executor = Executors.newSingleThreadExecutor();
@@ -96,25 +94,25 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Exchange the Microsoft auth code for an access token
             .thenComposeAsync(msAuthCode -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.msAccessToken"));
+                updateStatusWidget(client, "gui.authme.microsoft.status.msAccessToken");
                 return MicrosoftUtils.acquireMSAccessToken(msAuthCode, executor);
             })
 
             // Exchange the Microsoft access token for an Xbox access token
             .thenComposeAsync(msAccessToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxAccessToken"));
+                updateStatusWidget(client, "gui.authme.microsoft.status.xboxAccessToken");
                 return MicrosoftUtils.acquireXboxAccessToken(msAccessToken, executor);
             })
 
             // Exchange the Xbox access token for an XSTS token
             .thenComposeAsync(xboxAccessToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.xboxXstsToken"));
+                updateStatusWidget(client, "gui.authme.microsoft.status.xboxXstsToken");
                 return MicrosoftUtils.acquireXboxXstsToken(xboxAccessToken, executor);
             })
 
             // Exchange the Xbox XSTS token for a Minecraft access token
             .thenComposeAsync(xboxXstsData -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcAccessToken"));
+                updateStatusWidget(client, "gui.authme.microsoft.status.mcAccessToken");
                 return MicrosoftUtils.acquireMCAccessToken(
                     xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor
                 );
@@ -122,7 +120,7 @@ public class MicrosoftAuthScreen extends AuthScreen
 
             // Build a new Minecraft session with the Minecraft access token
             .thenComposeAsync(mcToken -> {
-                statusWidget.setMessage(Component.translatable("gui.authme.microsoft.status.mcProfile"));
+                updateStatusWidget(client, "gui.authme.microsoft.status.mcProfile");
                 return MicrosoftUtils.login(mcToken, executor);
             })
 
@@ -150,10 +148,19 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else {
                     key = "gui.authme.error.generic";
                 }
-                statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED));
+                client.execute(() ->
+                        statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED)));
                 cancelBtn.setMessage(Component.translatable("gui.back"));
                 return null; // return a default value
             });
+    }
+
+    private void updateStatusWidget(Minecraft client, String translatableKey)
+    {
+        client.execute(() -> {
+            statusWidget.setMessage(Component.translatable(translatableKey));
+            AuthScreen.centerPosition(statusWidget, this, 0, -1);
+        });
     }
 
     @Override

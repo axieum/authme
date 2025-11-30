@@ -63,25 +63,20 @@ public class AuthMethodScreen extends Screen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = new StringWidget(width, height, title, font);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
         titleWidget.setColor(0xffffff);
-        titleWidget.setPosition(width / 2 - titleWidget.getWidth() / 2, height / 2 - titleWidget.getHeight() / 2 - 22);
-        addRenderableWidget(titleWidget);
+        AuthScreen.centerPosition(titleWidget, this, 0, -22);
 
         // Add a greeting message
-        StringWidget greetingWidget = new StringWidget(
-            width, height,
+        StringWidget greetingWidget = addRenderableWidget(new StringWidget(
             Component.translatable(
                 "gui.authme.method.greeting",
                 Component.literal(SessionUtils.getUser().getName()).withStyle(ChatFormatting.YELLOW)
             ),
             font
-        );
+        ));
         greetingWidget.setColor(0xa0a0a0);
-        greetingWidget.setPosition(
-            width / 2 - greetingWidget.getWidth() / 2, height / 2 - greetingWidget.getHeight() / 2 - 42
-        );
-        addRenderableWidget(greetingWidget);
+        AuthScreen.centerPosition(greetingWidget, this, 0, -42);
 
         // Add a button for the 'Microsoft' authentication method
         ImageButton msButton = new ImageButton(
@@ -90,7 +85,7 @@ public class AuthMethodScreen extends Screen
             button -> {
                 // If 'Left Control' is being held, enforce user interaction
                 final boolean selectAccount = InputConstants.isKeyDown(
-                    minecraft.getWindow().getWindow(), InputConstants.KEY_LCONTROL
+                    minecraft.getWindow(), InputConstants.KEY_LCONTROL
                 );
                 if (Config.LoginMethods.Microsoft.isDefaults()) {
                     minecraft.setScreen(new MicrosoftAuthScreen(this, parentScreen, selectAccount));

@@ -1,6 +1,8 @@
 package me.axieum.mcmod.authme.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,6 +25,10 @@ import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 @Mixin(JoinMultiplayerScreen.class)
 public abstract class JoinMultiplayerScreenMixin extends Screen
 {
+    @Shadow
+    @Final
+    private Screen lastScreen;
+
     private JoinMultiplayerScreenMixin(Component title)
     {
         super(title);
@@ -45,7 +51,7 @@ public abstract class JoinMultiplayerScreenMixin extends Screen
                 this,
                 Config.AuthButton.x,
                 Config.AuthButton.y,
-                btn -> minecraft.setScreen(new AuthMethodScreen(this)),
+                btn -> minecraft.setScreen(new AuthMethodScreen(new JoinMultiplayerScreen(this.lastScreen))),
                 // Optionally, enable button dragging
                 Config.AuthButton.draggable ? btn -> {
                     // Sync configuration with the updated button position

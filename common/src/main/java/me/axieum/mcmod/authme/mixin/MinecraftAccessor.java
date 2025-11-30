@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.ProfileResult;
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.realmsclient.gui.RealmsDataFetcher;
 
 import net.minecraft.client.Minecraft;
@@ -40,14 +39,6 @@ public interface MinecraftAccessor
     @Accessor
     @Mutable
     void setProfileFuture(CompletableFuture<ProfileResult> future);
-
-    /**
-     * Returns the Minecraft authentication service.
-     *
-     * @return the Minecraft authentication service
-     */
-    @Accessor
-    YggdrasilAuthenticationService getAuthenticationService();
 
     /**
      * Sets the Minecraft user API service.
