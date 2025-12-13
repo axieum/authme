@@ -9,6 +9,9 @@ loom {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
+    api "commons-logging:commons-logging:${project.apache_logging_version}"
+    api "org.apache.httpcomponents:httpcore:${project.apache_httpcore_version}"
+    api "org.apache.httpcomponents:httpclient:${project.apache_httpclient_version}"
     modApi "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-${project.resourceful_config_version}"
 }
 

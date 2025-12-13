@@ -26,6 +26,10 @@ dependencies {
     neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
     modImplementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-${project.resourceful_config_version}")
+
+    implementation include("commons-logging:commons-logging:${project.apache_logging_version}")
+    implementation include("org.apache.httpcomponents:httpcore:${project.apache_httpcore_version}")
+    implementation include("org.apache.httpcomponents:httpclient:${project.apache_httpclient_version}")
 }
 
 processResources {

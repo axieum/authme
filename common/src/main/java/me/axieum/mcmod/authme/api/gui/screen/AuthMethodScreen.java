@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import me.axieum.mcmod.authme.api.AuthMe;
 import me.axieum.mcmod.authme.api.Config;
@@ -28,21 +28,21 @@ public class AuthMethodScreen extends Screen
     private final Screen parentScreen;
     /** The 'Microsoft' authentication method button textures. */
     public static final WidgetSprites MICROSOFT_BUTTON_TEXTURES = new WidgetSprites(
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/microsoft_button"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/microsoft_button_disabled"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/microsoft_button_focused")
+        Identifier.fromNamespaceAndPath("authme", "widget/microsoft_button"),
+        Identifier.fromNamespaceAndPath("authme", "widget/microsoft_button_disabled"),
+        Identifier.fromNamespaceAndPath("authme", "widget/microsoft_button_focused")
     );
     /** The 'Mojang (or legacy)' authentication method button textures. */
     public static final WidgetSprites MOJANG_BUTTON_TEXTURES = new WidgetSprites(
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/mojang_button"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/mojang_button_disabled"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/mojang_button_focused")
+        Identifier.fromNamespaceAndPath("authme", "widget/mojang_button"),
+        Identifier.fromNamespaceAndPath("authme", "widget/mojang_button_disabled"),
+        Identifier.fromNamespaceAndPath("authme", "widget/mojang_button_focused")
     );
     /** The 'Offline' authentication method button textures. */
     public static final WidgetSprites OFFLINE_BUTTON_TEXTURES = new WidgetSprites(
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/offline_button"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/offline_button_disabled"),
-        ResourceLocation.fromNamespaceAndPath("authme", "widget/offline_button_focused")
+        Identifier.fromNamespaceAndPath("authme", "widget/offline_button"),
+        Identifier.fromNamespaceAndPath("authme", "widget/offline_button_disabled"),
+        Identifier.fromNamespaceAndPath("authme", "widget/offline_button_focused")
     );
 
     /**
@@ -63,20 +63,18 @@ public class AuthMethodScreen extends Screen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
-        titleWidget.setColor(0xffffff);
-        AuthScreen.centerPosition(titleWidget, this, 0, -22);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title.copy().withColor(0xffffff), font));
+        AuthScreen.centerPosition(titleWidget, this, 0, 0);
 
         // Add a greeting message
         StringWidget greetingWidget = addRenderableWidget(new StringWidget(
             Component.translatable(
                 "gui.authme.method.greeting",
                 Component.literal(SessionUtils.getUser().getName()).withStyle(ChatFormatting.YELLOW)
-            ),
+            ).withColor(0xa0a0a0),
             font
         ));
-        greetingWidget.setColor(0xa0a0a0);
-        AuthScreen.centerPosition(greetingWidget, this, 0, -42);
+        AuthScreen.centerPosition(greetingWidget, this, 0, -20);
 
         // Add a button for the 'Microsoft' authentication method
         ImageButton msButton = new ImageButton(

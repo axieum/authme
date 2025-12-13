@@ -28,6 +28,10 @@ dependencies {
 
     modImplementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.resourceful_config_version}")
     modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+    implementation include("commons-logging:commons-logging:${project.apache_logging_version}")
+    implementation include("org.apache.httpcomponents:httpcore:${project.apache_httpcore_version}")
+    implementation include("org.apache.httpcomponents:httpclient:${project.apache_httpclient_version}")
 }
 
 processResources {

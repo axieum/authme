@@ -32,7 +32,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
 
     @Shadow
     @Final
-    private RealmsGenericErrorScreen.ErrorMessage lines;
+    private Component detail;
 
     private RealmsGenericErrorScreenMixin(Component title)
     {
@@ -48,7 +48,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
     private void init(CallbackInfo ci)
     {
         // Determine if the disconnection reason is user or session related
-        if (authme$isUserRelated(lines.detail())) {
+        if (authme$isUserRelated(detail)) {
             LOGGER.info("Adding auth button to the Realms error screen");
             assert minecraft != null;
 
