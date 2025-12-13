@@ -15,6 +15,9 @@ import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
  */
 public class AuthMeFabric implements ModInitializer
 {
+    /** Constructs a new NeoForge platform mod. */
+    public AuthMeFabric() {}
+
     @Override
     public void onInitialize()
     {

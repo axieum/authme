@@ -32,6 +32,9 @@ import me.axieum.mcmod.authme.api.util.MicrosoftUtils.MicrosoftPrompt;
 )
 public class Config
 {
+    /** Constructs a new configuration instance. */
+    public Config() {}
+
     /** Authentication button configuration schema. */
     @Category(value = "authButton")
     @ConfigInfo(
@@ -40,6 +43,9 @@ public class Config
     )
     public static class AuthButton
     {
+        /** Constructs a new authentication button configuration instance. */
+        public AuthButton() {}
+
         /** X coordinate of the button on the multiplayer screen. */
         @ConfigEntry(id = "x", translation = "text.rconfig.authme.option.authButton.x")
         public static int x = 6;
@@ -67,6 +73,9 @@ public class Config
     )
     public static class LoginMethods
     {
+        /** Constructs a new authentication methods configuration instance. */
+        public LoginMethods() {}
+
         /** Login via Microsoft configuration schema. */
         @Category(value = "microsoft")
         @ConfigInfo(
@@ -75,6 +84,9 @@ public class Config
         )
         public static class Microsoft
         {
+            /** Constructs a new Microsoft login configuration instance. */
+            public Microsoft() {}
+
             /** Indicates the type of user interaction that is required. */
             @ConfigEntry(id = "prompt", translation = "text.rconfig.authme.option.methods.microsoft.prompt")
             public static MicrosoftPrompt prompt = MicrosoftPrompt.DEFAULT;
@@ -135,6 +147,9 @@ public class Config
         )
         public static class Offline
         {
+            /** Constructs a new offline login configuration instance. */
+            public Offline() {}
+
             /** Last used username. */
             @ConfigEntry(id = "lastUsername", translation = "text.rconfig.authme.option.methods.offline.lastUsername")
             public static String lastUsername = "";

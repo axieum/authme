@@ -53,14 +53,12 @@ public class MicrosoftAuthScreen extends AuthScreen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
-        titleWidget.setColor(0xffffff);
-        AuthScreen.centerPosition(titleWidget, this, 0, -27);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title.copy().withColor(0xffffff), font));
+        AuthScreen.centerPosition(titleWidget, this, 0, -20);
 
         // Add a status message
-        statusWidget = addRenderableWidget(new StringWidget(title, font));
-        statusWidget.setColor(0xdddddd);
-        AuthScreen.centerPosition(statusWidget, this, 0, -1);
+        statusWidget = addRenderableWidget(new StringWidget(title.copy().withColor(0xdddddd), font));
+        AuthScreen.centerPosition(statusWidget, this, 0, 15);
 
         // Add a cancel button to abort the task
         final Button cancelBtn;
@@ -146,10 +144,13 @@ public class MicrosoftAuthScreen extends AuthScreen
                 } else if ("NOT_FOUND: Not Found".equals(error.getCause().getMessage())) {
                     key = "gui.authme.error.notPurchased";
                 } else {
+                    LOGGER.error("Could not login via Microsoft!", error);
                     key = "gui.authme.error.generic";
                 }
-                client.execute(() ->
-                        statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED)));
+                client.execute(() -> {
+                    statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED));
+                    AuthScreen.centerPosition(statusWidget, this, 0, 15);
+                });
                 cancelBtn.setMessage(Component.translatable("gui.back"));
                 return null; // return a default value
             });
@@ -159,7 +160,7 @@ public class MicrosoftAuthScreen extends AuthScreen
     {
         client.execute(() -> {
             statusWidget.setMessage(Component.translatable(translatableKey));
-            AuthScreen.centerPosition(statusWidget, this, 0, -1);
+            AuthScreen.centerPosition(statusWidget, this, 0, 15);
         });
     }
 

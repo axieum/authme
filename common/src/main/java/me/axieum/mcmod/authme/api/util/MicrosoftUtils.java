@@ -40,9 +40,9 @@ import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.Util;
 import net.minecraft.client.User;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Util;
 
 import me.axieum.mcmod.authme.api.Config;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;

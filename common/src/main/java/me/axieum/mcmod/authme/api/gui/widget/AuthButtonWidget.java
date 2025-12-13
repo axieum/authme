@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.api.gui.widget;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import me.axieum.mcmod.authme.api.util.SessionUtils;
 import me.axieum.mcmod.authme.api.util.SessionUtils.SessionStatus;
@@ -31,12 +32,12 @@ public class AuthButtonWidget extends ImageButton
     private SessionStatus sessionStatus = SessionStatus.UNKNOWN;
     /** The authentication button textures. */
     public static final WidgetSprites BUTTON_TEXTURES = new WidgetSprites(
-        ResourceLocation.parse("widget/locked_button"),
-        ResourceLocation.parse("widget/locked_button_disabled"),
-        ResourceLocation.parse("widget/locked_button_highlighted")
+        Identifier.parse("widget/locked_button"),
+        Identifier.parse("widget/locked_button_disabled"),
+        Identifier.parse("widget/locked_button_highlighted")
     );
     /** The session status icon texture. */
-    public static final ResourceLocation SESSION_STATUS_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    public static final Identifier SESSION_STATUS_TEXTURE = Identifier.fromNamespaceAndPath(
         "authme", "textures/gui/session_status.png"
     );
 
@@ -243,10 +244,10 @@ public class AuthButtonWidget extends ImageButton
     }
 
     @Override
-    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta)
+    public void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta)
     {
         // Cascade the rendering
-        super.renderWidget(context, mouseX, mouseY, delta);
+        super.renderContents(context, mouseX, mouseY, delta);
 
         // Render the current session status
         final int u;

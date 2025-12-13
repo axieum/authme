@@ -40,9 +40,8 @@ public class OfflineAuthScreen extends AuthScreen
         assert minecraft != null;
 
         // Add a title
-        StringWidget titleWidget = addRenderableWidget(new StringWidget(title, font));
-        titleWidget.setColor(0xffffff);
-        AuthScreen.centerPosition(titleWidget, this, 0, -40);
+        StringWidget titleWidget = addRenderableWidget(new StringWidget(title.copy().withColor(0xffffff), font));
+        AuthScreen.centerPosition(titleWidget, this, 0, -20);
 
         // Add a username text field
         addRenderableWidget(
@@ -59,9 +58,10 @@ public class OfflineAuthScreen extends AuthScreen
         usernameField.setResponder(value -> loginBtn.active = isFormValid());
 
         // Add a label for the username field
-        StringWidget labelWidget = addRenderableWidget(new StringWidget(usernameField.getMessage(), font));
-        labelWidget.setColor(0xdddddd);
-        AuthScreen.centerPosition(labelWidget, this, -51, -17);
+        StringWidget labelWidget = addRenderableWidget(
+            new StringWidget(usernameField.getMessage().copy().withColor(0xdddddd), font)
+        );
+        AuthScreen.centerPosition(labelWidget, this, -51, 0);
 
         // Add a login button to submit the form
         addRenderableWidget(

@@ -21,6 +21,9 @@ import me.axieum.mcmod.authme.mixinHelper.YggdrasilAuthenticationServiceGetter;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin implements YggdrasilAuthenticationServiceGetter
 {
+    /** Constructs a new Minecraft mixin instance. */
+    public MinecraftMixin() {}
+
     @SuppressWarnings({"checkstyle:illegalidentifiername", "checkstyle:membername"})
     @Unique
     private YggdrasilAuthenticationService authme$authService;
