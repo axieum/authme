@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.1.0+1.21.11](https://github.com/axieum/authme/compare/v9.0.1+1.21.9...v9.1.0+1.21.11) (2025-12-13)
+
+
+### Features
+
+* **lang:** add Brazilian Portuguese translation ([#152](https://github.com/axieum/authme/issues/152)) ([5d6dea3](https://github.com/axieum/authme/commit/5d6dea3caec02400103fab7523c541468d84b9f0))
+
+
+### Build System
+
+* add support for Minecraft 1.21.11+ ([#154](https://github.com/axieum/authme/issues/154)) ([20b1c6f](https://github.com/axieum/authme/commit/20b1c6f6493f9ab2189a7b313743e099cd725e33))
+
 ## [9.0.1+1.21.9](https://github.com/axieum/authme/compare/v9.0.1+1.21.7...v9.0.1+1.21.9) (2025-11-30)
 
 
