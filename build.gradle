@@ -42,8 +42,7 @@ allprojects {
     }
 
     base {
-        // DELETE ME TEMP COMMENT
-        // archivesBaseName = rootProject.archives_base_name
+        archivesName = rootProject.archives_base_name;
     }
 
     // Add the licence to all distributions
