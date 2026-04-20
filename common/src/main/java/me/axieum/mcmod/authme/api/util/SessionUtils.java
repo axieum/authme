@@ -22,6 +22,7 @@ import me.axieum.mcmod.authme.mixin.MinecraftAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
 import me.axieum.mcmod.authme.mixin.ReportingContextAccessor;
 import me.axieum.mcmod.authme.mixin.SplashManagerAccessor;
+import me.axieum.mcmod.authme.mixinHelper.YggdrasilAuthenticationServiceGetter;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 
 /**
@@ -194,7 +195,9 @@ public final class SessionUtils
      */
     public static YggdrasilAuthenticationService getAuthService()
     {
-        return Minecraft.getInstance().authme$getAuthService();
+        YggdrasilAuthenticationServiceGetter getter =
+                (YggdrasilAuthenticationServiceGetter) Minecraft.getInstance();
+        return getter.authme$getAuthService();
     }
 
     /**

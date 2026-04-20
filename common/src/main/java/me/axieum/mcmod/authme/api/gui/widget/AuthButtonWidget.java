@@ -3,7 +3,7 @@ package me.axieum.mcmod.authme.api.gui.widget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -244,10 +244,10 @@ public class AuthButtonWidget extends ImageButton
     }
 
     @Override
-    public void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta)
+    public void extractContents(@NotNull GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
     {
         // Cascade the rendering
-        super.renderContents(context, mouseX, mouseY, delta);
+        super.extractContents(context, mouseX, mouseY, delta);
 
         // Render the current session status
         final int u;
