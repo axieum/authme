@@ -6,6 +6,10 @@ loom {
     accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
 }
 
+configurations {
+    shadowCommon
+}
+
 dependencies {
     implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
@@ -26,4 +30,37 @@ processResources {
 
     // pack.mcmeta
     filesMatching('pack.mcmeta') { expand(['mod_name': project.mod_name]) }
+}
+
+jar {
+    archiveAppendix.set project.name
+    archiveClassifier.set 'dev'
+}
+
+shadowJar {
+    dependsOn jar
+    mainSpec.sourcePaths.clear()
+    from zipTree(jar.archiveFile)
+    configurations = [project.configurations.shadowCommon]
+    archiveAppendix.set project.name
+    archiveClassifier.unset()
+}
+
+sourcesJar {
+    archiveAppendix.set project.name
+}
+
+javadocJar {
+    archiveAppendix.set project.name
+}
+
+configurations {
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }

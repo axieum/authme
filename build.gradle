@@ -1,5 +1,6 @@
 plugins {
     id 'architectury-plugin' version '3.5-SNAPSHOT'
+    id 'com.gradleup.shadow' version '9.4.1' apply false
     id 'dev.architectury.loom-no-remap' version '1.14-SNAPSHOT' apply false
 }
 
@@ -8,6 +9,7 @@ architectury {
 }
 
 subprojects {
+    apply plugin: 'com.gradleup.shadow'
     apply plugin: 'dev.architectury.loom-no-remap'
 
     loom {
