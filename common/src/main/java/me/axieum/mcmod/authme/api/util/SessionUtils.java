@@ -20,6 +20,7 @@ import net.minecraft.util.Util;
 
 import me.axieum.mcmod.authme.mixin.MinecraftAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
+import me.axieum.mcmod.authme.mixin.RealmsClientAccessor;
 import me.axieum.mcmod.authme.mixin.ReportingContextAccessor;
 import me.axieum.mcmod.authme.mixin.SplashManagerAccessor;
 import me.axieum.mcmod.authme.mixinHelper.YggdrasilAuthenticationServiceGetter;
@@ -99,8 +100,8 @@ public final class SessionUtils
 
         // Necessary for Realms to re-check for a valid session
         synchronized (RealmsClient.class) {
-            RealmsClient realmsClient = new RealmsClient(user.getSessionId(), user.getName(), client);
-            RealmsClient.realmsClientInstance = realmsClient;
+            RealmsClient realmsClient = RealmsClientAccessor.init(user.getSessionId(), user.getName(), client);
+            RealmsClientAccessor.setRealmsClientInstance(realmsClient);
             ((MinecraftAccessor) client).setRealmsDataFetcher(new RealmsDataFetcher(realmsClient));
             RealmsAvailabilityAccessor.setFuture(null);
         }
