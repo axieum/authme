@@ -6,6 +6,7 @@
   "mixins": [],
   "client": [
     "DisconnectedScreenMixin",
+    "JoinMultiplayerScreenAccessor",
     "JoinMultiplayerScreenMixin",
     "MinecraftAccessor",
     "MinecraftMixin",
