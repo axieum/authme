@@ -61,7 +61,6 @@ shadowJar {
     mainSpec.sourcePaths.clear()
     from zipTree(jar.archiveFile)
     exclude 'fabric.mod.json'
-    exclude "${project.mod_id}.accesswidener"
     configurations = [project.configurations.shadowCommon]
     archiveAppendix.set project.name
     archiveClassifier.unset()
