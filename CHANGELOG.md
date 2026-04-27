@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.2.0+26.1](https://github.com/axieum/authme/compare/v9.1.0+1.21.11...v9.2.0+26.1) (2026-04-27)
+
+
+### Features
+
+* **lang:** add Belarusian translation (https://github.com/axieum/authme/issues/158) ([bb39cb3](https://github.com/axieum/authme/commit/bb39cb3f797b23dac4a2b6e2734c9f6267e11972))
+
+
+### Build System
+
+* add support for Minecraft 26.1+ ([#160](https://github.com/axieum/authme/issues/160)) ([98e629a](https://github.com/axieum/authme/commit/98e629aa6dc88d1774aa45cc34e36fecd8285910))
+
 ## [9.1.0+1.21.11](https://github.com/axieum/authme/compare/v9.0.1+1.21.9...v9.1.0+1.21.11) (2025-12-13)
 
 
