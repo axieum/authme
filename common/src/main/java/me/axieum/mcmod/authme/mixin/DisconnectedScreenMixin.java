@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -56,7 +57,13 @@ public abstract class DisconnectedScreenMixin extends Screen
             addRenderableWidget(
                 Button.builder(
                     Component.translatable("gui.authme.button.relogin"),
-                    btn -> minecraft.setScreen(new AuthMethodScreen(parent))
+                    btn -> minecraft.setScreen(
+                        new AuthMethodScreen(
+                            parent instanceof JoinMultiplayerScreen
+                                ? new JoinMultiplayerScreen(((JoinMultiplayerScreenAccessor) parent).getLastScreen())
+                                : parent
+                        )
+                    )
                 ).bounds(
                     backButton.getX(),
                     backButton.getY(),

@@ -1,14 +1,6 @@
-plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
-
 architectury {
     platformSetupLoomIde()
     fabric()
-}
-
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 configurations {
@@ -20,14 +12,14 @@ configurations {
 }
 
 dependencies {
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':common')) { transitive false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive false }
 
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    api "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modImplementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.resourceful_config_version}")
-    modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    implementation include("com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-${project.resourceful_config_version}")
+    implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
     implementation include("commons-logging:commons-logging:${project.apache_logging_version}")
     implementation include("org.apache.httpcomponents:httpcore:${project.apache_httpcore_version}")
@@ -43,13 +35,6 @@ processResources {
     inputs.property 'version', project.version
     inputs.property 'minecraft_version', project.minecraft_version
     inputs.property 'fabric_loader_version_range', project.fabric_loader_version_range
-
-    // access widener
-    processResources {
-        from(rootProject.file("common/src/main/resources")) {
-            include("authme.accesswidener")
-        }
-    }
 
     // fabric.mod.json
     filesMatching('fabric.mod.json') {
@@ -72,34 +57,29 @@ jar {
 }
 
 shadowJar {
+    dependsOn jar
+    mainSpec.sourcePaths.clear()
+    from zipTree(jar.archiveFile)
     configurations = [project.configurations.shadowCommon]
     archiveAppendix.set project.name
-    archiveClassifier.set 'dev-shadow'
-}
-
-remapJar {
-    dependsOn tasks.shadowJar
-    setInput tasks.shadowJar.archiveFile
-    archiveAppendix.set project.name
-    archiveClassifier.set null
+    archiveClassifier.unset()
 }
 
 sourcesJar {
-    def commonSources = project(':common').tasks.sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
     archiveAppendix.set project.name
 }
 
 javadocJar {
-    def commonJavadocs = project(':common').tasks.javadocJar
-    dependsOn commonJavadocs
-    from commonJavadocs.archiveFile.map { zipTree(it) }
     archiveAppendix.set project.name
 }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
+configurations {
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
     }
 }

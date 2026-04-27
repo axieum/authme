@@ -20,8 +20,10 @@ import net.minecraft.util.Util;
 
 import me.axieum.mcmod.authme.mixin.MinecraftAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
+import me.axieum.mcmod.authme.mixin.RealmsClientAccessor;
 import me.axieum.mcmod.authme.mixin.ReportingContextAccessor;
 import me.axieum.mcmod.authme.mixin.SplashManagerAccessor;
+import me.axieum.mcmod.authme.mixinHelper.YggdrasilAuthenticationServiceGetter;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 
 /**
@@ -98,8 +100,8 @@ public final class SessionUtils
 
         // Necessary for Realms to re-check for a valid session
         synchronized (RealmsClient.class) {
-            RealmsClient realmsClient = new RealmsClient(user.getSessionId(), user.getName(), client);
-            RealmsClient.realmsClientInstance = realmsClient;
+            RealmsClient realmsClient = RealmsClientAccessor.init(user.getSessionId(), user.getName(), client);
+            RealmsClientAccessor.setRealmsClientInstance(realmsClient);
             ((MinecraftAccessor) client).setRealmsDataFetcher(new RealmsDataFetcher(realmsClient));
             RealmsAvailabilityAccessor.setFuture(null);
         }
@@ -194,7 +196,9 @@ public final class SessionUtils
      */
     public static YggdrasilAuthenticationService getAuthService()
     {
-        return Minecraft.getInstance().authme$getAuthService();
+        YggdrasilAuthenticationServiceGetter getter =
+                (YggdrasilAuthenticationServiceGetter) Minecraft.getInstance();
+        return getter.authme$getAuthService();
     }
 
     /**

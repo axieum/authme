@@ -6,10 +6,12 @@
   "mixins": [],
   "client": [
     "DisconnectedScreenMixin",
+    "JoinMultiplayerScreenAccessor",
     "JoinMultiplayerScreenMixin",
     "MinecraftAccessor",
     "MinecraftMixin",
     "RealmsAvailabilityAccessor",
+    "RealmsClientAccessor",
     "RealmsGenericErrorScreenMixin",
     "ReportingContextAccessor",
     "SplashManagerAccessor"
