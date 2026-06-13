@@ -150,8 +150,8 @@ public class MicrosoftAuthScreen extends AuthScreen
                 client.execute(() -> {
                     statusWidget.setMessage(Component.translatable(key).withStyle(ChatFormatting.RED));
                     AuthScreen.centerPosition(statusWidget, this, 0, 15);
+                    cancelBtn.setMessage(Component.translatable("gui.back"));
                 });
-                cancelBtn.setMessage(Component.translatable("gui.back"));
                 return null; // return a default value
             });
     }
