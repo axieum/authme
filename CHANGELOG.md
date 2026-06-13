@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.1+26.1](https://github.com/axieum/authme/compare/v9.2.0+26.1...v9.2.1+26.1) (2026-06-13)
+
+
+### Bug Fixes
+
+* back button text should be set correctly when Microsoft authentication fails ([#163](https://github.com/axieum/authme/issues/163)) ([c3020d6](https://github.com/axieum/authme/commit/c3020d6b4268b08791a8be7b2e4e626ea91bc121))
+
 ## [9.2.0+26.1](https://github.com/axieum/authme/compare/v9.1.0+1.21.11...v9.2.0+26.1) (2026-04-27)
 
 
