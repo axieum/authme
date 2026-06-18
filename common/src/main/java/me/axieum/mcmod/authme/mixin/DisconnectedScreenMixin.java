@@ -57,7 +57,7 @@ public abstract class DisconnectedScreenMixin extends Screen
             addRenderableWidget(
                 Button.builder(
                     Component.translatable("gui.authme.button.relogin"),
-                    btn -> minecraft.setScreen(
+                    btn -> minecraft.setScreenAndShow(
                         new AuthMethodScreen(
                             parent instanceof JoinMultiplayerScreen
                                 ? new JoinMultiplayerScreen(((JoinMultiplayerScreenAccessor) parent).getLastScreen())

@@ -13,6 +13,7 @@ import com.mojang.realmsclient.gui.RealmsDataFetcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.User;
 import net.minecraft.client.gui.screens.social.PlayerSocialManager;
+import net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler;
 import net.minecraft.client.multiplayer.ProfileKeyPairManager;
 import net.minecraft.client.multiplayer.chat.report.ReportingContext;
 
@@ -57,6 +58,23 @@ public interface MinecraftAccessor
     @Accessor
     @Mutable
     void setPlayerSocialManager(PlayerSocialManager playerSocialManager);
+
+    /**
+     * Returns the Minecraft remote friend list update handler.
+     *
+     * @return The Minecraft remote friend list update handler
+     */
+    @Accessor
+    RemoteFriendListUpdateHandler getRemoteFriendListUpdateHandler();
+
+    /**
+     * Sets the Minecraft remote friend list update handler.
+     *
+     * @param remoteFriendListUpdateHandler new Minecraft remote friend list update handler
+     */
+    @Accessor
+    @Mutable
+    void setRemoteFriendListUpdateHandler(RemoteFriendListUpdateHandler remoteFriendListUpdateHandler);
 
     /**
      * Sets the Minecraft profile keys.
