@@ -86,17 +86,19 @@ public class AuthMethodScreen extends Screen
                     minecraft.getWindow(), InputConstants.KEY_LCONTROL
                 );
                 if (Config.LoginMethods.Microsoft.isDefaults()) {
-                    minecraft.setScreen(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
+                    minecraft.setScreenAndShow(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
                 } else {
                     LOGGER.warn("Non-default Microsoft authentication URLs are in use!");
                     ConfirmScreen confirmScreen = new ConfirmScreen(
-                        a -> minecraft.setScreen(a ? new MicrosoftAuthScreen(this, parentScreen, selectAccount) : this),
+                        a -> minecraft.setScreenAndShow(
+                            a ? new MicrosoftAuthScreen(this, parentScreen, selectAccount) : this
+                        ),
                         Component.translatable("gui.authme.microsoft.warning.title"),
                         Component.translatable("gui.authme.microsoft.warning.body"),
                         Component.translatable("gui.authme.microsoft.warning.accept"),
                         Component.translatable("gui.authme.microsoft.warning.cancel")
                     );
-                    minecraft.setScreen(confirmScreen);
+                    minecraft.setScreenAndShow(confirmScreen);
                     confirmScreen.setDelay(40);
                 }
             },
@@ -131,7 +133,7 @@ public class AuthMethodScreen extends Screen
         ImageButton offlineButton = new ImageButton(
             width / 2 + 10 + 4, height / 2 - 5, 20, 20,
             OFFLINE_BUTTON_TEXTURES,
-            button -> minecraft.setScreen(new OfflineAuthScreen(this, parentScreen)),
+            button -> minecraft.setScreenAndShow(new OfflineAuthScreen(this, parentScreen)),
             Component.translatable("gui.authme.method.button.offline")
         );
         offlineButton.setTooltip(Tooltip.create(Component.translatable("gui.authme.method.button.offline")));
@@ -148,6 +150,6 @@ public class AuthMethodScreen extends Screen
     @Override
     public void onClose()
     {
-        if (minecraft != null) minecraft.setScreen(parentScreen);
+        if (minecraft != null) minecraft.setScreenAndShow(parentScreen);
     }
 }

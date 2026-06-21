@@ -57,7 +57,7 @@ public abstract class RealmsGenericErrorScreenMixin extends RealmsScreen
             addRenderableWidget(
                 Button.builder(
                     Component.translatable("gui.authme.button.relogin"),
-                    btn -> minecraft.setScreen(new AuthMethodScreen(nextScreen))
+                    btn -> minecraft.setScreenAndShow(new AuthMethodScreen(nextScreen))
                 ).bounds(
                     backButton.getX(),
                     backButton.getY() - backButton.getHeight() - 4,

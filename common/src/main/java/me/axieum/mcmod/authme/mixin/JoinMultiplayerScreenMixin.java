@@ -51,7 +51,7 @@ public abstract class JoinMultiplayerScreenMixin extends Screen
                 this,
                 Config.AuthButton.x,
                 Config.AuthButton.y,
-                btn -> minecraft.setScreen(new AuthMethodScreen(new JoinMultiplayerScreen(this.lastScreen))),
+                btn -> minecraft.setScreenAndShow(new AuthMethodScreen(new JoinMultiplayerScreen(this.lastScreen))),
                 // Optionally, enable button dragging
                 Config.AuthButton.draggable ? btn -> {
                     // Sync configuration with the updated button position

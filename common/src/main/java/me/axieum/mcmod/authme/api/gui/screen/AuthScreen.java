@@ -51,7 +51,7 @@ public abstract class AuthScreen extends Screen
     @Override
     public void onClose()
     {
-        if (minecraft != null) minecraft.setScreen(success ? successScreen : parentScreen);
+        if (minecraft != null) minecraft.setScreenAndShow(success ? successScreen : parentScreen);
     }
 
     /**

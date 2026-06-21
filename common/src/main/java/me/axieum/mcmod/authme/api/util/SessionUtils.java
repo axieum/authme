@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.minecraft.UserApiService;
+import com.mojang.authlib.yggdrasil.FriendsService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.realmsclient.client.RealmsClient;
 import com.mojang.realmsclient.gui.RealmsDataFetcher;
@@ -14,6 +15,7 @@ import com.mojang.realmsclient.gui.RealmsDataFetcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.User;
 import net.minecraft.client.gui.screens.social.PlayerSocialManager;
+import net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler;
 import net.minecraft.client.multiplayer.ProfileKeyPairManager;
 import net.minecraft.client.multiplayer.chat.report.ReportingContext;
 import net.minecraft.util.Util;
@@ -63,7 +65,7 @@ public final class SessionUtils
 
         // Use an accessor mixin to update the 'private final' Minecraft session
         ((MinecraftAccessor) client).setUser(user);
-        ((SplashManagerAccessor) client.getSplashManager()).setUser(user);
+        ((SplashManagerAccessor) client.gui.splashManager()).setUser(user);
 
         // Re-create the game profile future
         ((MinecraftAccessor) client).setProfileFuture(
@@ -80,10 +82,24 @@ public final class SessionUtils
         }
         ((MinecraftAccessor) client).setUserApiService(userApiService);
 
-        // Re-create the social interactions manager
-        ((MinecraftAccessor) client).setPlayerSocialManager(
-            new PlayerSocialManager(client, userApiService)
+        // Re-create the friends API service
+        ((MinecraftAccessor) client).getRemoteFriendListUpdateHandler().stop();
+        FriendsService friendsService = getAuthService().createFriendsService(user.getAccessToken());
+        RemoteFriendListUpdateHandler remoteFriendListUpdateHandler = new RemoteFriendListUpdateHandler(
+            friendsService, client
         );
+        ((MinecraftAccessor) client).setRemoteFriendListUpdateHandler(remoteFriendListUpdateHandler);
+
+        // Re-create the social interactions manager
+        PlayerSocialManager playerSocialManager = new PlayerSocialManager(
+            client, userApiService, friendsService, remoteFriendListUpdateHandler
+        );
+        ((MinecraftAccessor) client).setPlayerSocialManager(playerSocialManager);
+
+        // Restart the friend list update handler
+        if (playerSocialManager.isFriendListEnabled()) {
+            remoteFriendListUpdateHandler.start();
+        }
 
         // Re-create the profile keys
         ((MinecraftAccessor) client).setProfileKeyPairManager(
