@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.0+26.2](https://github.com/axieum/authme/compare/v9.2.1+26.1...v9.3.0+26.2) (2026-06-21)
+
+
+### Features
+
+* add Minecraft 26.2 (w/ friends list) support ([#168](https://github.com/axieum/authme/issues/168)) ([198a373](https://github.com/axieum/authme/commit/198a37306a8d62046d0320baac78a2a09c96e761))
+
 ## [9.2.1+26.1](https://github.com/axieum/authme/compare/v9.2.0+26.1...v9.2.1+26.1) (2026-06-13)
 
 
