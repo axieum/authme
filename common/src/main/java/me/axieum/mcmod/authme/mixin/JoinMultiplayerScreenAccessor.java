@@ -12,6 +12,11 @@ import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 @Mixin(JoinMultiplayerScreen.class)
 public interface JoinMultiplayerScreenAccessor
 {
+    /**
+     * Returns the last screen that opened the multiplayer screen.
+     *
+     * @return The last screen that opened the multiplayer screen
+     */
     @Accessor
     Screen getLastScreen();
 }

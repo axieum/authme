@@ -1,5 +1,1 @@
-{
-  "injected_interfaces": {
-    "net/minecraft/client/Minecraft": ["me/axieum/mcmod/authme/mixinHelper/YggdrasilAuthenticationServiceGetter"]
-  }
-}
+{}

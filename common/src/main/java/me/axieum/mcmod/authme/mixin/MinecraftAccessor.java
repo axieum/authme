@@ -1,5 +1,6 @@
 package me.axieum.mcmod.authme.mixin;
 
+import java.net.Proxy;
 import java.util.concurrent.CompletableFuture;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +8,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import com.mojang.authlib.minecraft.UserApiService;
-import com.mojang.authlib.yggdrasil.ProfileResult;
+import com.mojang.authlib.services.ProfileResult;
 import com.mojang.realmsclient.gui.RealmsDataFetcher;
 
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,22 @@ import net.minecraft.client.multiplayer.chat.report.ReportingContext;
 @Mixin(Minecraft.class)
 public interface MinecraftAccessor
 {
+    /**
+     * Returns whether the Minecraft client is in offline developer mode.
+     *
+     * @return True if the Minecraft client is in offline developer mode, false otherwise
+     */
+    @Accessor
+    boolean getOfflineDeveloperMode();
+
+    /**
+     * Returns the Minecraft proxy.
+     *
+     * @return The Minecraft proxy
+     */
+    @Accessor
+    Proxy getProxy();
+
     /**
      * Sets the Minecraft session.
      *

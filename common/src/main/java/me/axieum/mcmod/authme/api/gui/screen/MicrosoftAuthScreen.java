@@ -123,7 +123,7 @@ public class MicrosoftAuthScreen extends AuthScreen
             })
 
             // Update the game session and greet the player
-            .thenAccept(user -> {
+            .thenAcceptAsync(user -> {
                 // Apply the new session
                 SessionUtils.setUser(user);
                 // Add a toast that greets the player
@@ -134,7 +134,7 @@ public class MicrosoftAuthScreen extends AuthScreen
                 // Mark the task as successful, in turn closing the screen
                 LOGGER.info("Successfully logged in via Microsoft!");
                 success = true;
-            })
+            }, client)
 
             // On any exception, update the status and cancel button
             .exceptionally(error -> {

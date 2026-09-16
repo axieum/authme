@@ -1,5 +1,7 @@
 package me.axieum.mcmod.authme.api;
 
+import java.net.URI;
+
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,7 @@ public final class AuthMe
     /**
      * The legacy Mojang account migration FAQ link.
      */
-    public static final String MOJANG_ACCOUNT_MIGRATION_FAQ_URL = "https://aka.ms/MinecraftPostMigrationFAQ";
+    public static final URI MOJANG_ACCOUNT_MIGRATION_FAQ_URL = URI.create("https://aka.ms/MinecraftPostMigrationFAQ");
 
     /**
      * Initialises the multi-platform mod.
