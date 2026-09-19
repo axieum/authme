@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.0+26.3](https://github.com/axieum/authme/compare/v9.3.0+26.2...v9.3.0+26.3) (2026-09-19)
+
+
+### Features
+
+* add Minecraft 26.3 support ([#171](https://github.com/axieum/authme/issues/171)) ([d58ba46](https://github.com/axieum/authme/commit/d58ba4630ef52acf3b885746aeb66b1fbe90fb76))
+
 ## [9.3.0+26.2](https://github.com/axieum/authme/compare/v9.2.1+26.1...v9.3.0+26.2) (2026-06-21)
 
 
