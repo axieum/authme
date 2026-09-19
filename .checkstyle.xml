@@ -141,13 +141,13 @@
     <module name="InvalidJavadocPosition"/>
     <module name="JavadocMethod"/>
     <module name="JavadocParagraph"/>
-    <module name="JavadocStyle"/>
     <module name="JavadocType"/>
     <!-- <module name="MissingJavadocMethod"/> -->
     <!-- <module name="MissingJavadocPackage"/> -->
     <!-- <module name="MissingJavadocType"/> -->
     <module name="RequireEmptyLineBeforeBlockTagGroup"/>
     <module name="SingleLineJavadoc"/>
+    <module name="SummaryJavadoc"/>
 
     <!-- Checks for whitespace                             -->
     <!-- See https://checkstyle.org/config_whitespace.html -->

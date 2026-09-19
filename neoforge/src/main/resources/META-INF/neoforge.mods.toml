@@ -9,7 +9,7 @@ modId = "${mod_id}"
 version = "${version}"
 displayName = "${mod_name}"
 displayURL = "https://github.com/axieum/authme"
-logoFile = "icon.png"
+iconFile = "icon.png"
 authors = "${mod_author}"
 description = '''${mod_description}'''
 

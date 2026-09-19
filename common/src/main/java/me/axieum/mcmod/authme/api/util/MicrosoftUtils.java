@@ -40,9 +40,10 @@ import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.blaze3d.Blaze3D;
+
 import net.minecraft.client.User;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.Util;
 
 import me.axieum.mcmod.authme.api.Config;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
@@ -56,7 +57,7 @@ import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 public final class MicrosoftUtils
 {
     /**
-     * A reusable Apache HTTP request config
+     * A reusable Apache HTTP request config.
      *
      * <p>NB: We use Apache's HTTP implementation as the native HTTP client does
      * not appear to free its resources after use!
@@ -106,7 +107,7 @@ public final class MicrosoftUtils
         final Function<Boolean, @NotNull String> browserMessage, final Executor executor
     )
     {
-        return acquireMSAuthCode(url -> Util.getPlatform().openUri(url), browserMessage, executor);
+        return acquireMSAuthCode(Blaze3D::openUri, browserMessage, executor);
     }
 
     /**
@@ -130,7 +131,7 @@ public final class MicrosoftUtils
         final @Nullable MicrosoftPrompt prompt
     )
     {
-        return acquireMSAuthCode(url -> Util.getPlatform().openUri(url), browserMessage, executor, prompt);
+        return acquireMSAuthCode(Blaze3D::openUri, browserMessage, executor, prompt);
     }
 
     /**

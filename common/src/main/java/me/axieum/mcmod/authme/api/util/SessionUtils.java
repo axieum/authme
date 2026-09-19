@@ -5,10 +5,10 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import com.mojang.authlib.exceptions.AuthenticationException;
-import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.minecraft.SessionService;
 import com.mojang.authlib.minecraft.UserApiService;
-import com.mojang.authlib.yggdrasil.FriendsService;
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import com.mojang.authlib.services.FriendsService;
+import com.mojang.authlib.services.MinecraftServicesDiscoveryService;
 import com.mojang.realmsclient.client.RealmsClient;
 import com.mojang.realmsclient.gui.RealmsDataFetcher;
 
@@ -25,7 +25,6 @@ import me.axieum.mcmod.authme.mixin.RealmsAvailabilityAccessor;
 import me.axieum.mcmod.authme.mixin.RealmsClientAccessor;
 import me.axieum.mcmod.authme.mixin.ReportingContextAccessor;
 import me.axieum.mcmod.authme.mixin.SplashManagerAccessor;
-import me.axieum.mcmod.authme.mixinHelper.YggdrasilAuthenticationServiceGetter;
 import static me.axieum.mcmod.authme.api.AuthMe.LOGGER;
 
 /**
@@ -75,16 +74,25 @@ public final class SessionUtils
             )
         );
 
+        // Set the offline developer mode based on the access token
+        boolean offlineDeveloperMode = OFFLINE_TOKEN.equals(user.getAccessToken());
+        ((MinecraftAccessor) client).setOfflineDeveloperMode(offlineDeveloperMode);
+
+        // Create a new Minecraft services discovery service to re-discover the services
+        MinecraftServicesDiscoveryService discovery = MinecraftServicesDiscoveryService.create(
+            ((MinecraftAccessor) client).getProxy(), !offlineDeveloperMode
+        );
+
         // Re-create the user API service (ignore offline session)
         UserApiService userApiService = UserApiService.OFFLINE;
-        if (!OFFLINE_TOKEN.equals(user.getAccessToken())) {
-            userApiService = getAuthService().createUserApiService(user.getAccessToken());
+        if (!offlineDeveloperMode) {
+            userApiService = discovery.createUserApiService(user.getAccessToken());
         }
         ((MinecraftAccessor) client).setUserApiService(userApiService);
 
         // Re-create the friends API service
         ((MinecraftAccessor) client).getRemoteFriendListUpdateHandler().stop();
-        FriendsService friendsService = getAuthService().createFriendsService(user.getAccessToken());
+        FriendsService friendsService = discovery.createFriendsService(user.getAccessToken());
         RemoteFriendListUpdateHandler remoteFriendListUpdateHandler = new RemoteFriendListUpdateHandler(
             friendsService, client
         );
@@ -173,7 +181,7 @@ public final class SessionUtils
             final String serverId = UUID.randomUUID().toString();
 
             // Attempt to join the Minecraft Session Service server
-            final MinecraftSessionService sessionService = getSessionService();
+            final SessionService sessionService = getSessionService();
             try {
                 LOGGER.info("Verifying Minecraft session...");
                 sessionService.joinServer(session.getProfileId(), session.getAccessToken(), serverId);
@@ -200,21 +208,9 @@ public final class SessionUtils
      *
      * @return Yggdrasil Minecraft Session Service instance
      */
-    public static MinecraftSessionService getSessionService()
+    public static SessionService getSessionService()
     {
         return Minecraft.getInstance().services().sessionService();
-    }
-
-    /**
-     * Returns the Yggdrasil Authentication Service.
-     *
-     * @return Yggdrasil Authentication Service instance
-     */
-    public static YggdrasilAuthenticationService getAuthService()
-    {
-        YggdrasilAuthenticationServiceGetter getter =
-                (YggdrasilAuthenticationServiceGetter) Minecraft.getInstance();
-        return getter.authme$getAuthService();
     }
 
     /**

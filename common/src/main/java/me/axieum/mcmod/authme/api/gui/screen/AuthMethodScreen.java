@@ -82,9 +82,7 @@ public class AuthMethodScreen extends Screen
             MICROSOFT_BUTTON_TEXTURES,
             button -> {
                 // If 'Left Control' is being held, enforce user interaction
-                final boolean selectAccount = InputConstants.isKeyDown(
-                    minecraft.getWindow(), InputConstants.KEY_LCONTROL
-                );
+                final boolean selectAccount = InputConstants.isKeyDown(InputConstants.KEY_LCONTROL);
                 if (Config.LoginMethods.Microsoft.isDefaults()) {
                     minecraft.setScreenAndShow(new MicrosoftAuthScreen(this, parentScreen, selectAccount));
                 } else {
