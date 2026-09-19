@@ -74,14 +74,18 @@ public final class SessionUtils
             )
         );
 
+        // Set the offline developer mode based on the access token
+        boolean offlineDeveloperMode = OFFLINE_TOKEN.equals(user.getAccessToken());
+        ((MinecraftAccessor) client).setOfflineDeveloperMode(offlineDeveloperMode);
+
         // Create a new Minecraft services discovery service to re-discover the services
         MinecraftServicesDiscoveryService discovery = MinecraftServicesDiscoveryService.create(
-            ((MinecraftAccessor) client).getProxy(), !((MinecraftAccessor) client).getOfflineDeveloperMode()
+            ((MinecraftAccessor) client).getProxy(), !offlineDeveloperMode
         );
 
         // Re-create the user API service (ignore offline session)
         UserApiService userApiService = UserApiService.OFFLINE;
-        if (!OFFLINE_TOKEN.equals(user.getAccessToken())) {
+        if (!offlineDeveloperMode) {
             userApiService = discovery.createUserApiService(user.getAccessToken());
         }
         ((MinecraftAccessor) client).setUserApiService(userApiService);

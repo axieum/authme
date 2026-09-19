@@ -33,6 +33,15 @@ public interface MinecraftAccessor
     boolean getOfflineDeveloperMode();
 
     /**
+     * Sets whether the Minecraft client is in offline developer mode.
+     *
+     * @param offlineDeveloperMode True if the Minecraft client is in offline developer mode, false otherwise
+     */
+    @Accessor
+    @Mutable
+    void setOfflineDeveloperMode(boolean offlineDeveloperMode);
+
+    /**
      * Returns the Minecraft proxy.
      *
      * @return The Minecraft proxy
